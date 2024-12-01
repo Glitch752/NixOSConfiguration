@@ -1,8 +1,37 @@
-{ config, pkgs, ... }:
-
+# https://nixos-and-flakes.thiscute.world/nixos-with-flakes/start-using-home-manager
+{ inputs, lib, config, pkgs, ... }:
 {
-  home.username = "brody";
-  home.homeDirectory = "/home/brody";
+  imports = [
+    inputs.nix-colors.homeManagerModules.default
+  ];
+  colorScheme = nix-colors.colorSchemes.dracula;
+
+  nixpkgs = {
+    # You can add overlays here
+    overlays = [
+      # If you want to use overlays exported from other flakes:
+      # neovim-nightly-overlay.overlays.default
+
+      # Or define it inline, for example:
+      # (final: prev: {
+      #   hi = final.hello.overrideAttrs (oldAttrs: {
+      #     patches = [ ./change-hello-to-hi.patch ];
+      #   });
+      # })
+    ];
+
+    # Configure nixpkgs
+    config = {
+      allowUnfree = true;
+      # Workaround for https://github.com/nix-community/home-manager/issues/2942
+      allowUnfreePredicate = _: true;
+    };
+  };
+
+  home = {
+    username = "brody";
+    homeDirectory = "/home/brody";
+  };
 
   # set cursor size and dpi for 4k monitor
   # xresources.properties = {
@@ -60,6 +89,17 @@
       # c = "cd";
     };
   };
+
+  # https://nixos.wiki/wiki/Visual_Studio_Code
+  programs.vscode = {
+    enable = true;
+    extensions = with pkgs.vscode-extensions; [
+      # TODO
+    ];
+  };
+
+  # Nicely reload system units when changing configs
+  systemd.user.startServices = "sd-switch";
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

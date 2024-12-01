@@ -99,7 +99,7 @@
     #   system.nixos.tags = [ "open-nvidia" ];
     #   hardware.nvidia.open = true;
     # };
-  }
+  };
 
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;

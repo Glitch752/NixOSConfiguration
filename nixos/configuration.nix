@@ -54,11 +54,11 @@
   
   # NixOS supports "specialisations", which allow you to automatically generate different boot profiles when rebuilding your system.
   specialisation = {
-    # Use the open-source Nvidia driver for the open-nvidia tag.
-    # open-nvidia.configuration = {
-    #   system.nixos.tags = [ "open-nvidia" ];
-    #   lib.mkForce.hardware.nvidia.open = true;
-    # };
+    gnome.configuration = {
+      system.nixos.tags = [ "gnome" ];
+      desktopEnvironments.hyprland.enable = lib.mkForce false;
+      desktopEnvironments.gnome.enable = lib.mkForce true;
+    };
   };
 
   # Enable sound with pipewire.

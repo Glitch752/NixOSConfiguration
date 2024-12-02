@@ -16,6 +16,9 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
   };
   
   outputs = { self, nixpkgs, home-manager, hyprland, ... } @ inputs: let

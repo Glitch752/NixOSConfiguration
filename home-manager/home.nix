@@ -46,6 +46,8 @@
     nix-output-monitor
 
     glow # markdown previewer in terminal
+
+    pciutils # provides the command `lspci`
   ];
 
   # basic configuration of git, please change to your own

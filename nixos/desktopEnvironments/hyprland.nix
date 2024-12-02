@@ -51,7 +51,7 @@
     };
 
     hardware.graphics = {
-      driSupport = true;
+      # driSupport = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
         nvidia-vaapi-driver
@@ -83,7 +83,7 @@
       playerctl # Control audio
 
       (inputs.hyprland.packages."x86_64-linux".hyprland.override {
-        enableNvidiaPatches = true;
+        # enableNvidiaPatches = true;
       })
       eww
       wl-clipboard

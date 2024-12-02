@@ -1,11 +1,16 @@
 # Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
+# your system. Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { inputs, outputs, lib, config, pkgs, ... }: {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    ./desktopEnvironments/gnome_x11.nix
+    ./desktopEnvironments/hyprland.nix
   ];
+
+  desktopEnvironments.hyprland.enable = true;
+  desktopEnvironments.gnome.enable = false;
 
   # Bootloader.
   boot.loader = {
@@ -44,48 +49,18 @@
 
   # TODO: https://wiki.hyprland.org/Nix/Hyprland-on-NixOS/ ???
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
-  };
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Use proprietary Nvidia GPU drivers and fix a bunch of other stuff
-  # Source: https://nixos.wiki/wiki/Nvidia
-  # hardware.graphics.enable = true;
-  # services.xserver.videoDrivers = [ "nvidia" ]; 
-  # hardware.nvidia = {
-  #   modesetting.enable = true; # Modesetting is required.
-  #   powerManagement.enable = false; # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-  #   # Fine-grained power management. Turns off GPU when not in use.
-  #   # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-  #   powerManagement.finegrained = false;
-  #
-  #   # Use the NVidia open source kernel module (not to be confused with the
-  #   # independent third-party "nouveau" open source driver).
-  #   # Support is limited to the Turing and later architectures. Full list of 
-  #   # supported GPUs is at: 
-  #   # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
-  #   # Only available from driver 515.43.04+
-  #   # Currently alpha-quality/buggy, so false is currently the recommended setting.
-  #   open = false;
-  #
-  #   # Enable the Nvidia settings menu, accessible via `nvidia-settings`.
-  #   nvidiaSettings = true;
-  # 
-  #   # Optionally, you may need to select the appropriate driver version for your specific GPU.
-  #   package = config.boot.kernelPackages.nvidiaPackages.stable;
-  # };
+  # Use proprietary Nvidia GPU drivers
+  # https://nixos.wiki/wiki/Nvidia
+  services.xserver.videoDrivers = ["nvidia"];
+  hardware.graphics.enable = true;
+  hardware.nvidia = {
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    open = true;
+    modesetting.enable = true;
+  };
   
   # NixOS supports "specialisations", which allow you to automatically generate different boot profiles when rebuilding your system.
   specialisation = {
@@ -148,10 +123,17 @@
   environment.systemPackages = with pkgs; [
     # Git is a prerequisite to using flakes
     git
+    git-credential-oauth
+    
     wget
     htop
     neovim
   ];
+
+  programs.git = {
+    enable = true;
+    config.credential.helper = "oauth";
+  };
 
   # Reduce disk usage
   nix.gc = {

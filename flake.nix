@@ -4,7 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nix-colors.url = "github:misterio77/nix-colors";
-    # home-manager, used for managing user configuration
+
+    # Home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
       # The `follows` keyword in inputs is used for inheritance.
@@ -13,9 +14,11 @@
       # to avoid problems caused by different versions of nixpkgs.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    hyprland.url = "github:hyprwm/Hyprland";
   };
   
-  outputs = { self, nixpkgs, home-manager, ... } @ inputs: let
+  outputs = { self, nixpkgs, home-manager, hyprland, ... } @ inputs: let
     inherit (self) outputs;
   in {
     # NixOS configuration entrypoint
@@ -23,19 +26,26 @@
     nixosConfigurations = {
       brody-nixos = nixpkgs.lib.nixosSystem {
         specialArgs = {inherit inputs;};
-        modules = [
-	  ./nixos/configuration.nix
 
-	  # Make home-manager as a module of nixos so that home-manager configuration
-	  # will be deployed automatically when executing `nixos-rebuild switch`
+        # All system configurations
+        modules = [
+          ./nixos/configuration.nix
+
+          # Make home-manager as a module of nixos so that home-manager configuration
+          # will be deployed automatically when executing `nixos-rebuild switch`
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-	    home-manager.users.brody = import ./home-manager/home.nix;
+            home-manager.users.brody = import ./home-manager/home.nix;
             home-manager.extraSpecialArgs = {inherit inputs outputs;};
-	  }
-	];
+          }
+        ];
+
       };
     };
+
+    # We could put home-manager configuration entrypoints here as well,
+    # but I put them in nixosConfigurations instead so I don't have to
+    # remember to run `home-manager switch` after `nixos-rebuild switch`.
   };
 }

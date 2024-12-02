@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nix-colors.url = "github:misterio77/nix-colors";
     # home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
@@ -21,18 +22,19 @@
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
       brody-nixos = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        modules = [./nixos/configuration.nix];
-      };
-    };
+        specialArgs = {inherit inputs;};
+        modules = [
+	  ./nixos/configuration.nix
 
-    # Standalone home-manager configuration entrypoint
-    # Available through 'home-manager --flake .#your-username@your-hostname'
-    homeConfigurations = {
-      "brody@brody-nixos" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages.x86_64-linux; # Home-manager requires 'pkgs' instance
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [./home-manager/home.nix];
+	  # Make home-manager as a module of nixos so that home-manager configuration
+	  # will be deployed automatically when executing `nixos-rebuild switch`
+          home-manager.nixosModules.home-manager {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+	    home-manager.users.brody = import ./home-manager/home.nix;
+            home-manager.extraSpecialArgs = {inherit inputs outputs;};
+	  }
+	];
       };
     };
   };

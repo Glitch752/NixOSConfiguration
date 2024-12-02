@@ -1,32 +1,10 @@
 # https://nixos-and-flakes.thiscute.world/nixos-with-flakes/start-using-home-manager
-{ inputs, lib, config, pkgs, ... }:
-{
+{ inputs, lib, config, pkgs, ... }: {
   imports = [
-    inputs.nix-colors.homeManagerModules.default
+    inputs.nix-colors.homeManagerModule
   ];
-  colorScheme = nix-colors.colorSchemes.dracula;
 
-  nixpkgs = {
-    # You can add overlays here
-    overlays = [
-      # If you want to use overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
-    ];
-
-    # Configure nixpkgs
-    config = {
-      allowUnfree = true;
-      # Workaround for https://github.com/nix-community/home-manager/issues/2942
-      allowUnfreePredicate = _: true;
-    };
-  };
+  colorScheme = inputs.nix-colors.colorSchemes.dracula;
 
   home = {
     username = "brody";

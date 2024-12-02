@@ -51,16 +51,6 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-
-  # Use proprietary Nvidia GPU drivers
-  # https://nixos.wiki/wiki/Nvidia
-  services.xserver.videoDrivers = ["nvidia"];
-  hardware.graphics.enable = true;
-  hardware.nvidia = {
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
-    open = true;
-    modesetting.enable = true;
-  };
   
   # NixOS supports "specialisations", which allow you to automatically generate different boot profiles when rebuilding your system.
   specialisation = {

@@ -34,28 +34,49 @@
       portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     };
 
-    lib.mkForce = {
-      boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
+    boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
 
-      hardware.nvidia.powerManagement.enable = true;
-
+    # https://nixos.wiki/wiki/Nvidia
+    # https://wiki.hyprland.org/Nvidia/
+    services.xserver.videoDrivers = ["nvidia-dkms"];
+    hardware.graphics.enable = true;
+    hardware.nvidia = {
+      # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/472
       # Making sure to use the proprietary drivers until the issue above is fixed upstream
-      hardware.nvidia.open = false;
+      open = false;
+      modesetting.enable = true;
+      package = config.boot.kernelPackages.nvidiaPackages.beta;
+      nvidiaSettings = true;
+      powerManagement.enable = true;
     };
 
-    # If you start experiencing lag and FPS drops in games or programs like Blender on stable
-    # NixOS when using the Hyprland flake, it is most likely a mesa version mismatch between
-    # your system and Hyprland.
     hardware.graphics = {
-      package = pkgs-unstable.mesa.drivers;
+      driSupport = true;
+      enable32Bit = true;
+      extraPackages = with pkgs; [
+        nvidia-vaapi-driver
+        vaapiVdpau
+        libvdpau-va-gl
+      ];
 
-      # If you also want 32-bit support (e.g for Steam)
-      driSupport32Bit = true;
-      package32 = pkgs-unstable.pkgsi686Linux.mesa.drivers;
+      # If you start experiencing lag and FPS drops in games or programs like Blender on stable
+      # NixOS when using the Hyprland flake, it is most likely a mesa version mismatch between
+      # your system and Hyprland.
+      # package = pkgs-unstable.mesa.drivers;
+      # package32 = pkgs-unstable.pkgsi686Linux.mesa.drivers;
     };
 
+    environment.variables = {
+      GBM_BACKEND = "nvidia-drm";
+      LIBVA_DRIVER_NAME = "nvidia";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+    };
 
-    home.packages = with pkgs; [
+    environment.systemPackages = with pkgs; [
+      # vulkan-loader
+      # vulkan-validation-layers
+      # vulkan-tools
+
       # utils
       acpi # hardware states
       brightnessctl # Control background

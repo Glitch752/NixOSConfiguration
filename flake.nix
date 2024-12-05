@@ -43,6 +43,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.brody = import ./home-manager/home.nix;
             home-manager.extraSpecialArgs = {inherit inputs outputs;};
+            home-manager.backupFileExtension = "backup";
           }
         ];
 

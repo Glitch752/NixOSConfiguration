@@ -42,13 +42,15 @@
       portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     };
 
+    services.xserver.displayManager.gdm.enable = true;
+
     # https://nixos.wiki/wiki/Nvidia
     # https://wiki.hyprland.org/Nvidia/
-    services.xserver.videoDrivers = ["nvidia-dkms"];
+    services.xserver.videoDrivers = ["nvidia"];
     hardware.nvidia = {
       # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/472
       # Making sure to use the proprietary drivers until the issue above is fixed upstream
-      open = false;
+      open = true;
       modesetting.enable = true;
       # package = config.boot.kernelPackages.nvidiaPackages.beta;
       package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -75,9 +77,13 @@
     boot = {
       # https://forums.developer.nvidia.com/t/550-54-14-cannot-create-sg-table-for-nvkmskapimemory-spammed-when-launching-chrome-on-wayland/284775/26
       # https://wiki.hyprland.org/Nvidia/ | "add the following module names" ....
-      initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
+      initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ]; # "nvidia-dkms" or "nvidia"?
       # extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
-      kernelParams = [ "nvidia-drm.fbdev=1" "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
+      # kernelPackages = let pkgs = import inputs.nixpkgs-unstable { system = "x86_64-linux"; config.allowUnfree = true; }; in pkgs.linuxPackages_latest;
+      kernelParams = [ "nvidia-drm.modeset=1" "nvidia-drm.fbdev=1" "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
+      extraModprobeConfig=''
+      	options nvidia_drm modeset=1 fbdev=1
+      '';
     };
 
     environment.variables = {
@@ -101,6 +107,8 @@
       vulkan-validation-layers
       vulkan-tools
       egl-wayland
+
+      kitty # Needed for hyprland
 
       # utils
       acpi # hardware states

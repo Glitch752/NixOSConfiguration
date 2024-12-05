@@ -54,11 +54,11 @@
   
   # NixOS supports "specialisations", which allow you to automatically generate different boot profiles when rebuilding your system.
   specialisation = {
-    gnome.configuration = {
-      system.nixos.tags = [ "gnome" ];
-      desktopEnvironments.hyprland.enable = lib.mkForce false;
-      desktopEnvironments.gnome.enable = lib.mkForce true;
-    };
+    # gnome.configuration = {
+    #   system.nixos.tags = [ "gnome" ];
+    #   desktopEnvironments.hyprland.enable = lib.mkForce false;
+    #   desktopEnvironments.gnome.enable = lib.mkForce true;
+    # };
   };
 
   # Enable sound with pipewire.

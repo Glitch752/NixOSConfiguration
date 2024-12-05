@@ -2,6 +2,8 @@
   description = "NixOS configuration";
 
   inputs = {
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nix-colors.url = "github:misterio77/nix-colors";
 
@@ -21,7 +23,7 @@
     nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
   };
   
-  outputs = { self, nixpkgs, home-manager, hyprland, ... } @ inputs: let
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, hyprland, ... } @ inputs: let
     inherit (self) outputs;
   in {
     # NixOS configuration entrypoint

@@ -16,6 +16,13 @@
           Enable the Hyprland desktop environment.
         '';
       };
+      displayManager = mkOption {
+        default = "greetd";
+        type = with types; strMatching "^(gdm|greetd)$";
+        description = ''
+          The display manager to use.
+        '';
+      };
     };
   };
 
@@ -26,11 +33,13 @@
         "https://hyprland.cachix.org"
         "https://cache.nixos.org"
         "https://nixpkgs-wayland.cachix.org"
+        "https://anyrun.cachix.org"
       ];
       trusted-public-keys = [
         "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+        "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
       ];
     };
 
@@ -42,64 +51,35 @@
       portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     };
 
-    services.xserver.displayManager.gdm.enable = true;
+    # TODO: Systemd start with uwsm? https://wiki.hyprland.org/Useful-Utilities/Systemd-start/
 
-    # https://nixos.wiki/wiki/Nvidia
-    # https://wiki.hyprland.org/Nvidia/
-    services.xserver.videoDrivers = ["nvidia"];
-    hardware.nvidia = {
-      # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/472
-      # Making sure to use the proprietary drivers until the issue above is fixed upstream
-      open = true;
-      modesetting.enable = true;
-      # package = config.boot.kernelPackages.nvidiaPackages.beta;
-      package = config.boot.kernelPackages.nvidiaPackages.stable;
-      nvidiaSettings = true;
-      powerManagement.enable = true;
+    # Gnome display manager
+    services.xserver.displayManager.gdm.enable = cfg.displayManager == "gdm";
+
+    # Greetd display manager
+    services.greetd = let
+      session = {
+        command = "${lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop";
+        user = "mihai";
+      };
+    in {
+      enable = cfg.displayManager == "greetd";
+      settings = {
+        terminal.vt = 1;
+        default_session = session;
+        initial_session = session;
+      };
     };
-    hardware.graphics = {
-      # driSupport = true;
-      enable = true;
-      enable32Bit = true;
-      extraPackages = with pkgs; [
-        nvidia-vaapi-driver
-        vaapiVdpau
-        libvdpau-va-gl
-      ];
-
-      # If you start experiencing lag and FPS drops in games or programs like Blender on stable
-      # NixOS when using the Hyprland flake, it is most likely a mesa version mismatch between
-      # your system and Hyprland.
-      # package = pkgs-unstable.mesa.drivers;
-      # package32 = pkgs-unstable.pkgsi686Linux.mesa.drivers;
-    };
-
-    boot = {
-      # https://forums.developer.nvidia.com/t/550-54-14-cannot-create-sg-table-for-nvkmskapimemory-spammed-when-launching-chrome-on-wayland/284775/26
-      # https://wiki.hyprland.org/Nvidia/ | "add the following module names" ....
-      initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ]; # "nvidia-dkms" or "nvidia"?
-      # extraModulePackages = [ config.boot.kernelPackages.nvidia_x11 ];
-      # kernelPackages = let pkgs = import inputs.nixpkgs-unstable { system = "x86_64-linux"; config.allowUnfree = true; }; in pkgs.linuxPackages_latest;
-      kernelParams = [ "nvidia-drm.modeset=1" "nvidia-drm.fbdev=1" "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
-      extraModprobeConfig=''
-      	options nvidia_drm modeset=1 fbdev=1
-      '';
-    };
-
-    environment.variables = {
-      LIBVA_DRIVER_NAME = "nvidia";
-      XDG_SESSION_TYPE = "wayland";
-      GBM_BACKEND = "nvidia-drm";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      NVD_BACKEND = "direct";
-      # The previously used WLR_NO_HARDWARE_CURSORS environment variable has been deprecated.
-      # WLR_NO_HARDWARE_CURSORS = "1";
-
-      NIXOS_OZONE_WL = "1";
+    programs.uwsm = {
+      enable = cfg.displayManager == "greetd";
+      waylandCompositors.hyprland = {
+        binPath = "/run/current-system/sw/bin/Hyprland";
+        prettyName = "Hyprland";
+        comment = "Hyprland managed by UWSM";
+      };
     };
 
     nixpkgs.overlays = [
-      # inputs.nixpkgs-wayland.overlay-egl
       inputs.nixpkgs-wayland.overlay
     ];
     environment.systemPackages = with pkgs; [
@@ -109,21 +89,29 @@
       egl-wayland
 
       kitty # Needed for hyprland
-
-      # utils
-      acpi # hardware states
       brightnessctl # Control background
       playerctl # Control audio
 
       (inputs.hyprland.packages."x86_64-linux".hyprland.override {
         # enableNvidiaPatches = true;
       })
+
+      # utils
+      acpi # hardware states
       eww
       wl-clipboard
       rofi
-      grim
-      # from overlay
       mpvpaper
+
+      slurp
+      grim
+
+      inputs.pyprland.packages."x86_64-linux".pyprland
+      hyprpicker
+      hyprcursor
+      hyprlock
+      hypridle
+      hyprpaper
     ];
   };
 }

@@ -7,9 +7,16 @@
     ./hardware-configuration.nix
     ./desktopEnvironments/gnome_x11.nix
     ./desktopEnvironments/hyprland.nix
+
+    # TODO: Only use for environments that require NVIDIA drivers.
+    ./nvidia.nix
   ];
 
-  desktopEnvironments.hyprland.enable = true;
+  desktopEnvironments.hyprland =  {
+    enable = true;
+    displayManager = "gdm";
+  };
+
   desktopEnvironments.gnome.enable = false;
 
   # Bootloader.
@@ -88,7 +95,11 @@
       # TODO
     ];
     extraGroups = [ "networkmanager" "wheel" ];
+    shell = pkgs.zsh;
   };
+
+  # Configured at a user level, but enabled at a system level.
+  programs.zsh.enable = true;
 
   # Enable the OpenSSH server.
   services.openssh = {
@@ -101,9 +112,6 @@
     };
   };
 
-  # Install firefox.
-  programs.firefox.enable = true;
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -111,7 +119,8 @@
   # $ nix search ___
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   environment.systemPackages = with pkgs; [
-    # Git is a prerequisite to using flakes
+    # Git is a prerequisite to using flakes, so we install it at
+    # a system level.
     git
     git-credential-oauth
     
@@ -120,10 +129,12 @@
     neovim
   ];
 
+  # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
     config.credential.helper = "oauth";
   };
+
 
   # Reduce disk usage
   nix.gc = {

@@ -18,9 +18,21 @@
     };
 
     hyprland.url = "github:hyprwm/Hyprland";
+    pyprland.url = "github:hyprland-community/pyprland";
+    # walker.url = "github:abenz1267/walker";
+    anyrun = {
+      url = "github:anyrun-org/anyrun";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ags = {
+      url = "github:aylur/ags";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
-    nixpkgs-wayland.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, hyprland, ... } @ inputs: let

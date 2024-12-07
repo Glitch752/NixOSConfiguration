@@ -1,0 +1,114 @@
+@use "sass:color";
+@use "./colors.scss" as colors;
+
+window.mediaControls {
+    $borderRadius: 5px;
+
+    background: transparent;
+    color: colors.$fg;
+    font-weight: bold;
+    font-size: 14px;
+
+    >box {
+        background: colors.$bg;
+        border-radius: $borderRadius;
+        // border: 2px solid #414141;
+        // margin: 5px 20px 0px 20px;
+        min-height: 34px;
+    }
+
+    button {
+        all: unset;
+        background-color: transparent;
+
+        &:hover label, &:hover icon {
+            background-color: color.adjust(colors.$fg, $alpha: -0.84);
+            border-color: color.adjust(colors.$accent, $alpha: -0.8);
+        }
+
+        &:active label, &:active icon {
+            background-color: color.adjust(colors.$fg, $alpha: -0.8)
+        }
+    }
+
+    .close icon {
+        border-radius: $borderRadius;
+        font-size: 20px;
+    }
+
+    label, icon {
+        transition: 200ms;
+        padding: 3px 8px;
+    }
+
+    .player {
+        margin: 10px;
+        padding: 10px 15px 10px 0px;
+
+        border-radius: $borderRadius;
+        background: colors.$lightBg;
+        color: colors.$fg;
+
+        font-size: 14px;
+        font-weight: bold;
+
+        .cover-art {
+            min-width: 120px;
+            min-height: 120px;
+            border-radius: $borderRadius;
+            margin-right: 15px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 1.1em;
+            min-width: 300px;
+        }
+
+        .sideIcons {
+            font-size: 24px;
+            margin-top: 5px;
+
+            icon {
+                padding: 7px 12px;
+            }
+            .quitPlayer.noQuit {
+                color: #999;
+
+                &:hover icon {
+                    background-color: transparent;
+                }
+            }
+        }
+
+        .progress {
+            $radius: 7px;
+            
+            * {
+                all: unset;
+            }
+
+            trough {
+                background-color: color.adjust(colors.$fg, $alpha: -0.8);
+                border-radius: $radius;
+            }
+
+            highlight {
+                background-color: colors.$accent;
+                min-height: 8px;
+                border-radius: $radius;
+            }
+
+            slider {
+                background-color: colors.$fg;
+                border-radius: $radius;
+                min-height: 10px;
+                min-width: 10px;
+                margin: -5px;
+            }
+        }
+    }
+}

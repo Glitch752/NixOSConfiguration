@@ -92,7 +92,7 @@
       brightnessctl # Control background
       playerctl # Control audio
 
-      (inputs.hyprland.packages."x86_64-linux".hyprland.override {
+      (inputs.hyprland.packages.${pkgs.system}.hyprland.override {
         # enableNvidiaPatches = true;
       })
 
@@ -106,7 +106,7 @@
       slurp
       grim
 
-      inputs.pyprland.packages."x86_64-linux".pyprland
+      inputs.pyprland.packages.${pkgs.system}.pyprland
       hyprpicker
       hyprcursor
       hyprlock

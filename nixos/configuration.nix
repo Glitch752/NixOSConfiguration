@@ -26,6 +26,7 @@
     efi.canTouchEfiVariables = true;
   };
   boot.kernelParams = [ "module_blacklist=amdgpu" ];
+  boot.supportedFilesystems = [ "ntfs" ];
 
   networking.hostName = "brody-nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -84,6 +85,10 @@
     #media-session.enable = true;
   };
 
+  # Bluetooth
+  hardware.bluetooth.enable = true; # Enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
@@ -127,6 +132,8 @@
     wget
     htop
     neovim
+
+    bluez # Bluetooth
   ];
 
   # basic configuration of git, please change to your own

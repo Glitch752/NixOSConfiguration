@@ -1,0 +1,177 @@
+@use "sass:color";
+@use "./colors.scss" as colors;
+
+window.bar {
+    $gap: 15px;
+    $borderRadius: 0px;
+    $radius: 7px;
+
+    background: transparent;
+    color: colors.$fg;
+    font-weight: bold;
+    font-size: 14px;
+
+    >centerbox {
+        background: colors.$bg;
+        border-radius: $borderRadius;
+        // border: 2px solid #414141;
+        // margin: 5px 20px 0px 20px;
+        min-height: 34px;
+    }
+
+    .windowTitle {
+        color: #ccc;
+    }
+
+    button {
+        all: unset;
+        background-color: transparent;
+
+        &:hover label, &:hover icon {
+            background-color: color.adjust(colors.$fg, $alpha: -0.84);
+            border-color: color.adjust(colors.$accent, $alpha: -0.8);
+        }
+
+        &:active label, &:active icon {
+            background-color: color.adjust(colors.$fg, $alpha: -0.8)
+        }
+    }
+
+    label, icon {
+        transition: 200ms;
+        padding: 3px 8px;
+    }
+
+    // Left panel
+    .nixosIcon {
+        icon {
+            background-image: url("icons/nixos.svg");
+            border-radius: $borderRadius;
+        }
+
+        font-size: 28px;
+
+        transition: all 200ms;
+
+        &:hover {
+            color: colors.$accent;
+        }
+    }
+
+    .workspaces {
+        .focused label {
+            color: colors.$accent;
+            border-color: colors.$accent;
+        }
+        label {
+            min-width: 10px;
+        }
+        >button:hover {
+            color: color.adjust(colors.$accent, $lightness: 20%);
+        }
+
+        margin: 0px 10px;
+
+        font-size: 16px;
+        color: colors.$mutedText;
+    }
+
+    .focusedClient {
+        font-weight: normal;
+        color: color.adjust(colors.$accent, $saturation: -50%);
+    }
+
+    // Center panel
+    
+    .media {
+        icon {
+            font-size: 20px;
+            color: colors.$accent;
+        }
+
+        .cover {
+            min-height: 1.2em;
+            min-width: 1.2em;
+            border-radius: $radius;
+            background-position: center;
+            background-size: contain;
+        }
+
+        label {
+            padding-left: 0;
+            color: colors.$mutedText;
+            padding-top: 2px; // Makes the text more visually centered
+        }
+    }
+
+    // Right panel
+    .resourceUtilization {
+        margin-left: $gap;
+        icon {
+            font-size: 20px;
+            color: colors.$accent;
+            padding-left: 5px;
+        }
+        label {
+            padding-left: 0;
+            color: colors.$mutedText;
+            padding-top: 2px; // Makes the text more visually centered
+        }
+        label.ram {
+            padding-right: 5px;
+        }
+    }
+
+    .bluetooth {
+        margin-left: $gap;
+    }
+    .bluetooth, .wifi {
+        &:hover {
+            color: color.adjust(colors.$accent, $lightness: 20%);
+        }
+        color: colors.$accent;
+    }
+
+    .audio {
+        min-width: 120px;
+        margin-left: $gap;
+
+        * {
+            all: unset;
+        }
+
+        icon {
+            margin-right: 8px;
+        }
+
+        trough {
+            background-color: color.adjust(colors.$fg, $alpha: -0.8);
+            border-radius: $radius;
+        }
+
+        highlight {
+            background-color: colors.$accent;
+            min-height: 8px;
+            border-radius: $radius;
+        }
+
+        slider {
+            background-color: colors.$fg;
+            border-radius: $radius;
+            min-height: 10px;
+            min-width: 10px;
+            margin: -5px;
+        }
+    }
+
+    .battery {
+        margin-left: $gap;
+        label {
+            padding-left: 0;
+        }
+    }
+    .timeLabel {
+        margin-left: $gap;
+        margin-right: 10px;
+    }
+}

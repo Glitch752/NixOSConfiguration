@@ -51,7 +51,6 @@
       exec-once = [
         "firefox"
         # hyprpaper
-        "ags"
         # hyprctl setcursor ???? 32
 
         "dbus-update-activation-environment --systemd --all"

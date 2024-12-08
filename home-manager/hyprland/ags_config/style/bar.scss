@@ -19,6 +19,10 @@ window.bar {
         min-height: 34px;
     }
 
+    .separator {
+        margin-left: $gap;
+    }
+
     .windowTitle {
         color: #ccc;
     }
@@ -26,22 +30,20 @@ window.bar {
     button {
         all: unset;
         background-color: transparent;
+        padding: 3px 8px;
 
-        &:hover label, &:hover icon {
+        &:hover {
             background-color: color.adjust(colors.$fg, $alpha: -0.84);
             border-color: color.adjust(colors.$accent, $alpha: -0.8);
         }
 
-        &:active label, &:active icon {
+        &:active {
             background-color: color.adjust(colors.$fg, $alpha: -0.8)
         }
-    }
 
-    label, icon {
         transition: 200ms;
-        padding: 3px 8px;
     }
-
+    
     // Left panel
     .nixosIcon {
         icon {
@@ -50,8 +52,6 @@ window.bar {
         }
 
         font-size: 28px;
-
-        transition: all 200ms;
 
         &:hover {
             color: colors.$accent;
@@ -106,25 +106,22 @@ window.bar {
 
     // Right panel
     .resourceUtilization {
-        margin-left: $gap;
         icon {
             font-size: 20px;
             color: colors.$accent;
-            padding-left: 5px;
+            padding-left: 10px;
+            padding-right: 0;
         }
         label {
-            padding-left: 0;
             color: colors.$mutedText;
+            min-width: 60px;
             padding-top: 2px; // Makes the text more visually centered
         }
         label.ram {
-            padding-right: 5px;
+            padding-right: 10px;
         }
     }
 
-    .bluetooth {
-        margin-left: $gap;
-    }
     .bluetooth, .wifi {
         &:hover {
             color: color.adjust(colors.$accent, $lightness: 20%);
@@ -134,7 +131,6 @@ window.bar {
 
     .audio {
         min-width: 120px;
-        margin-left: $gap;
 
         * {
             all: unset;
@@ -165,13 +161,11 @@ window.bar {
     }
 
     .battery {
-        margin-left: $gap;
         label {
             padding-left: 0;
         }
     }
     .timeLabel {
-        margin-left: $gap;
         margin-right: 10px;
     }
 }

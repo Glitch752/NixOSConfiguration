@@ -5,8 +5,6 @@
     ./hyprland/hyprland.nix
   ];
 
-  # TODO: Investigate https://github.com/Vencord/Vesktop ?
-
   colorScheme = inputs.nix-colors.colorSchemes.dracula;
 
   home = {
@@ -49,6 +47,17 @@
     pciutils # provides the command `lspci`
 
     networkmanagerapplet # NetworkManager applet for the system tray
+
+    vesktop # Vencord optimized for wayland
+    (discord.override {
+      withOpenASAR = true;
+      withVencord = true;
+    })
+
+    bitwarden-desktop # Bitwarden password manager
+    bitwarden-cli # Bitwarden password manager CLI
+
+    spotube # Spotify client using Youtube as an audio source
   ];
 
   programs.firefox.enable = true;
@@ -128,9 +137,6 @@
         });
 
     enable = true;
-    extensions = with pkgs.vscode-extensions; [
-      # TODO
-    ];
 
     # keybinds.json
     keybindings = [

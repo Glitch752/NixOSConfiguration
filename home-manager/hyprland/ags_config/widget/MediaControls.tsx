@@ -33,6 +33,10 @@ export default function MediaControls(monitor: Gdk.Monitor): Gtk.Window | null {
             {bind(mpris, "players").as(arr => arr.map(player => (
                 <MediaPlayer player={player} />
             )))}
+
+            {bind(mpris, "players").as(arr => arr.length === 0 && (
+                <label className="noMediaPlayers" label="No media players found" />
+            ))}
         </box>
     </window> as Gtk.Window;
 }

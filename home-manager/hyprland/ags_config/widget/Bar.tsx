@@ -91,9 +91,7 @@ function SystemTray() {
 
     return <box>
         {bind(tray, "items").as(items => items.map(item => {
-            if (item.iconThemePath)
-                App.add_icons(item.iconThemePath)
-
+            if(item.iconThemePath) App.add_icons(item.iconThemePath)
             const menu = item.create_menu();
 
             return <button
@@ -101,7 +99,8 @@ function SystemTray() {
                 onDestroy={() => menu?.destroy()}
                 onClickRelease={self => {
                     menu?.popup_at_widget(self, Gdk.Gravity.SOUTH, Gdk.Gravity.NORTH, null)
-                }}>
+                }}
+                tooltipText={bind(item, "tooltip").as(t => `${t.title}`)}>
                 <icon gIcon={bind(item, "gicon")} />
             </button>
         }))}
@@ -112,7 +111,7 @@ function ResourceUtilization() {
     const CPUUsage = Variable(0).poll(1000, ["bash", "-c", "top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 | gawk '{print $2+$4+$6}'"], parseFloat);
     const RAMUsage = Variable(0).poll(1000, ["bash", "-c", "free | awk '/Mem:/ {print $3/$2 * 100}'"], parseFloat);   
 
-    return <button onClick={() => execAsync("missioncenter")}>
+    return <button onClick={() => execAsync("missioncenter")} tooltipText="Resource Utilization">
         <box className="resourceUtilization">
             <icon icon="processor" />
             <label label={CPUUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => CPUUsage.drop()} tooltipText="CPU utilization" />
@@ -169,17 +168,32 @@ function BatteryLevel() {
 }
 
 function Time() {
-    const shortTime = Variable("").poll(1000, 'date "+%m/%d %l:%M:%S %p"');
-    const longTime = Variable("").poll(1000, 'date "+%A, %B %d %Y - %m/%d/%y - %H:%M:%S %Z"');
-    return <label
-        className="timeLabel"
+    const shortTime = Variable("").poll(1000, 'date "+%l:%M:%S %p"');
+    const shortDate = Variable("").poll(1000, 'date "+%m/%d/%Y');
+    const tooltipText = Variable("").poll(1000, 'date "+%A, %B %d %Y - %m/%d/%y - %H:%M:%S %Z"');
+    return <box
+        vertical
+        tooltipText={tooltipText()}
+        className="time"
         onDestroy={() => {
             shortTime.drop();
-            longTime.drop();
+            shortDate.drop();
+            tooltipText.drop();
         }}
-        tooltipText={longTime()}
-        label={shortTime()}
-    />;
+    >
+        <label
+            className="timeLabel"
+            label={shortTime()}
+        />
+        <label
+            className="dateLabel"
+            label={shortDate()}
+        />
+    </box>;
+}
+
+function Separator() {
+    return <box className="separator" />;
 }
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
@@ -194,7 +208,13 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 {/* Left panel */}
                 
                 <NixOSIcon />
+
+                <Separator />
+
                 <Workspaces />
+
+                <Separator />
+
                 <FocusedClient />
             </box>
 
@@ -209,13 +229,21 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
                 <SystemTray />
 
+                <Separator />
+
                 <ResourceUtilization />
+
+                <Separator />
 
                 <Bluetooth />
                 <Wifi />
 
+                <Separator />
+
                 <AudioSlider />
                 <BatteryLevel />
+
+                <Separator />
 
                 <Time />
             </box>

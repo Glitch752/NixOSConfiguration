@@ -22,7 +22,7 @@
     # walker.url = "github:abenz1267/walker";
     anyrun = {
       url = "github:anyrun-org/anyrun";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     ags = {
       url = "github:aylur/ags";

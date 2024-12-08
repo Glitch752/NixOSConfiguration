@@ -203,6 +203,9 @@
         "suppressevent maximize, class:.*"
         # Fix some dragging issues with XWayland
         "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
+
+        # Always float Nemo windows (file manager)
+        "float, class:(nemo)"
       ];
 
       # Helps when using NVidia drivers
@@ -218,5 +221,16 @@
       force_zero_scaling = true
     }
     '';
+  };
+
+  # Gtk theming
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Adwaita";
+    };
+    iconTheme = {
+      name = "Adwaita";
+    };
   };
 }

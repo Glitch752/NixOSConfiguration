@@ -72,9 +72,6 @@
       # Scroll through existing workspaces with mainMod + scroll
       "$mainMod, mouse_down, workspace, e+1"
       "$mainMod, mouse_up, workspace, e-1"
-
-      # Open anyrun with meta + space
-      "$mainMode, SPACE, exec, bash ${./anyrun/launch_anyrun.sh}"
     ];
 
     # Move/resize windows with mainMod + LMB/RMB and dragging
@@ -97,11 +94,6 @@
       ", XF86AudioPause, exec, playerctl play-pause"
       ", XF86AudioPlay, exec, playerctl play-pause"
       ", XF86AudioPrev, exec, playerctl previous"
-    ];
-
-    bindr = [
-      # Open anyrun with just meta
-      # "SUPER, SUPER_L, exec, bash ${./launch_anyrun.sh}"
     ];
   };
 }

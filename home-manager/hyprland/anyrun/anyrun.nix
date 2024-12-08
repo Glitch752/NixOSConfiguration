@@ -14,19 +14,34 @@
     inputs.anyrun.homeManagerModules.default
   ];
 
+  wayland.windowManager.hyprland.settings.bindr = [
+    # Open anyrun with just meta
+    "SUPER, SUPER_L, exec, bash ${./launch_anyrun.sh}"
+  ];
 
-  # TODO: Fix; anyrun panics currently lol
+  wayland.windowManager.hyprland.settings.bind = [
+    # Open anyrun with meta + space
+    # "$mainMode, SPACE, exec, bash ${./launch_anyrun.sh}"
+  ];
+
   programs.anyrun = {
     enable = true;
     config = {
-      x = { fraction = 0; };
-      y = { fraction = 0; };
-      width = { fraction = 0.5; };
+      x = { absolute = 410; }; # The center X position of the window
+      y = { absolute = 10; }; # The top Y position of the window
+      width = { absolute = 800; };
+      # Height will automatically grow with the number of entries
+      
       hideIcons = false;
+      
       ignoreExclusiveZones = false;
+
       layer = "overlay";
+      
       hidePluginInfo = false;
-      closeOnClick = false;
+      
+      closeOnClick = true;
+
       showResultsImmediately = true;
       maxEntries = null;
 
@@ -50,10 +65,8 @@
         phases = [ "buildPhase" ];
         buildInputs = [ pkgs.sassc ];
         buildPhase = ''
-          echo "Compiling anyrun.scss to css"
-          echo $out
-          ls -la
-          sassc ./anyrun.css $out
+          echo "Compiling anyrun.scss to css\n"
+          sassc $src/anyrun.scss $out
         '';
       }
     );
@@ -62,10 +75,10 @@
       Config(
         // Also show the Desktop Actions defined in the desktop files, e.g. "New Window" from LibreWolf
         desktop_actions: true,
-        max_entries: 5, 
+        max_entries: 8,
         // The terminal used for running terminal based desktop entries, if left as `None` a static list of terminals is used
         // to determine what terminal to use.
-        terminal: Some("alacritty"),
+        terminal: Some("kitty"),
       )
     '';
     extraConfigFiles."kidex.ron".text = ''
@@ -75,13 +88,13 @@
     '';
     extraConfigFiles."dictionary.ron".text = ''
       Config(
-        prefix: ":def",
+        prefix: "define",
         max_entries: 5,
       )
     '';
     extraConfigFiles."shell.ron".text = ''
       Config(
-        prefix: ":sh",
+        prefix: "$",
         // Override the shell used to launch the command
         shell: None,
       )
@@ -100,7 +113,7 @@
     '';
     extraConfigFiles."translate.ron".text = ''
       Config(
-        prefix: ":",
+        prefix: "translate",
         language_delimiter: ">",
         max_entries: 3,
       )

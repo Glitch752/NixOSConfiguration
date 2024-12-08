@@ -58,6 +58,8 @@
     bitwarden-cli # Bitwarden password manager CLI
 
     spotube # Spotify client using Youtube as an audio source
+
+    nemo-with-extensions # Nemo file manager with extensions
   ];
 
   programs.firefox.enable = true;
@@ -100,6 +102,9 @@
       nixos-switch = "sudo nixos-rebuild switch";
       shit = "fuck";
       oops = "fuck";
+      explorer = "nemo";
+      files = "nemo";
+      browse = "nemo";
     };
     history = {
       size = 10000;

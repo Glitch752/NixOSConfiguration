@@ -16,12 +16,12 @@
 
   wayland.windowManager.hyprland.settings.bindr = [
     # Open anyrun with just meta
-    "SUPER, SUPER_L, exec, bash ${./launch_anyrun.sh}"
+    "SUPER, SUPER_L, exec, uwsm app -- sh ${./launch_anyrun.sh}"
   ];
 
   wayland.windowManager.hyprland.settings.bind = [
     # Open anyrun with meta + space
-    # "$mainMode, SPACE, exec, bash ${./launch_anyrun.sh}"
+    # "$mainMode, SPACE, exec, uwsm app -- sh ${./launch_anyrun.sh}"
   ];
 
   programs.anyrun = {

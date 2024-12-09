@@ -11,12 +11,12 @@
   wayland.windowManager.hyprland.settings = {
     bind = [
       # Re-randomize the wallpaper when pressing Meta + `
-      "$mainMod, Grave, exec, bash ${./randomize_wallpaper.sh}"
+      "$mainMod, Grave, exec, uwsm app -- sh ${./randomize_wallpaper.sh}"
     ];
 
     exec-once = [
       "swww-daemon" # Or `swww init`?
-      "bash ${./randomize_wallpaper.sh}"
+      "uwsm app -- sh ${./randomize_wallpaper.sh}"
     ];
   };
 

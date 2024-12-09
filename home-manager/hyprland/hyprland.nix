@@ -72,15 +72,16 @@ in {
     systemd.enable = false; # Conflicts with uwsm
 
     settings = {
-      "$terminal" = "kitty";
-      "$fileManager" = "nemo";
+      "$terminal" = "uwsm app -- kitty";
+      "$fileManager" = "uwsm app -- thunar";
+      "$lockScreen" = "uwsm app -- sh ${./hyprlock/hyprlock_nvidia_screenshot_fix.sh}";
 
       # Note: environment variables should be set in the env files
       # above instead of here. I think. Maybe.
 
       # We should use uwsm app -- <app> instead of spawning apps as a child process
       exec-once = [
-        "hyprlock" # We automatically boot into hyprland, so we need to lock the screen on startup
+        "$lockScreen" # We automatically boot into hyprland, so we need to lock the screen on startup
 
         "uwsm app -- firefox"
         "hyprctl setcursor ${cursor} ${toString cursor_size}"
@@ -241,8 +242,8 @@ in {
         # Fix some dragging issues with XWayland
         "nofocus,class:^$,title:^$,xwayland:1,floating:1,fullscreen:0,pinned:0"
 
-        # Always float Nemo windows (file manager)
-        "float, class:(nemo)"
+        # Always float Thunar windows (file manager)
+        "float, class:(thunar)"
         # Always float Kitty windows and make them transparent (terminal)
         # "float, class:(kitty)" # Not so sure about this one
         # 80% opacity when active, 50% when inactive, 90% when fullscreen
@@ -260,7 +261,11 @@ in {
       cursor = {
         no_hardware_cursors = true;
       };
-      "render:explicit_sync" = 0;
+
+      # This is a tradeoff... turning it off can fix some stuttering,
+      # but it breaks some apps like hyprlock when off.
+      # Yay Nvidia drivers!
+      "render:explicit_sync" = 1;
     };
 
     # Settings that don't work in Nix for some reason

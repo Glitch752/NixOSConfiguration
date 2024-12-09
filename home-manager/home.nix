@@ -56,10 +56,12 @@
 
     spotube # Spotify client using Youtube as an audio source
 
-    nemo-with-extensions # Nemo file manager with extensions
+    # nemo-with-extensions # Nemo file manager with extensions
+    # Nevermind... nemo crashes wayland on my system lol
+
     qimgv # Qt5 image viewer
   ];
-
+  
   programs.firefox.enable = true;
 
   # Install Brave
@@ -117,9 +119,9 @@
       nixos-switch = "sudo nixos-rebuild switch";
       shit = "fuck";
       oops = "fuck";
-      explorer = "nemo";
-      files = "nemo";
-      browse = "nemo";
+      explorer = "thunar";
+      files = "thunar";
+      browse = "thunar";
     };
     history = {
       size = 10000;

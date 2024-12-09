@@ -21,11 +21,11 @@
 
     # https://wiki.hyprland.org/Configuring/Binds/
     bind = [
-      "$mainMod, Q, exec, uwsm app -- $terminal"
+      "$mainMod, Q, exec, $terminal"
 
       "$mainMod, C, killactive,"
-      "$mainMod, L, exec, hyprlock"
-      "$mainMod, E, exec, uwsm app -- $fileManager"
+      "$mainMod, L, exec, $lockScreen"
+      "$mainMod, E, exec, $fileManager"
       "$mainMod, Z, togglefloating,"
       "$mainMod, P, pseudo," # dwindle
       "$mainMod, J, togglesplit," # dwindle

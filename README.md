@@ -13,3 +13,4 @@ Inspired by the following configurations and resources:
 - https://github.com/SoraTenshi/nixos-config
 - https://github.com/RoccoRakete/hyprland-dots
 - https://github.com/fufexan/dotfiles
+- https://github.com/justinmdickey/publicdots/tree/main

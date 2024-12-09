@@ -15,7 +15,7 @@ function limitLength(s: string, n: number) {
 // Left panel
 
 function NixOSIcon() {
-    return <button className="nixosIcon" onClicked={() => execAsync('kitty bash -lic "neofetch && read -n 1 -s"')}>
+    return <button className="nixosIcon" onClicked={() => execAsync('kitty sh -lic "neofetch && read -n 1 -s"')}>
         <icon icon="nixos" />
     </button>
 }

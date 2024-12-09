@@ -133,16 +133,29 @@
     bluez # Bluetooth
 
     dbus-broker # Alternative message broker implementation
+
+    xfce.thunar # Thunar file manager; needs to be installed at a system level for some reason
   ];
 
   systemd.packages = [ pkgs.dbus-broker ];
+
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin
+      thunar-volman
+    ];
+  };
+  programs.xfconf.enable = true;
+  services.gvfs.enable = true; # Mount, trash, and other functionalities
+  services.tumbler.enable = true; # Thumbnail support for images
+
 
   # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
     config.credential.helper = "oauth";
   };
-
 
   # Reduce disk usage
   nix.gc = {

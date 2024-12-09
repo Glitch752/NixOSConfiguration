@@ -19,6 +19,8 @@
 
     hyprland.url = "github:hyprwm/Hyprland";
     pyprland.url = "github:hyprland-community/pyprland";
+    swww.url = "github:LGFae/swww";
+
     # walker.url = "github:abenz1267/walker";
     anyrun = {
       url = "github:anyrun-org/anyrun";

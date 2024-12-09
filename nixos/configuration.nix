@@ -20,6 +20,7 @@
   desktopEnvironments.gnome.enable = false;
 
   # Bootloader.
+  # TODO: Switch to grub and style it.
   boot.loader = {
     systemd-boot.enable = true;
     systemd-boot.configurationLimit = 5;

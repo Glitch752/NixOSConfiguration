@@ -8,13 +8,16 @@ in {
   imports = [
     ./ags.nix
     ./anyrun/anyrun.nix
+    ./swww/swww.nix
     ./hypr_shortcuts.nix
   ];
 
   # TODO: Configure hyprlock https://github.com/hyprwm/hyprlock
   # TODO: Configure hypridle https://github.com/hyprwm/hypridle
-  # TODO: Configure hyprpaper https://github.com/hyprwm/hyprpaper
+  # TODO: Configure pyprland https://github.com/hyprland-community/pyprland
   # ...or sww? https://github.com/LGFae/swww
+
+  # TODO: Look into https://github.com/hyprland-community/hyprland-autoname-workspaces
 
   # https://gitlab.com/Zaney/zaneyos/-/blob/main/config/hyprland.nix
   wayland.windowManager.hyprland = {
@@ -54,7 +57,6 @@ in {
 
       exec-once = [
         "firefox"
-        # hyprpaper
         "hyprctl setcursor ${cursor} ${toString cursor_size}"
 
         "dbus-update-activation-environment --systemd --all"

@@ -6,11 +6,12 @@
   wayland.windowManager.hyprland.settings = {
     env = [
       "WALLPAPERS_DIR, ${wallpaperDir}"
+      "WALLPAPER_STATE_FILE, ${config.home.homeDirectory}/.wallpapers"
     ];
 
     bind = [
       # Re-randomize the wallpaper when pressing Meta + `
-      "$mainMod, Backtick, exec, bash ${./randomize_wallpaper.sh}"
+      "$mainMod, Grave, exec, bash ${./randomize_wallpaper.sh}"
     ];
 
     exec-once = [
@@ -27,14 +28,15 @@
 
   # Systemd service to re-randomize the wallpaper every hour
   systemd.user.services.randomize_wallpaper = {
-    description = "Randomize wallpaper";
-    wantedBy = [ "graphical-session.target" ];
-    serviceConfig = {
+    Unit = {
+      Description = "Randomize wallpaper";
+    };
+    Service = {
       Type = "oneshot";
       ExecStart = "${pkgs.bash}/bin/bash ${./randomize_wallpaper.sh}";
-      Timer = {
-        OnCalendar = "*:0/1";
-      };
+
+      Timer = "*:0/1";
     };
+    Install.WantedBy = [ "graphical-session.target" ];
   };
 }

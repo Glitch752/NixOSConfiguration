@@ -61,6 +61,8 @@
 
     nemo-with-extensions # Nemo file manager with extensions
     qimgv # Qt5 image viewer
+
+    wev # A wayland event viewer
   ];
 
   programs.firefox.enable = true;

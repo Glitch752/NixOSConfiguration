@@ -9,10 +9,55 @@ in {
     ./ags.nix
     ./anyrun/anyrun.nix
     ./swww/swww.nix
+    ./hyprlock/hyprlock.nix
     ./hypr_shortcuts.nix
   ];
 
-  # TODO: Configure hyprlock https://github.com/hyprwm/hyprlock
+  # Avoid placing environment variables in the hyprland.conf file.
+  # Instead, use ~/.config/uwsm/env for theming, xcursor, nvidia and toolkit variables,
+  # and ~/.config/uwsm/env-hyprland for HYPR* and AQ_* variables. The format is export KEY=VAL.
+  home.file.".config/uwsm/env".text = ''
+    export LIBVA_DRIVER_NAME=nvidia
+    export XDG_SESSION_TYPE=wayland
+    export GBM_BACKEND=nvidia-drm
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export NVD_BACKEND=direct
+
+    export NIXOS_OZONE_WL=1
+    export NIXPKGS_ALLOW_UNFREE=1
+    export XDG_CURRENT_DESKTOP=Hyprland
+    export XDG_SESSION_DESKTOP=Hyprland
+    export GDK_BACKEND=wayland, x11
+    export CLUTTER_BACKEND=wayland
+    export QT_QPA_PLATFORM=wayland;xcb
+    export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+    export QT_AUTO_SCREEN_SCALE_FACTOR=1
+    export SDL_VIDEODRIVER=x11
+    export MOZ_ENABLE_WAYLAND=1
+
+    # Can fix flickering in Electron apps
+    export ELECTRON_OZONE_PLATFORM_HINT = auto
+
+    export XCURSOR_SIZE = ${toString cursor_size}
+  '';
+  home.file.".config/uwsm/env-hyprland".text = ''
+    export HYPRCURSOR_SIZE = ${toString cursor_size}
+  '';
+
+  home.packages = with pkgs; [
+    hyprpicker
+    hyprcursor
+    hyprlock
+    hypridle
+    inputs.pyprland.packages.${pkgs.system}.pyprland
+
+    wev # A wayland event viewer
+
+    slurp # Select a region in wayland
+    grim # Screenshot utility for wayland
+    wl-clipboard # Wayland clipboard utilities
+  ];
+
   # TODO: Configure hypridle https://github.com/hyprwm/hypridle
   # TODO: Configure pyprland https://github.com/hyprland-community/pyprland
   # ...or sww? https://github.com/LGFae/swww
@@ -24,43 +69,21 @@ in {
     enable = true;
 
     xwayland.enable = true;
-    systemd.enable = true;
+    systemd.enable = false; # Conflicts with uwsm
 
     settings = {
-      env = [
-        "LIBVA_DRIVER_NAME, nvidia"
-        "XDG_SESSION_TYPE, wayland"
-        "GBM_BACKEND, nvidia-drm"
-        "__GLX_VENDOR_LIBRARY_NAME, nvidia"
-        "NVD_BACKEND, direct"
-
-        "NIXOS_OZONE_WL, 1"
-        "NIXPKGS_ALLOW_UNFREE, 1"
-        "XDG_CURRENT_DESKTOP, Hyprland"
-        "XDG_SESSION_DESKTOP, Hyprland"
-        "GDK_BACKEND, wayland, x11"
-        "CLUTTER_BACKEND, wayland"
-        "QT_QPA_PLATFORM=wayland;xcb"
-        "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
-        "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
-        "SDL_VIDEODRIVER, x11"
-        "MOZ_ENABLE_WAYLAND, 1"
-
-        "ELECTRON_OZONE_PLATFORM_HINT,auto" # Can fix flickering in Electron apps
-
-        "XCURSOR_SIZE,${toString cursor_size}"
-        "HYPRCURSOR_SIZE,${toString cursor_size}"
-      ];
-
       "$terminal" = "kitty";
       "$fileManager" = "nemo";
 
-      exec-once = [
-        "firefox"
-        "hyprctl setcursor ${cursor} ${toString cursor_size}"
+      # Note: environment variables should be set in the env files
+      # above instead of here. I think. Maybe.
 
-        "dbus-update-activation-environment --systemd --all"
-        "systemctl --user import-environment QT_QPA_PLATFORMTHEME WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+      # We should use uwsm app -- <app> instead of spawning apps as a child process
+      exec-once = [
+        "hyprlock" # We automatically boot into hyprland, so we need to lock the screen on startup
+
+        "uwsm app -- firefox"
+        "hyprctl setcursor ${cursor} ${toString cursor_size}"
       ];
 
       # https://wiki.hyprland.org/Configuring/Monitors/
@@ -84,7 +107,7 @@ in {
         # https://wiki.hyprland.org/Configuring/Variables/#variable-types
         # "col.active_border" = "rgba(cc945fff) rgba(e1ad8dff) 45deg";
         "col.active_border" = "rgba(e28936ff) rgba(e1ad8dff) 45deg";
-        "col.inactive_border" = "rgba(655653cc)  rgba(3b3433cc) 45deg";
+        "col.inactive_border" = "rgba(655653cc) rgba(3b3433cc) 45deg";
 
         # Allow resizing windows by clicking and dragging on borders and gaps
         resize_on_border = false;
@@ -263,4 +286,12 @@ in {
   # https://github.com/fufexan/dotfiles/blob/17939d902a780a6db459312baa40940ff2a9c149/home/programs/wayland/hyprland/default.nix#L21C1-L21C84
   # I'm not super happy with this solution, but it works for now.
   xdg.dataFile."icons/${cursor}".source = "${cursorPackage}/share/icons/${cursor}";
+
+  home.pointerCursor = {
+    gtk.enable = true;
+    # x11.enable = true;
+    package = cursorPackage;
+    name = cursor;
+    size = cursor_size;
+  };
 }

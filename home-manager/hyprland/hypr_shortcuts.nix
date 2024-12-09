@@ -4,6 +4,8 @@
     # https://wiki.hyprland.org/Configuring/Keywords/
     "$mainMod" = "SUPER";
 
+    # Keep this in mind for spawning applications: https://wiki.hyprland.org/Useful-Utilities/Systemd-start/#launching-applications-inside-session
+
     # Bind flags:
     # l -> locked, will also work when an input inhibitor (e.g. a lockscreen) is active.
     # r -> release, will trigger on release of a key.
@@ -19,20 +21,20 @@
 
     # https://wiki.hyprland.org/Configuring/Binds/
     bind = [
-      "$mainMod, Q, exec, $terminal"
+      "$mainMod, Q, exec, uwsm app -- $terminal"
 
       "$mainMod, C, killactive,"
-      "$mainMod, M, exit,"
-      "$mainMod, E, exec, $fileManager"
+      "$mainMod, L, exec, hyprlock"
+      "$mainMod, E, exec, uwsm app -- $fileManager"
       "$mainMod, Z, togglefloating,"
       "$mainMod, P, pseudo," # dwindle
       "$mainMod, J, togglesplit," # dwindle
 
       # Screenshots
-      "$mainMod SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy"
+      "$mainMod SHIFT, S, exec, uwsm app -- grim -g \"$(slurp)\" - | wl-copy"
 
       # Color picker
-      "$mainMod SHIFT, C, exec, hyprpicker --autocopy"
+      "$mainMod SHIFT, C, exec, uwsm app -- hyprpicker --autocopy"
 
       # Move focus with mainMod + arrow keys
       "$mainMod, left, movefocus, l"

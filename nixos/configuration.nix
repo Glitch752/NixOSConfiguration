@@ -12,11 +12,7 @@
     ./nvidia.nix
   ];
 
-  desktopEnvironments.hyprland =  {
-    enable = true;
-    displayManager = "gdm";
-  };
-
+  desktopEnvironments.hyprland.enable = true;
   desktopEnvironments.gnome.enable = false;
 
   # Bootloader.
@@ -135,7 +131,11 @@
     neovim
 
     bluez # Bluetooth
+
+    dbus-broker # Alternative message broker implementation
   ];
+
+  systemd.packages = [ pkgs.dbus-broker ];
 
   # basic configuration of git, please change to your own
   programs.git = {

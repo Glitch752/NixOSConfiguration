@@ -2,13 +2,13 @@
   home.packages = [
     inputs.swww.packages.${pkgs.system}.swww
   ];
+
+  home.sessionVariables = {
+    WALLPAPERS_DIR = wallpaperDir;
+    WALLPAPER_STATE_FILE = "${config.home.homeDirectory}/.wallpapers";
+  };
   
   wayland.windowManager.hyprland.settings = {
-    env = [
-      "WALLPAPERS_DIR, ${wallpaperDir}"
-      "WALLPAPER_STATE_FILE, ${config.home.homeDirectory}/.wallpapers"
-    ];
-
     bind = [
       # Re-randomize the wallpaper when pressing Meta + `
       "$mainMod, Grave, exec, bash ${./randomize_wallpaper.sh}"

@@ -5,7 +5,6 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
-    nix-colors.url = "github:misterio77/nix-colors";
 
     # Home-manager, used for managing user configuration
     home-manager = {
@@ -37,7 +36,7 @@
     };
   };
   
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, hyprland, ... } @ inputs: let
+  outputs = { self, nixpkgs, home-manager, ... } @ inputs: let
     inherit (self) outputs customPackages;
   in {
     # NixOS configuration entrypoint

@@ -1,11 +1,8 @@
 # https://nixos-and-flakes.thiscute.world/nixos-with-flakes/start-using-home-manager
 { inputs, lib, config, pkgs, customPackages, ... }: {
   imports = [
-    inputs.nix-colors.homeManagerModule # TODO: Stylix instead? Maybe? https://github.com/danth/stylix
     ./hyprland/hyprland.nix
   ];
-
-  colorScheme = inputs.nix-colors.colorSchemes.dracula;
 
   home = {
     username = "brody";
@@ -61,8 +58,6 @@
 
     nemo-with-extensions # Nemo file manager with extensions
     qimgv # Qt5 image viewer
-
-    wev # A wayland event viewer
   ];
 
   programs.firefox.enable = true;
@@ -176,6 +171,10 @@
       {
         key = "ctrl+shift+tab";
         command = "workbench.action.previousEditorInGroup";
+      }
+      {
+        key = "ctrl+t";
+        command = "workbench.action.files.newUntitledFile";
       }
     ];
   };

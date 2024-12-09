@@ -16,13 +16,6 @@
           Enable the Hyprland desktop environment.
         '';
       };
-      displayManager = mkOption {
-        default = "greetd";
-        type = with types; strMatching "^(gdm|greetd)$";
-        description = ''
-          The display manager to use.
-        '';
-      };
     };
   };
 
@@ -43,37 +36,45 @@
 
     programs.hyprland = {
       enable = true;
-      # set the flake package
-      package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-      # make sure to also set the portal package, so that they are in sync
-      portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+
+      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+      portalPackage = inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
+
+      xwayland.enable = true;
+      withUWSM = true;
     };
 
-    # TODO: Systemd start with uwsm? https://wiki.hyprland.org/Useful-Utilities/Systemd-start/
-
-    # Gnome display manager
-    services.xserver.displayManager.gdm.enable = cfg.displayManager == "gdm";
-
-    # Greetd display manager
-    services.greetd = let
-      session = {
-        command = "${lib.getExe config.programs.uwsm.package} start hyprland-uwsm.desktop";
-        user = "mihai";
-      };
-    in {
-      enable = cfg.displayManager == "greetd";
-      settings = {
-        terminal.vt = 1;
-        default_session = session;
-        initial_session = session;
-      };
-    };
     programs.uwsm = {
-      enable = cfg.displayManager == "greetd";
-      waylandCompositors.hyprland = {
-        binPath = "/run/current-system/sw/bin/Hyprland";
-        prettyName = "Hyprland";
-        comment = "Hyprland managed by UWSM";
+      enable = true;
+      waylandCompositors = {
+        Hyprland = {
+          prettyName = "Hyprland";
+          comment = "Hyprland UWSM";
+          binPath = "/etc/profiles/per-user/quinn/bin/Hyprland";
+        };
+      };
+    };
+
+    xdg.portal = {
+      enable = true;
+      extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+    };
+    
+    # Required for hyprlock, which is installed at a user level
+    security = {
+      polkit.enable = true;
+      pam.services.hyprlock = {};
+    };
+
+    # This is a super hacky set up lol
+    services.greetd = {
+      enable = true;
+      settings = rec {
+        initial_session = {
+          command = "${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop";
+          user = "brody";
+        };
+        default_session = initial_session;
       };
     };
 
@@ -94,22 +95,7 @@
         # enableNvidiaPatches = true;
       })
 
-      # utils
       acpi # hardware states
-      eww
-      wl-clipboard
-      rofi
-      mpvpaper
-
-      slurp
-      grim
-
-      inputs.pyprland.packages.${pkgs.system}.pyprland
-      hyprpicker
-      hyprcursor
-      hyprlock
-      hypridle
-      hyprpaper
     ];
   };
 }

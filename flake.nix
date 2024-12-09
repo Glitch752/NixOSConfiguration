@@ -36,25 +36,25 @@
   };
   
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, hyprland, ... } @ inputs: let
-    inherit (self) outputs;
+    inherit (self) outputs customPackages;
   in {
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
     nixosConfigurations = {
       brody-nixos = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
+        specialArgs = { inherit inputs customPackages; };
 
         # All system configurations
         modules = [
           ./nixos/configuration.nix
-
+          
           # Make home-manager as a module of nixos so that home-manager configuration
           # will be deployed automatically when executing `nixos-rebuild switch`
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.users.brody = import ./home-manager/home.nix;
-            home-manager.extraSpecialArgs = {inherit inputs outputs;};
+            home-manager.extraSpecialArgs = { inherit inputs outputs customPackages; };
             home-manager.backupFileExtension = "backup";
           }
         ];

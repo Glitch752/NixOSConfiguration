@@ -62,6 +62,7 @@
       pkgs.stdenv.mkDerivation {
         name = "anyrun-css";
         src = ./styles;
+        version = "v0.1.0";
         phases = [ "buildPhase" ];
         buildInputs = [ pkgs.sassc ];
         buildPhase = ''

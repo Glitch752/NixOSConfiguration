@@ -1,5 +1,5 @@
 # https://nixos-and-flakes.thiscute.world/nixos-with-flakes/start-using-home-manager
-{ inputs, lib, config, pkgs, ... }: {
+{ inputs, lib, config, pkgs, customPackages, ... }: {
   imports = [
     inputs.nix-colors.homeManagerModule # TODO: Stylix instead? Maybe? https://github.com/danth/stylix
     ./hyprland/hyprland.nix
@@ -60,6 +60,7 @@
     spotube # Spotify client using Youtube as an audio source
 
     nemo-with-extensions # Nemo file manager with extensions
+    qimgv # Qt5 image viewer
   ];
 
   programs.firefox.enable = true;
@@ -84,6 +85,23 @@
     enable = true;
     userName = "Glitch752";
     userEmail = "xxGlitch752xx@gmail.com";
+  };
+
+  programs.kitty = {
+    enable = true;
+    package = pkgs.kitty;
+    # The kitty.conf file
+    extraConfig = ''
+      # https://sw.kovidgoyal.net/kitty/conf.html
+      # 10% background opacity
+      background_opacity 0.1
+      confirm_os_window_close 0
+      single_window_margin_width 20
+      
+      map ctrl+shift+f toggle_fullscreen
+      map ctrl+w close_tab
+      map ctrl+t new_tab
+    '';
   };
 
   programs.bash = {

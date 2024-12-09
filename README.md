@@ -12,3 +12,4 @@ Inspired by the following configurations and resources:
 - https://github.com/Jas-SinghFSU/HyprPanel/tree/master
 - https://github.com/SoraTenshi/nixos-config
 - https://github.com/RoccoRakete/hyprland-dots
+- https://github.com/fufexan/dotfiles

@@ -59,7 +59,7 @@ window.bar {
     }
 
     .workspaces {
-        .focused label {
+        .focused {
             color: colors.$accent;
             border-color: colors.$accent;
         }
@@ -69,8 +69,6 @@ window.bar {
         >button:hover {
             color: color.adjust(colors.$accent, $lightness: 20%);
         }
-
-        margin: 0px 10px;
 
         font-size: 16px;
         color: colors.$mutedText;
@@ -106,19 +104,20 @@ window.bar {
 
     // Right panel
     .resourceUtilization {
-        icon {
-            font-size: 20px;
-            color: colors.$accent;
-            padding-left: 10px;
-            padding-right: 0;
+        font-size: 11px;
+        // Minimum width to avoid reflow when the text is its maximum length
+        min-width: 84px;
+        .name {
+            min-width: 36px;
+            
+            label {
+                color: colors.$accent;
+                padding: 0;
+                margin: 0;
+            }
         }
-        label {
+        .cpu, .ram {
             color: colors.$mutedText;
-            min-width: 60px;
-            padding-top: 2px; // Makes the text more visually centered
-        }
-        label.ram {
-            padding-right: 10px;
         }
     }
 
@@ -137,6 +136,7 @@ window.bar {
         }
 
         icon {
+            color: colors.$accent;
             margin-right: 8px;
         }
 
@@ -165,7 +165,18 @@ window.bar {
             padding-left: 0;
         }
     }
-    .timeLabel {
-        margin-right: 10px;
+
+    .time {
+        margin-right: 12px;
+        font-weight: normal;
+
+        .timeLabel {
+            color: colors.$fg;
+            font-size: 13px;
+        }
+        .dateLabel {
+            color: colors.$mutedText;
+            font-size: 11px;
+        }
     }
 }

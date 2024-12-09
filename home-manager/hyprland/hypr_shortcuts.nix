@@ -25,7 +25,6 @@
       "$mainMod, M, exit,"
       "$mainMod, E, exec, $fileManager"
       "$mainMod, Z, togglefloating,"
-      "$mainMod, R, exec, $menu"
       "$mainMod, P, pseudo," # dwindle
       "$mainMod, J, togglesplit," # dwindle
 
@@ -65,13 +64,22 @@
       "$mainMod SHIFT, 9, movetoworkspace, 9"
       "$mainMod SHIFT, 0, movetoworkspace, 10"
 
-      # Scratchpad special workspace
-      "$mainMod, A, togglespecialworkspace, magic:"
-      "$mainMod SHIFT, A, movetoworkspace, special:magic:"
+      # A special workspace to hide windows
+      # mainMod + DOWN toggles the currently-hidden window
+      "$mainMod, DOWN, togglespecialworkspace, hidden"
+      "$mainMod, DOWN, movetoworkspace, +0"
+      "$mainMod, DOWN, togglespecialworkspace, hidden"
+      "$mainMod, DOWN, movetoworkspace, special:hidden"
+      "$mainMod, DOWN, togglespecialworkspace, hidden"
 
       # Scroll through existing workspaces with mainMod + scroll
       "$mainMod, mouse_down, workspace, e+1"
       "$mainMod, mouse_up, workspace, e-1"
+
+      # Groups
+      "$mainMod, G, togglegroup"
+      "$mainMod, TAB, changegroupactive, f"
+      "$mainMod SHIFT, TAB, changegroupactive, b"
     ];
 
     # Move/resize windows with mainMod + LMB/RMB and dragging

@@ -1,4 +1,7 @@
-{ inputs, lib, config, pkgs, ... }: {
+{ inputs, lib, config, pkgs, customPackages, ... }: let
+  cursor = "Bibata-Modern-Classic-Hyprcursor";
+  cursorPackage = pkgs.callPackage ./bibata-hyprcursor {};
+in {
   # TODO: Only include if hyprland is enabled as the desktop environment
 
   imports = [
@@ -46,8 +49,7 @@
       ];
 
       "$terminal" = "kitty";
-      "$fileManager" = "dolphin";
-      "$menu" = "wofi --show drun";
+      "$fileManager" = "nemo";
 
       exec-once = [
         "firefox"
@@ -73,13 +75,13 @@
 
       general = {
         gaps_in = 5;
-        gaps_out = 20;
-
+        gaps_out = 10;
         border_size = 2;
 
         # https://wiki.hyprland.org/Configuring/Variables/#variable-types
-        "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        "col.inactive_border" = "rgba(595959aa)";
+        # "col.active_border" = "rgba(cc945fff) rgba(e1ad8dff) 45deg";
+        "col.active_border" = "rgba(e28936ff) rgba(e1ad8dff) 45deg";
+        "col.inactive_border" = "rgba(655653cc)  rgba(3b3433cc) 45deg";
 
         # Allow resizing windows by clicking and dragging on borders and gaps
         resize_on_border = false;
@@ -107,9 +109,19 @@
         # https://wiki.hyprland.org/Configuring/Variables/#blur
         blur = {
           enabled = true;
-          size = 3;
-          passes = 1;
-          vibrancy = 0.1696;
+
+          size = 8;
+          passes = 3;
+          noise = 0.0117; # [0, 1]
+          contrast = 0.8916; # [0, 2]
+          brightness = 0.8172; # [0, 2]
+          vibrancy = 0.1696; # [0, 1]
+          vibrancy_darkness = 0; # [0, 1]
+
+          ignore_opacity = true;
+          new_optimizations = true;
+          # Make windows ignore windows beneath them; improves performance but can look weird with floating windows
+          xray = false;
         };
       };
 
@@ -147,7 +159,6 @@
 
       # https://wiki.hyprland.org/Configuring/Workspace-Rules/
       # "Smart gaps" / "No gaps when only"
-      # uncomment all if you wish to use that.
       # workspace = w[tv1], gapsout:0, gapsin:0
       # workspace = f[1], gapsout:0, gapsin:0
       # windowrulev2 = bordersize 0, floating:0, onworkspace:w[tv1]
@@ -206,6 +217,17 @@
 
         # Always float Nemo windows (file manager)
         "float, class:(nemo)"
+        # Always float Kitty windows and make them transparent (terminal)
+        # "float, class:(kitty)" # Not so sure about this one
+        # 80% opacity when active, 50% when inactive, 90% when fullscreen
+        # Nevermind -- I now do this in my kitty config
+        # "opacity 0.8 override 0.5 override 0.9 override, class:(kitty)"
+      ];
+
+      layerrule = [
+        # Blur the background when Anyrun is open
+        # This doesn't look great since I use a really aggressive blur
+        # "blur, ^anyrun$"
       ];
 
       # Helps when using NVidia drivers
@@ -233,4 +255,9 @@
       name = "Adwaita";
     };
   };
+
+  # Cursor theme
+  # https://github.com/fufexan/dotfiles/blob/17939d902a780a6db459312baa40940ff2a9c149/home/programs/wayland/hyprland/default.nix#L21C1-L21C84
+  # I'm not super happy with this solution, but it works for now.
+  xdg.dataFile."icons/${cursor}".source = "${cursorPackage}/share/icons/${cursor}";
 }

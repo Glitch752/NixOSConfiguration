@@ -25,13 +25,20 @@ function Workspaces() {
 
     return <box className="workspaces">
         {bind(hypr, "workspaces").as(wss => wss
+            // .filter(ws => ws.id > 0) // Negative-numbered workspaces are special ones that we don't want to show
             .sort((a, b) => a.id - b.id)
             .map(ws => (
                 <button
                     className={bind(hypr, "focusedWorkspace").as(fw =>
                         ws === fw ? "focused" : "")}
-                    onClicked={() => ws.focus()}>
-                    {ws.id}
+                    tooltipText={`${ws.name}: Workspace ${ws.id} with ${ws.get_clients().length} clients${ws.id < 0 ? " (special; moves windows to focused workspace)" : ""}`}
+                    onClicked={() => {
+                        if(ws.id > 0) ws.focus();
+                        else {
+                            ws.get_clients().forEach(c => c.move_to(hypr.focusedWorkspace));
+                        }
+                    }}>
+                    {ws.name}
                 </button>
             ))
         )}
@@ -112,11 +119,21 @@ function ResourceUtilization() {
     const RAMUsage = Variable(0).poll(1000, ["bash", "-c", "free | awk '/Mem:/ {print $3/$2 * 100}'"], parseFloat);   
 
     return <button onClick={() => execAsync("missioncenter")} tooltipText="Resource Utilization">
-        <box className="resourceUtilization">
-            <icon icon="processor" />
-            <label label={CPUUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => CPUUsage.drop()} tooltipText="CPU utilization" />
-            <icon icon="memory" />
-            <label label={RAMUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => RAMUsage.drop()} tooltipText="RAM utilization" className="ram" />
+        <box vertical className="resourceUtilization" valign={Gtk.Align.CENTER} halign={Gtk.Align.START}>
+            <box>
+                {/* <icon icon="processor" className="name" /> */}
+                <box className="name">
+                    <label label={"CPU"} halign={Gtk.Align.START} />
+                </box>
+                <label label={CPUUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => CPUUsage.drop()} hexpand halign={Gtk.Align.START} className="cpu" />
+            </box>
+            <box>
+                {/* <icon icon="memory" className="name" /> */}
+                <box className="name">
+                    <label label={"RAM"} halign={Gtk.Align.START} />
+                </box>
+                <label label={RAMUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => RAMUsage.drop()} hexpand halign={Gtk.Align.START} className="ram" />
+            </box>
         </box>
     </button>
 }
@@ -169,12 +186,13 @@ function BatteryLevel() {
 
 function Time() {
     const shortTime = Variable("").poll(1000, 'date "+%l:%M:%S %p"');
-    const shortDate = Variable("").poll(1000, 'date "+%m/%d/%Y');
+    const shortDate = Variable("").poll(1000, 'date "+%m/%d/%Y"');
     const tooltipText = Variable("").poll(1000, 'date "+%A, %B %d %Y - %m/%d/%y - %H:%M:%S %Z"');
     return <box
         vertical
         tooltipText={tooltipText()}
         className="time"
+        valign={Gtk.Align.CENTER}
         onDestroy={() => {
             shortTime.drop();
             shortDate.drop();
@@ -226,6 +244,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
             <box hexpand halign={Gtk.Align.END}>
                 {/* Right panel */}
+
+                {/* TODO: Pomodoro timer? */}
 
                 <SystemTray />
 

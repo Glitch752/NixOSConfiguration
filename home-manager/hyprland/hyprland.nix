@@ -1,6 +1,7 @@
 { inputs, lib, config, pkgs, customPackages, ... }: let
-  cursor = "Bibata-Modern-Classic-Hyprcursor";
+  cursor = "Bibata-Original-Classic-Hyprcursor";
   cursorPackage = pkgs.callPackage ./bibata-hyprcursor {};
+  cursor_size = 24;
 in {
   # TODO: Only include if hyprland is enabled as the desktop environment
 
@@ -44,8 +45,8 @@ in {
 
         "ELECTRON_OZONE_PLATFORM_HINT,auto" # Can fix flickering in Electron apps
 
-        "XCURSOR_SIZE,24"
-        "HYPRCURSOR_SIZE,24"
+        "XCURSOR_SIZE,${toString cursor_size}"
+        "HYPRCURSOR_SIZE,${toString cursor_size}"
       ];
 
       "$terminal" = "kitty";
@@ -54,7 +55,7 @@ in {
       exec-once = [
         "firefox"
         # hyprpaper
-        # hyprctl setcursor ???? 32
+        "hyprctl setcursor ${cursor} ${toString cursor_size}"
 
         "dbus-update-activation-environment --systemd --all"
         "systemctl --user import-environment QT_QPA_PLATFORMTHEME WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"

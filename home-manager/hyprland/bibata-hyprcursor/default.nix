@@ -6,10 +6,16 @@
   python3,
   python3Packages,
   hyprcursor,
-  variant ? "modern",
+
+  # Modern, Modern-Right, Original, or Original-Right; modern is rounded, original is square
+  variant ? "original",
+  
   baseColor ? "#000000",
   outlineColor ? "#FFFFFF",
+
   watchBackgroundColor ? "#000000",
+
+  # Classic, Amber, Ice, or Custom
   colorName ? "classic",
 }:
 

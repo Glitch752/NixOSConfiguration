@@ -1,3 +1,3 @@
 # {username} | {uptime}
 
-echo "$(whoami) | Up $(uptime | awk '{print $3}' | sed 's/,//g')"
+echo "$(whoami) | Uptime: $(uptime | awk '{print $3}' | sed 's/,//g')"

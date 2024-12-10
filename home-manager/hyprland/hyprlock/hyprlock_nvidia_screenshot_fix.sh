@@ -15,4 +15,4 @@ for wallpaper in "${wallpapers[@]}"; do
 done
 
 # Finally, actually open hyprlock
-hyprlock
+hyprlock "$@"

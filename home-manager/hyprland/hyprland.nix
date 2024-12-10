@@ -60,8 +60,7 @@ in {
 
   # TODO: Configure hypridle https://github.com/hyprwm/hypridle
   # TODO: Configure pyprland https://github.com/hyprland-community/pyprland
-  # ...or sww? https://github.com/LGFae/swww
-
+  
   # TODO: Look into https://github.com/hyprland-community/hyprland-autoname-workspaces
 
   # https://gitlab.com/Zaney/zaneyos/-/blob/main/config/hyprland.nix
@@ -81,7 +80,7 @@ in {
 
       # We should use uwsm app -- <app> instead of spawning apps as a child process
       exec-once = [
-        "$lockScreen" # We automatically boot into hyprland, so we need to lock the screen on startup
+        "$lockScreen --no-fade-in --immediate-render" # We automatically boot into hyprland, so we need to lock the screen on startup
 
         "uwsm app -- firefox"
         "hyprctl setcursor ${cursor} ${toString cursor_size}"

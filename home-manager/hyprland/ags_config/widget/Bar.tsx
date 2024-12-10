@@ -1,5 +1,5 @@
 import { App, Astal, Gtk, Gdk } from "astal/gtk3"
-import { Variable, bind, execAsync } from "astal"
+import { Binding, Variable, bind, execAsync } from "astal"
 import Hyprland from "gi://AstalHyprland"
 import Wp from "gi://AstalWp"
 import Network from "gi://AstalNetwork"
@@ -7,6 +7,7 @@ import Battery from "gi://AstalBattery"
 import Tray from "gi://AstalTray"
 import Mpris from "gi://AstalMpris"
 import { openMediaControls } from "../app"
+import { mergeBindings } from "astal/gtk3/astalify"
 
 function limitLength(s: string, n: number) {
     return s.length > n ? s.slice(0, n - 3) + "..." : s;
@@ -141,6 +142,7 @@ function ResourceUtilization() {
 function Bluetooth() {
     return <button className="bluetooth" onCLicked={() => execAsync("overskride")}>
         <icon
+            tooltipText="Bluetooth"
             className="bluetoothIcon"
             icon="bluetooth"
         />

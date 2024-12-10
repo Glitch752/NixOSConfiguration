@@ -7,6 +7,9 @@ in {
 
   imports = [
     ./ags.nix
+    # ./wayvnc.nix # TODO: Figure out how to get this working
+    ./pyprland.nix
+
     ./anyrun/anyrun.nix
     ./swww/swww.nix
     ./hyprlock/hyprlock.nix
@@ -48,9 +51,6 @@ in {
   home.packages = with pkgs; [
     hyprpicker
     hyprcursor
-    hyprlock
-    hypridle
-    inputs.pyprland.packages.${pkgs.system}.pyprland
 
     wev # A wayland event viewer
 

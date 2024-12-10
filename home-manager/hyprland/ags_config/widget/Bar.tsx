@@ -7,7 +7,6 @@ import Battery from "gi://AstalBattery"
 import Tray from "gi://AstalTray"
 import Mpris from "gi://AstalMpris"
 import { openMediaControls } from "../app"
-import { mergeBindings } from "astal/gtk3/astalify"
 
 function limitLength(s: string, n: number) {
     return s.length > n ? s.slice(0, n - 3) + "..." : s;
@@ -32,7 +31,7 @@ function Workspaces() {
                 <button
                     className={bind(hypr, "focusedWorkspace").as(fw =>
                         ws === fw ? "focused" : "")}
-                    tooltipText={`${ws.name}: Workspace ${ws.id} with ${ws.get_clients().length} clients${ws.id < 0 ? " (special; moves windows to focused workspace)" : ""}`}
+                    tooltipText={`"${ws.name}": Workspace ${ws.id}${ws.id < 0 ? " (special; moves windows to focused workspace)" : ""}`}
                     onClicked={() => {
                         if(ws.id > 0) ws.focus();
                         else {

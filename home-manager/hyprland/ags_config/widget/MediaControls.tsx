@@ -6,6 +6,9 @@ import Pango from "gi://Pango?version=1.0";
 
 // const FloatingWindow = astalify(Gtk.Window);
 
+// TODO: Allow selecting what controls are shown and modifying what the
+// bar shows (e.g. the title, time, nothing)
+
 export default function MediaControls(monitor: Gdk.Monitor): Gtk.Window | null {
     const mpris = Mpris.get_default();
     return <window

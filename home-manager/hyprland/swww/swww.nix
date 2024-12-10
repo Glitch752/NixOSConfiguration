@@ -6,6 +6,7 @@
   home.sessionVariables = {
     WALLPAPERS_DIR = wallpaperDir;
     WALLPAPER_STATE_FILE = "${config.home.homeDirectory}/.wallpapers";
+    DISABLED_WALLPAPERS_STATE_FILE = "${config.home.homeDirectory}/.disabled_wallpapers";
   };
   
   wayland.windowManager.hyprland.settings = {

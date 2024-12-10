@@ -60,6 +60,7 @@
     # Nevermind... nemo crashes wayland on my system lol
 
     qimgv # Qt5 image viewer
+    imagemagick # Image manipulation programs
   ];
   
   programs.firefox.enable = true;
@@ -122,6 +123,7 @@
       explorer = "thunar";
       files = "thunar";
       browse = "thunar";
+      view = "qimgv";
     };
     history = {
       size = 10000;

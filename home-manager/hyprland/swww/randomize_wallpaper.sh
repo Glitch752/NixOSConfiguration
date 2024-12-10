@@ -3,15 +3,33 @@
 # stored in the Nix store
 wallpapers=($(find $WALLPAPERS_DIR -maxdepth 1 -type f,l))
 
+# If WALLPAPER_STATE_FILE or DISABLED_WALLPAPERS_STATE_FILE are not set, error
+if [ -z $WALLPAPER_STATE_FILE ] || [ -z $DISABLED_WALLPAPERS_STATE_FILE ]; then
+  echo "WALLPAPER_STATE_FILE and DISABLED_WALLPAPERS_STATE_FILE must be set"
+  exit 1
+fi
+
 # If the state file does not exist, create it
 if [ ! -f $WALLPAPER_STATE_FILE ]; then
   touch $WALLPAPER_STATE_FILE
 fi
 
+# If the disabled wallpapers state file doesn't exist, create it
+if [ ! -f $DISABLED_WALLPAPERS_STATE_FILE ]; then
+  touch $DISABLED_WALLPAPERS_STATE_FILE
+fi
+
+# Read the disabled wallpapers state file into an array
+# TODO: An ags widget to select what wallpapers are active
+mapfile -t disabled_wallpapers < $DISABLED_WALLPAPERS_STATE_FILE
+
 # Read the wallpapers in the directory and store them in an array
 wallpapers=()
 while IFS= read -r wallpaper; do
-  wallpapers+=("$wallpaper")
+  # If the wallpaper is not in the disabled wallpapers array, add it to the wallpapers array
+  if [[ ! " ${disabled_wallpapers[@]} " =~ " $(basename $wallpaper) " ]]; then
+    wallpapers+=("$wallpaper")
+  fi
 done < <(find "$WALLPAPERS_DIR" -type f,l)
 
 # Read the state file into an array

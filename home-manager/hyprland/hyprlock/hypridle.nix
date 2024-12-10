@@ -1,4 +1,8 @@
 { inputs, lib, config, pkgs, ... }: {
+  home.packages = with pkgs; [
+    hypridle
+  ];
+
   # https://wiki.hyprland.org/Hypr-Ecosystem/hypridle/
   # Will automatically enable the systemd service
   services.hypridle = {

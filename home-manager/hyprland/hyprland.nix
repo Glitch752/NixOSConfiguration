@@ -10,6 +10,7 @@ in {
     ./anyrun/anyrun.nix
     ./swww/swww.nix
     ./hyprlock/hyprlock.nix
+    ./hyprlock/hypridle.nix
     ./hypr_shortcuts.nix
   ];
 

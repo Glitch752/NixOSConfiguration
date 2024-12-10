@@ -1,129 +1,40 @@
 { inputs, lib, config, pkgs, ... }: {
-  programs.hyprlock = {
+  # https://wiki.hyprland.org/Hypr-Ecosystem/hypridle/
+  # Will automatically enable the systemd service
+  services.hypridle = {
     enable = true;
 
-    # https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/
-
-    # Inspired by https://github.com/justinmdickey/publicdots/tree/main
     settings = {
       general = {
-        disable_loading_bar = false;
-        grace = 0;
-        hide_cursor = true;
-        no_fade_in = false;
-        # enable_fingerprint TODO once I get this set up on my laptop
+        ignore_dbus_inhibit = false;
+        lock_cmd = "pidof hyprlock || hyprlock";       # avoid starting multiple hyprlock instances.
+        before_sleep_cmd = "loginctl lock-session";    # lock before suspend.
+        after_sleep_cmd = "hyprctl dispatch dpms on";  # to avoid having to press a key twice to turn on the display.
       };
 
-      background = [
-        # Path=screenshot is broken on Nvidia hardware. We manually take a screenshot with grim for each monitor instead.
+      listener = [
+        # TODO: Enable only when on laptop
         # {
-        #   monitor = "DP-1";
-        #   path = "/tmp/dp-1-lock.png";
-        #   blur_passes = 3;
-        #   blur_size = 2;
+        #   timeout = 150;                          # 2.5min.
+        #   on-timeout = "brightnessctl -s set 10"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
+        #   on-resume = "brightnessctl -r";         # monitor backlight restore.
         # }
-        # {
-        #   monitor = "HDMI-A-2";
-        #   path = "/tmp/hdmi-a-2-lock.png";
-        #   blur_passes = 3;
-        #   blur_size = 2;
-        # }
-        # {
-        #   monitor = "HDMI-A-1";
-        #   path = "/tmp/hdmi-a-1-lock.png";
-        #   blur_passes = 3;
-        #   blur_size = 2;
+        # { # Turn off keyboard backlight, comment out this section if you dont have a keyboard backlight. 
+        #   timeout = 150;                                            # 2.5min.
+        #   on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # turn off keyboard backlight.
+        #   on-resume = "brightnessctl -rd rgb:kbd_backlight";        # turn on keyboard backlight.
         # }
 
-        # Non-monitor-specific backgrounds load much faster;
-        # maybe there's a way to decompress and lower the quality of the images first before opening hyprlock though?
         {
-          path = "/tmp/dp-1-lock.png";
-          blur_passes = 3;
-          blur_size = 2;
+          timeout = 600; # 10 minutes
+          # Lock screen
+          on-timeout = "hyprlock";
         }
-      ];
-
-      input-field = [
         {
-          monitor = "";
-          size = "350, 55";
-          outline_thickness = 2;
-          # Scale of input-field height, 0.2 - 0.8
-          dots_size = 0.2;
-          # Scale of dots' absolute size, 0.0 - 1.0
-          dots_spacing = 0.35;
-          dots_center = true;
-          outer_color = "rgba(0, 0, 0, 0)";
-          inner_color = "rgba(0, 0, 0, 0.3)";
-          font_color = "rgba(255, 255, 255, 1)";
-          fade_on_empty = false;
-          rounding = 10;
-          check_color = "rgba(201, 177, 140, 0.3)";
-          placeholder_text = ''<i><span foreground="##cdd6f4">Password...</span></i>'';
-          hide_input = false;
-          position = "0, -150";
-          halign = "center";
-          valign = "center";
-        }
-      ];
-
-      label = [ # Positive positions are upward
-        { # Date
-          monitor = "";
-          text = ''cmd[update:1000] date +"%A, %B %d"'';
-          color = "rgba(242, 243, 244, 0.75)";
-          font_size = 22;
-          font_family = "JetBrains Mono";
-          position = "0, 200";
-          halign = "center";
-          valign = "center";
-          zindex = 5;
-        }
-        { # Date shadow
-          monitor = "";
-          text = ''cmd[update:1000] date +"%A, %B %d"'';
-          color = "rgba(0, 0, 0, 0.75)";
-          font_size = 22;
-          font_family = "JetBrains Mono";
-          position = "2, 198";
-          halign = "center";
-          valign = "center";
-          zindex = 4;
-        }
-
-        { # Time
-          monitor = "";
-          text = ''cmd[update:1000] date +"%-I:%M"'';
-          color = "rgba(242, 243, 244, 0.75)";
-          font_size = 95;
-          font_family = "JetBrains Mono Extrabold";
-          position = "0, 100";
-          halign = "center";
-          valign = "center";
-          zindex = 5;
-        }
-        { # Time shadow
-          monitor = "";
-          text = ''cmd[update:1000] date +"%-I:%M"'';
-          color = "rgba(0, 0, 0, 0.75)";
-          font_size = 95;
-          font_family = "JetBrains Mono Extrabold";
-          position = "4, 96";
-          halign = "center";
-          valign = "center";
-          zindex = 4;
-        }
-
-        { # User
-          monitor = "";
-          text = ''cmd[update:1000] sh ${./scripts/userInfo.sh}'';
-          color = "rgba(255, 255, 255, 0.8)";
-          font_size = 18;
-          font_family = "JetBrains Mono";
-          position = "0, 40";
-          halign = "center";
-          valign = "bottom";
+          timeout = 1200; # 20 minutes
+          # Screen off
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume = "hyprctl dispatch dpms on";
         }
       ];
     };

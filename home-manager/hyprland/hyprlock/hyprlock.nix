@@ -18,36 +18,6 @@
         # enable_fingerprint TODO once I get this set up on my laptop
       };
 
-      background = [
-        # Path=screenshot is broken on Nvidia hardware. We manually take a screenshot with grim for each monitor instead.
-        # {
-        #   monitor = "DP-1";
-        #   path = "/tmp/dp-1-lock.png";
-        #   blur_passes = 3;
-        #   blur_size = 2;
-        # }
-        # {
-        #   monitor = "HDMI-A-2";
-        #   path = "/tmp/hdmi-a-2-lock.png";
-        #   blur_passes = 3;
-        #   blur_size = 2;
-        # }
-        # {
-        #   monitor = "HDMI-A-1";
-        #   path = "/tmp/hdmi-a-1-lock.png";
-        #   blur_passes = 3;
-        #   blur_size = 2;
-        # }
-
-        # Non-monitor-specific backgrounds load much faster;
-        # maybe there's a way to decompress and lower the quality of the images first before opening hyprlock though?
-        {
-          path = "/tmp/dp-1-lock.png";
-          blur_passes = 3;
-          blur_size = 2;
-        }
-      ];
-
       input-field = [
         {
           monitor = "";

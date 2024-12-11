@@ -1,7 +1,6 @@
-# https://nixos-and-flakes.thiscute.world/nixos-with-flakes/start-using-home-manager
-{ inputs, lib, config, pkgs, customPackages, ... }: {
+{ inputs, lib, config, pkgs, ... }: {
   imports = [
-    ./hyprland/hyprland.nix
+    ../hyprland/hyprland.nix
   ];
 
   home = {
@@ -93,8 +92,8 @@
     # The kitty.conf file
     extraConfig = ''
       # https://sw.kovidgoyal.net/kitty/conf.html
-      # 10% background opacity
-      background_opacity 0.1
+      # 30% background opacity
+      background_opacity 0.3
       confirm_os_window_close 0
       single_window_margin_width 20
       

@@ -1,31 +1,14 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+# TODO: Reorganize this configuration file.
 
 { inputs, outputs, lib, config, pkgs, ... }: {
-  imports = [ # Include the results of the hardware scan.
-    ./hardware-configuration.nix
+  imports = [
     ./desktopEnvironments/gnome_x11.nix
     ./desktopEnvironments/hyprland.nix
-
-    # TODO: Only use for environments that require NVIDIA drivers.
-    ./nvidia.nix
   ];
 
   desktopEnvironments.hyprland.enable = true;
   desktopEnvironments.gnome.enable = false;
 
-  # Bootloader.
-  # TODO: Switch to grub and style it.
-  boot.loader = {
-    systemd-boot.enable = true;
-    systemd-boot.configurationLimit = 5;
-    efi.canTouchEfiVariables = true;
-  };
-  boot.kernelParams = [ "module_blacklist=amdgpu" ];
-  boot.supportedFilesystems = [ "ntfs" ];
-
-  networking.hostName = "brody-nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -51,8 +34,6 @@
     LC_TELEPHONE = "en_US.UTF-8";
     LC_TIME = "en_US.UTF-8";
   };
-
-  # TODO: https://wiki.hyprland.org/Nix/Hyprland-on-NixOS/ ???
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -103,17 +84,6 @@
   # Configured at a user level, but enabled at a system level.
   programs.zsh.enable = true;
 
-  # Enable the OpenSSH server.
-  services.openssh = {
-    enable = true;
-    settings = {
-      # Forbid root login through SSH.
-      PermitRootLogin = "no";
-      # Remove if SSH using passwords is needed
-      PasswordAuthentication = false;
-    };
-  };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -150,8 +120,6 @@
   services.gvfs.enable = true; # Mount, trash, and other functionalities
   services.tumbler.enable = true; # Thumbnail support for images
 
-
-  # basic configuration of git, please change to your own
   programs.git = {
     enable = true;
     config.credential.helper = "oauth";
@@ -173,11 +141,6 @@
   #   enableSSHSupport = true;
   # };
 
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
@@ -191,5 +154,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }

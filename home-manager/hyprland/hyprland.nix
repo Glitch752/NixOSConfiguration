@@ -1,9 +1,9 @@
-{ inputs, lib, config, pkgs, customPackages, ... }: let
+{ inputs, lib, config, pkgs, ... }: let
   cursor = "Bibata-Original-Classic-Hyprcursor";
   cursorPackage = pkgs.callPackage ./bibata-hyprcursor {};
   cursor_size = 24;
 in {
-  # TODO: Only include if hyprland is enabled as the desktop environment
+  # TODO: Only include if hyprland is enabled as the desktop environment?
 
   imports = [
     ./ags.nix
@@ -59,9 +59,7 @@ in {
     wl-clipboard # Wayland clipboard utilities
   ];
 
-  # TODO: Configure hypridle https://github.com/hyprwm/hypridle
-  # TODO: Configure pyprland https://github.com/hyprland-community/pyprland
-  
+  # TODO: Configure pyprland https://github.com/hyprland-community/pyprland  
   # TODO: Look into https://github.com/hyprland-community/hyprland-autoname-workspaces
 
   # https://gitlab.com/Zaney/zaneyos/-/blob/main/config/hyprland.nix
@@ -74,7 +72,7 @@ in {
     settings = {
       "$terminal" = "uwsm app -- kitty";
       "$fileManager" = "uwsm app -- thunar";
-      "$lockScreen" = "uwsm app -- sh ${./hyprlock/hyprlock_nvidia_screenshot_fix.sh}";
+      "$lockScreen" = lib.mkDefault "uwsm app -- sh ${./hyprlock/hyprlock_nvidia_screenshot_fix.sh}";
 
       # Note: environment variables should be set in the env files
       # above instead of here. I think. Maybe.
@@ -82,21 +80,12 @@ in {
       # We should use uwsm app -- <app> instead of spawning apps as a child process
       exec-once = [
         "$lockScreen --no-fade-in --immediate-render" # We automatically boot into hyprland, so we need to lock the screen on startup
-
-        "uwsm app -- firefox"
         "hyprctl setcursor ${cursor} ${toString cursor_size}"
       ];
 
       # https://wiki.hyprland.org/Configuring/Monitors/
       monitor = [
-        # Position (0, 0), fractional scaling of 1.25x
-        # "DP-1, 2560x1440@179.88, 0x0, 1.25"
-        # Fractional scaling causes flickering and other weird issues.
-        # I could debug it, but I'm fine with 1x scaling for now.
-        "DP-1, 2560x1440@179.88, 0x0, 1"
-        "HDMI-A-2, 1600x900@60, 2560x270, 1"
-        "HDMI-A-1, 1920x1080@119.98, -1920x180, 1"
-
+        # Configured per host
         ", preferred, auto, 1"
       ];
 
@@ -106,7 +95,6 @@ in {
         border_size = 2;
 
         # https://wiki.hyprland.org/Configuring/Variables/#variable-types
-        # "col.active_border" = "rgba(cc945fff) rgba(e1ad8dff) 45deg";
         "col.active_border" = "rgba(e28936ff) rgba(e1ad8dff) 45deg";
         "col.inactive_border" = "rgba(655653cc) rgba(3b3433cc) 45deg";
 
@@ -137,7 +125,7 @@ in {
         blur = {
           enabled = true;
 
-          size = 8;
+          size = 7;
           passes = 3;
           noise = 0.0117; # [0, 1]
           contrast = 0.8916; # [0, 2]
@@ -213,22 +201,6 @@ in {
         disable_hyprland_logo = false;
       };
 
-      input = {
-        kb_layout = "us";
-        kb_variant = "";
-        kb_model = "";
-        kb_options = "";
-        kb_rules = "";
-
-        follow_mouse = 1;
-
-        # [-1.0, 1.0]; 0 is default.
-        sensitivity = -0.6;
-
-        touchpad = {
-            natural_scroll = false;
-        };
-      };
       gestures = {
         workspace_swipe = false;
       };

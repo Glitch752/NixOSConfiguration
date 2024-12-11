@@ -74,6 +74,8 @@
     bindm = [
       "$mainMod, mouse:272, movewindow"
       "$mainMod, mouse:273, resizewindow"
+      # Also resize with mainMod + alt since it's easier on my laptop
+      "$mainMod ALT_L, mouse:272, resizewindow"
     ];
 
     bindel = [

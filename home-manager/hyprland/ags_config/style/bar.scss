@@ -163,8 +163,12 @@ window.bar {
 
     .battery {
         label {
-            padding-left: 0;
+            padding-left: 5px;
         }
+        icon {
+            margin-bottom: 3px; // Makes the icon more visually centered
+        }
+        padding: 0 10px;
     }
 
     .time {

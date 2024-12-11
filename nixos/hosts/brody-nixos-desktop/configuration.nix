@@ -19,7 +19,7 @@
   boot.supportedFilesystems = [ "ntfs" ];
 
 
-  networking.hostName = "brody-nixos-desktop"; # Define your hostname.
+  networking.hostName = "brody-nixos-desktop";
 
   # Enable the OpenSSH server.
   services.openssh = {

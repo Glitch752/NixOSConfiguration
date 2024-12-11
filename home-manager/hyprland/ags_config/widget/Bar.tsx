@@ -164,7 +164,7 @@ function AudioSlider() {
     const speaker = Wp.get_default()?.audio.defaultSpeaker!;
 
     return <box className="audio">
-        <icon icon={bind(speaker, "volumeIcon")} />
+        <icon icon={bind(speaker, "volumeIcon").as(icon => icon ?? "audio-volume-low-symbolic")} />
         <slider
             hexpand
             onDragged={({ value }) => speaker.volume = value}
@@ -176,11 +176,10 @@ function AudioSlider() {
 function BatteryLevel() {
     const battery = Battery.get_default();
 
-    return <box className="battery"
-        visible={bind(battery, "isPresent")}>
+    return <box className="battery" visible={bind(battery, "isPresent")}>
         <icon icon={bind(battery, "batteryIconName")} />
         <label label={bind(battery, "percentage").as(p =>
-            `${Math.floor(p * 100)} %`
+            `${Math.floor(p * 100)}%`
         )} />
     </box>
 }
@@ -262,6 +261,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
                 <Separator />
 
                 <AudioSlider />
+                {/* TODO: Brightness slider? */}
+
+                <Separator />
+
                 <BatteryLevel />
 
                 <Separator />

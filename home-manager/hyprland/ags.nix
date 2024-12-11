@@ -73,6 +73,6 @@
   # Auto-reload with inotifywait
   # Importantly, this _is_ exec-once, so it only runs once
   wayland.windowManager.hyprland.settings.exec-once = [
-    "inotifywait -m -r --exclude '@girs' --exclude 'node_modules' -e close_write $(readlink -f ~/.config/ags) | while read; do sh ${./launch_ags.sh}; done"
+    "inotifywait -m -r --exclude '@girs/' --exclude 'node_modules/' -e close_write $(readlink -f ~/.config/ags) | while read; do sh ${./launch_ags.sh}; done"
   ];
 }

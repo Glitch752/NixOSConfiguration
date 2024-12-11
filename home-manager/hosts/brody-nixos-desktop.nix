@@ -22,6 +22,16 @@
       # [-1.0, 1.0]; 0 is default.
       sensitivity = -0.6;
     };
+
+    # Helps when using NVidia drivers
+    cursor = {
+      no_hardware_cursors = true;
+    };
+    
+    # This is a tradeoff... turning it off can fix some stuttering,
+    # but it breaks some apps like hyprlock when off.
+    # Yay Nvidia drivers!
+    "render:explicit_sync" = 1;
   };
 
   programs.hyprlock.settings.background = [

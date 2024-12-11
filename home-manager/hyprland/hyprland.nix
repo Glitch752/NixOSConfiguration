@@ -31,7 +31,7 @@ in {
     export NIXPKGS_ALLOW_UNFREE=1
     export XDG_CURRENT_DESKTOP=Hyprland
     export XDG_SESSION_DESKTOP=Hyprland
-    export GDK_BACKEND=wayland, x11
+    export GDK_BACKEND=wayland,x11
     export CLUTTER_BACKEND=wayland
     export QT_QPA_PLATFORM=wayland;xcb
     export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
@@ -41,11 +41,6 @@ in {
 
     # Can fix flickering in Electron apps
     export ELECTRON_OZONE_PLATFORM_HINT = auto
-
-    export XCURSOR_SIZE = ${toString cursor_size}
-  '';
-  home.file.".config/uwsm/env-hyprland".text = ''
-    export HYPRCURSOR_SIZE = ${toString cursor_size}
   '';
 
   home.packages = with pkgs; [
@@ -81,6 +76,8 @@ in {
       exec-once = [
         "$lockScreen --no-fade-in --immediate-render" # We automatically boot into hyprland, so we need to lock the screen on startup
         "hyprctl setcursor ${cursor} ${toString cursor_size}"
+        "dconf write /org/gnome/desktop/interface/cursor-theme \"${cursor}\""
+        "dconf write /org/gnome/desktop/interface/cursor-size ${toString cursor_size}"
       ];
 
       # https://wiki.hyprland.org/Configuring/Monitors/
@@ -229,15 +226,10 @@ in {
         # "blur, ^anyrun$"
       ];
 
-      # Helps when using NVidia drivers
       cursor = {
-        no_hardware_cursors = true;
+        # Causes cursor scale issues
+        sync_gsettings_theme = false;
       };
-
-      # This is a tradeoff... turning it off can fix some stuttering,
-      # but it breaks some apps like hyprlock when off.
-      # Yay Nvidia drivers!
-      "render:explicit_sync" = 1;
     };
 
     # Settings that don't work in Nix for some reason
@@ -266,7 +258,7 @@ in {
 
   home.pointerCursor = {
     gtk.enable = true;
-    # x11.enable = true;
+    x11.enable = true;
     package = cursorPackage;
     name = cursor;
     size = cursor_size;

@@ -5,9 +5,12 @@
 { inputs, outputs, lib, config, pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
+    inputs.nixos-hardware.nixosModules.framework-11th-gen-intel
   ];
 
-  # TODO: Set up Framework-specific configuration stuff
+  services.upower = {
+    enable = true;
+  };
 
   # Bootloader.
   # TODO: Switch to grub and style it.
@@ -16,10 +19,9 @@
     systemd-boot.configurationLimit = 5;
     efi.canTouchEfiVariables = true;
   };
-  boot.kernelParams = [ "module_blacklist=amdgpu" ];
   boot.supportedFilesystems = [ "ntfs" ];
 
-  networking.hostName = "brody-nixos-framework"; # Define your hostname.
+  networking.hostName = "brody-nixos-framework";
 
   # Enable the OpenSSH server.
   services.openssh = {

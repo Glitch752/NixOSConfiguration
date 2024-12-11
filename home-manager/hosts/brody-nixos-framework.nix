@@ -3,7 +3,7 @@
     "$lockScreen" = "uwsm app -- hyprlock"; # No need to use our nvidia screenshot fix script.
     monitor = [
       # Laptop screen
-      "eDP-1, 2256x1504@59.999, 0x0, 1"
+      "eDP-1, 2256x1504@59.999, 0x0, 1.175"
     ];
 
     input = {
@@ -24,6 +24,9 @@
         # TODO: Configure more touchpad settings
       };
     };
+
+    # Most stable
+    "render:explicit_sync" = 1;
   };
 
   services.hypridle.settings = {

@@ -46,6 +46,7 @@ in {
   home.packages = with pkgs; [
     hyprpicker
     hyprcursor
+    hyprpolkitagent # Polkit authentication agent for Hyprland
 
     wev # A wayland event viewer
 
@@ -78,6 +79,7 @@ in {
         "hyprctl setcursor ${cursor} ${toString cursor_size}"
         "dconf write /org/gnome/desktop/interface/cursor-theme \"${cursor}\""
         "dconf write /org/gnome/desktop/interface/cursor-size ${toString cursor_size}"
+        "systemctl --user start hyprpolkitagent"
       ];
 
       # https://wiki.hyprland.org/Configuring/Monitors/

@@ -1,20 +1,17 @@
 { inputs, outputs, lib, config, pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
+    ../../bootloader.nix
     inputs.nixos-hardware.nixosModules.framework-11th-gen-intel
   ];
+  
+  boot.loader.grub.gfxmodeEfi = "2256x1504,auto";
 
   services.upower = {
     enable = true;
   };
 
   # Bootloader.
-  # TODO: Switch to grub and style it.
-  boot.loader = {
-    systemd-boot.enable = true;
-    systemd-boot.configurationLimit = 5;
-    efi.canTouchEfiVariables = true;
-  };
   boot.supportedFilesystems = [ "ntfs" ];
 
   networking.hostName = "brody-nixos-framework";

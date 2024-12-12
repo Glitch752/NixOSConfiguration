@@ -5,8 +5,7 @@
     ../../bootloader.nix
   ];
 
-  # For some reason, 2560x1440x32 doesn't work--grub boots into text mode
-  boot.loader.grub.gfxmodeEfi = "1920x1200x32,auto";
+  boot.loader.grub.gfxmodeEfi = "2560x1440x32,auto";
 
   boot.kernelParams = [ "module_blacklist=amdgpu" ];
   boot.supportedFilesystems = [ "ntfs" ];

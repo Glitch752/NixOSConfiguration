@@ -35,8 +35,6 @@
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
-    distro-grub-themes.url = "github:AdisonCavani/distro-grub-themes";
   };
   
   outputs = { self, nixpkgs, home-manager, ... } @ inputs: let

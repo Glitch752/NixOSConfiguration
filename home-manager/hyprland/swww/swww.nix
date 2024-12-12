@@ -27,17 +27,29 @@
     recursive = true;
   };
 
-  # Systemd service to re-randomize the wallpaper every hour
+  # Systemd service to re-randomize the wallpaper occasionally
   systemd.user.services.randomize_wallpaper = {
     Unit = {
       Description = "Randomize wallpaper";
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash ${./randomize_wallpaper.sh}";
-
-      Timer = "*:0/1";
+      ExecStart = "${pkgs.writeShellScript "rerandomize_wallpaper" ''
+        #!/usr/bin/env sh
+        sh ${./randomize_wallpaper.sh}
+      ''}";
     };
-    Install.WantedBy = [ "graphical-session.target" ];
+  };
+  systemd.user.timers.randomize_wallpaper = {
+    Unit = {
+      Description = "Randomize wallpaper every hour";
+    };
+    Timer = {
+      OnCalendar = "*:0"; # Every hour
+      Persistent = true;
+    };
+    Install = {
+      WantedBy = [ "timers.target" ];
+    };
   };
 }

@@ -33,7 +33,7 @@ function WindowCloser(menu: string, monitor: Gdk.Monitor): Gtk.Window {
         name={`${menu}Closer`}
         className="windowCloser"
         layer={Astal.Layer.TOP}
-        exclusivity={Astal.Exclusivity.IGNORE}
+        exclusivity={Astal.Exclusivity.NORMAL}
         gdkmonitor={monitor}
         anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.LEFT | Astal.WindowAnchor.RIGHT}
     >

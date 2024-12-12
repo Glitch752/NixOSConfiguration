@@ -10,7 +10,7 @@
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
-    neofetch # A command-line system information tool
+    fastfetch # A fast neofetch alternative
     nnn # Terminal file manager
 
     # archives
@@ -123,6 +123,7 @@
       files = "thunar";
       browse = "thunar";
       view = "qimgv";
+      neofetch = "fastfetch";
     };
     history = {
       size = 10000;
@@ -137,7 +138,7 @@
 
     # The zshrc file
     initExtra = ''
-      neofetch
+      fastfetch
     '';
   };
 

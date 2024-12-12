@@ -91,6 +91,9 @@
       libsForQt5.qt5.qtwayland # qt5 Wayland support
 
       kitty # Needed for hyprland
+
+      # TODO: Switch to brillo for smooth transitions?
+      # https://github.com/CameronNemo/brillo
       brightnessctl # Control background
       playerctl # Control audio
 

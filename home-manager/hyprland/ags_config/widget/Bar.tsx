@@ -17,7 +17,7 @@ const COMPACT = false;
 // Left panel
 
 function NixOSIcon() {
-    return <button className="nixosIcon" onClicked={() => execAsync('kitty sh -lic "neofetch && read -n 1 -s"')}>
+    return <button className="nixosIcon" onClicked={() => execAsync('kitty sh -lic "fastfetch && read -n 1 -s"')}>
         <icon icon="nixos" />
     </button>
 }
@@ -234,8 +234,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): Gtk.Widget {
         className="bar"
         namespace="ags-bar-window"
         gdkmonitor={gdkmonitor}
-        // I'm not sure if it's technically correct for this to be an overlay, but it allows us to put it on top of the "window closer" windows
-        layer={Astal.Layer.OVERLAY}
+        layer={Astal.Layer.TOP}
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
         anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.LEFT | Astal.WindowAnchor.RIGHT}
         application={App}

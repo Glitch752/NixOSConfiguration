@@ -1,23 +1,15 @@
-# Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { inputs, outputs, lib, config, pkgs, ... }: {
   imports = [
     ./hardware-configuration.nix
     ../../nvidia.nix
+    ../../bootloader.nix
   ];
 
-  # Bootloader.
-  # TODO: Switch to grub and style it.
-  boot.loader = {
-    systemd-boot.enable = true;
-    systemd-boot.configurationLimit = 5;
-    efi.canTouchEfiVariables = true;
-  };
+  # For some reason, 2560x1440x32 doesn't work--grub boots into text mode
+  boot.loader.grub.gfxmodeEfi = "1920x1200x32,auto";
+
   boot.kernelParams = [ "module_blacklist=amdgpu" ];
   boot.supportedFilesystems = [ "ntfs" ];
-
 
   networking.hostName = "brody-nixos-desktop";
 

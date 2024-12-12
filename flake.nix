@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
 
     # Home-manager, used for managing user configuration
@@ -36,6 +35,8 @@
     };
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    distro-grub-themes.url = "github:AdisonCavani/distro-grub-themes";
   };
   
   outputs = { self, nixpkgs, home-manager, ... } @ inputs: let

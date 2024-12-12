@@ -1,0 +1,38 @@
+@use "sass:color";
+@use "./theme.scss" as theme;
+
+window.controlsPopup {
+  background: transparent;
+  color: theme.$fg;
+  font-weight: bold;
+  font-size: 14px;
+
+  > box {
+    background: theme.$bg;
+    border-radius: theme.$borderRadius;
+    
+    @if theme.$addWidgetBorders {
+      border: 1px solid theme.$accent;
+    }
+
+    box-shadow: 0 0 5px #000000aa;
+    margin: 5px 10px;
+    padding: 15px;
+  }
+
+  button {
+    all: unset;
+    background-color: transparent;
+
+    &:hover label,
+    &:hover icon {
+      background-color: color.adjust(theme.$fg, $alpha: -0.84);
+      border-color: color.adjust(theme.$accent, $alpha: -0.8);
+    }
+
+    &:active label,
+    &:active icon {
+      background-color: color.adjust(theme.$fg, $alpha: -0.8);
+    }
+  }
+}

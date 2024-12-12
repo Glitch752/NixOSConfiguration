@@ -87,6 +87,9 @@
       vulkan-tools
       egl-wayland
 
+      kdePackages.qtwayland # qt6 Wayland support
+      libsForQt5.qt5.qtwayland # qt5 Wayland support
+
       kitty # Needed for hyprland
       brightnessctl # Control background
       playerctl # Control audio

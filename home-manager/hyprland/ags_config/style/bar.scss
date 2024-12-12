@@ -1,187 +1,288 @@
 @use "sass:color";
-@use "./colors.scss" as colors;
+@use "./theme.scss" as theme;
 
 window.bar {
-    $gap: 15px;
-    $borderRadius: 0px;
+  $shadow: 0 0 3px #000000bb;
+  // This is the best way I've found to make icons relatively readable on any background
+  $iconShadow: 1px 1px 2px #00000040, -1px -1px 2px #00000040, 1px -1px 2px #00000040, -1px 1px 2px #00000040;
+
+  background: transparent;
+  color: theme.$fg;
+
+  font-weight: bold;
+  font-size: 14px;
+  // font-family: monospace;
+
+  > centerbox {
+    @if not theme.$segmented {
+      background: #00000001;
+      @if theme.$addWidgetBorders {
+        @if theme.$floating {
+          border: 1px solid theme.$accent;
+        } @else {
+          border-bottom: 1px solid theme.$accent;
+        }
+      }
+
+      border-radius: theme.$borderRadius;
+    }
+
+    @if theme.$floating {
+      margin: 5px 10px 0px 10px;
+    }
+  }
+
+  button {
+    all: unset;
+    background-color: transparent;
+    padding: 0 8px;
+
+    &:hover {
+      background-color: color.adjust(theme.$fg, $alpha: -0.84);
+      border-color: color.adjust(theme.$accent, $alpha: -0.8);
+    }
+
+    &:active {
+      background-color: color.adjust(theme.$fg, $alpha: -0.8);
+    }
+
+    transition: 200ms;
+  }
+
+  .segment {
+    // This is a disaster lol
+
+    @if theme.$segmented {
+      background: #00000001;
+      @if theme.$addWidgetBorders {
+        @if theme.$floating {
+          border: 1px solid theme.$accent;
+        } @else {
+          border-bottom: 1px solid theme.$accent;
+          &:not(.first) {
+            border-left: 1px solid theme.$accent;
+          }
+          &:not(.last) {
+            border-right: 1px solid theme.$accent;
+          }
+        }
+      }
+
+      border-radius: theme.$borderRadius;
+    }
+    
+    > :first-child {
+      border-radius: theme.$borderRadius 0 0 theme.$borderRadius;
+      @if theme.$segmented and not theme.$floating {
+        border-top-left-radius: 0;
+      }
+    }
+    > :last-child {
+      border-radius: 0 theme.$borderRadius theme.$borderRadius 0;
+      @if theme.$segmented and not theme.$floating {
+        border-top-right-radius: 0;
+      }
+    }
+
+    &.first, &.first > :first-child {
+      @if theme.$segmented and not theme.$floating {
+        border-bottom-left-radius: 0;
+      }
+    }
+    &.last, &.last > :last-child {
+      @if theme.$segmented and not theme.$floating {
+        border-bottom-right-radius: 0;
+      }
+    }
+
+    > :only-child {
+      border-radius: theme.$borderRadius;
+      @if theme.$segmented and not theme.$floating {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+
+    &:not(:first-child) {
+      margin-left: theme.$segmentGap;
+    }
+
+    @if theme.$segmented and not theme.$floating {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+  }
+
+  icon {
+    -gtk-icon-shadow: $iconShadow;
+  }
+  label {
+    text-shadow: $shadow;
+  }
+
+  // Left panel
+  .nixosIcon {
+    // Puts the icon off-center, but fixes the icon shadow slightly overflowing at the top of the bar
+    padding-top: 1px;
+    
+    icon {
+      background-image: url("icons/nixos.svg");
+    }
+
+    font-size: 28px;
+
+    &:hover {
+      color: theme.$accent;
+    }
+  }
+  centerbox.compact .nixosIcon {
+    font-size: 18px;
+  }
+
+  .workspaces {
+    .focused {
+      color: theme.$accent;
+      border-color: theme.$accent;
+    }
+    label {
+      min-width: 10px;
+    }
+    > button:hover {
+      color: color.adjust(theme.$accent, $lightness: 20%);
+    }
+
+    font-size: 16px;
+    color: theme.$mutedText;
+  }
+
+  .focusedClient {
+    font-weight: normal;
+    color: theme.$mutedText;
+    padding: 0 15px;
+  }
+
+  // Center panel
+
+  .media {
+    margin: 0 10px;
+
+    icon {
+      font-size: 20px;
+      color: theme.$accent;
+    }
+
+    .cover {
+      min-height: 1.2em;
+      min-width: 1.2em;
+      background-position: center;
+      background-size: contain;
+    }
+
+    label {
+      padding-left: 0;
+      color: theme.$mutedText;
+      padding-top: 2px; // Makes the text more visually centered
+    }
+  }
+
+  .resourceUtilization {
+    font-size: 11px;
+    padding: 0 10px 0 0;
+
+    // Minimum width to avoid reflow when the text is its maximum length
+    min-width: 84px;
+    .name {
+      min-width: 36px;
+      margin-left: 5px;
+
+      label {
+        color: theme.$accent;
+        padding: 0;
+        margin: 0;
+      }
+    }
+
+    .percent {
+      color: theme.$mutedText;
+    }
+    icon {
+      color: theme.$accent;
+    }
+  }
+  centerbox.compact .resourceUtilization {
+    min-width: unset;
+    .name {
+      min-width: unset;
+      margin: 0 10px;
+    }
+  }
+
+  .bluetooth,
+  .wifi {
+    &:hover {
+      color: color.adjust(theme.$accent, $lightness: 20%);
+    }
+    color: theme.$accent;
+  }
+
+  .audio {
+    min-width: 120px;
     $radius: 7px;
+    margin: -10px 0 -10px 15px;
 
-    background: transparent;
-    color: colors.$fg;
-    font-weight: bold;
-    font-size: 14px;
-    font-family: monospace;
-
-    >centerbox {
-        background: colors.$bg;
-        border-radius: $borderRadius;
-        // border: 2px solid #414141;
-        // margin: 5px 20px 0px 20px;
-        min-height: 34px;
+    trough, highlight, slider {
+      all: unset;
     }
 
-    .separator {
-        margin-left: $gap;
+    icon {
+      color: theme.$accent;
     }
 
-    .windowTitle {
-        color: #ccc;
+    trough {
+      background-color: color.adjust(theme.$fg, $alpha: -0.8);
+      border-radius: $radius;
+      box-shadow: $shadow;
     }
 
-    button {
-        all: unset;
-        background-color: transparent;
-        padding: 3px 8px;
-
-        &:hover {
-            background-color: color.adjust(colors.$fg, $alpha: -0.84);
-            border-color: color.adjust(colors.$accent, $alpha: -0.8);
-        }
-
-        &:active {
-            background-color: color.adjust(colors.$fg, $alpha: -0.8)
-        }
-
-        transition: 200ms;
+    highlight {
+      background-color: theme.$accent;
+      min-height: 8px;
+      border-radius: $radius;
     }
+
+    slider {
+      background-color: theme.$fg;
+      border-radius: $radius;
+      min-height: 10px;
+      min-width: 10px;
+      margin: -5px;
+    }
+  }
+
+  .battery {
+    label {
+      padding-left: 5px;
+    }
+    icon {
+      margin-bottom: 3px; // Makes the icon more visually centered
+    }
+    padding: 0 10px;
+  }
+
+  .time {
+    // Puts the text off-center, but fixes the icon shadow slightly overflowing at the top of the bar
+    padding-top: 1px;
     
-    // Left panel
-    .nixosIcon {
-        icon {
-            background-image: url("icons/nixos.svg");
-            border-radius: $borderRadius;
-        }
+    margin: 0 12px;
+    font-weight: normal;
 
-        font-size: 28px;
-
-        &:hover {
-            color: colors.$accent;
-        }
+    .timeLabel {
+      color: theme.$fg;
+      font-size: 13px;
     }
-
-    .workspaces {
-        .focused {
-            color: colors.$accent;
-            border-color: colors.$accent;
-        }
-        label {
-            min-width: 10px;
-        }
-        >button:hover {
-            color: color.adjust(colors.$accent, $lightness: 20%);
-        }
-
-        font-size: 16px;
-        color: colors.$mutedText;
+    .dateLabel {
+      color: theme.$mutedText;
+      font-size: 11px;
     }
-
-    .focusedClient {
-        font-weight: normal;
-        color: color.adjust(colors.$accent, $saturation: -50%);
-    }
-
-    // Center panel
-    
-    .media {
-        icon {
-            font-size: 20px;
-            color: colors.$accent;
-        }
-
-        .cover {
-            min-height: 1.2em;
-            min-width: 1.2em;
-            border-radius: $radius;
-            background-position: center;
-            background-size: contain;
-        }
-
-        label {
-            padding-left: 0;
-            color: colors.$mutedText;
-            padding-top: 2px; // Makes the text more visually centered
-        }
-    }
-
-    // Right panel
-    .resourceUtilization {
-        font-size: 11px;
-        // Minimum width to avoid reflow when the text is its maximum length
-        min-width: 84px;
-        .name {
-            min-width: 36px;
-            
-            label {
-                color: colors.$accent;
-                padding: 0;
-                margin: 0;
-            }
-        }
-        .cpu, .ram {
-            color: colors.$mutedText;
-        }
-    }
-
-    .bluetooth, .wifi {
-        &:hover {
-            color: color.adjust(colors.$accent, $lightness: 20%);
-        }
-        color: colors.$accent;
-    }
-
-    .audio {
-        min-width: 120px;
-
-        * {
-            all: unset;
-        }
-
-        icon {
-            color: colors.$accent;
-            margin-right: 8px;
-        }
-
-        trough {
-            background-color: color.adjust(colors.$fg, $alpha: -0.8);
-            border-radius: $radius;
-        }
-
-        highlight {
-            background-color: colors.$accent;
-            min-height: 8px;
-            border-radius: $radius;
-        }
-
-        slider {
-            background-color: colors.$fg;
-            border-radius: $radius;
-            min-height: 10px;
-            min-width: 10px;
-            margin: -5px;
-        }
-    }
-
-    .battery {
-        label {
-            padding-left: 5px;
-        }
-        icon {
-            margin-bottom: 3px; // Makes the icon more visually centered
-        }
-        padding: 0 10px;
-    }
-
-    .time {
-        margin-right: 12px;
-        font-weight: normal;
-
-        .timeLabel {
-            color: colors.$fg;
-            font-size: 13px;
-        }
-        .dateLabel {
-            color: colors.$mutedText;
-            font-size: 11px;
-        }
-    }
+  }
 }

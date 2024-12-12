@@ -1,0 +1,16 @@
+@use "sass:color";
+
+$floating: true;
+
+$segmented: false;
+$segmentGap: 15px;
+
+$addWidgetBorders: false;
+$borderRadius: 5px;
+
+$bg: #111111;
+$lightBg: #2a2b2c;
+$fg: #f1f1f1;
+// TODO: Configure this through Nix and sync with hyprland theme somehow
+$accent: #36a3e2;
+$mutedText: color.adjust($fg, $alpha: -0.2);

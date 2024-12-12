@@ -45,34 +45,25 @@
       inputs.ags.packages.${pkgs.system}.network
       inputs.ags.packages.${pkgs.system}.tray
       inputs.ags.packages.${pkgs.system}.mpris
+      inputs.ags.packages.${pkgs.system}.notifd
     ];
   };
 
-  # systemd.user.services.ags = {
-  #   Unit = {
-  #     Description = "Ags";
-  #     PartOf = [
-  #       "tray.target"
-  #       "graphical-session.target"
-  #     ];
-  #     After = "graphical-session.target";
-  #   };
-  #   Service = {
-  #     Environment = "PATH=/run/wrappers/bin:${lib.makeBinPath dependencies}";
-  #     ExecStart = "${cfg.package}/bin/ags";
-  #     Restart = "on-failure";
-  #   };
-  #   Install.WantedBy = ["graphical-session.target"];
-  # };
+  wayland.windowManager.hyprland.settings = {
+    # Not exec-once -- we want to reload ags with hyprland
+    exec = [
+      "sh ${./launch_ags.sh}"
+    ];
+    
+    # Auto-reload with inotifywait
+    # Importantly, this _is_ exec-once, so it only runs once
+    exec-once = [
+      "inotifywait -m -r --exclude '@girs/' --exclude 'node_modules/' -e close_write $(readlink -f ~/.config/ags) | while read; do sh ${./launch_ags.sh}; done"
+    ];
 
-  # Not exec-once -- we want to reload ags with hyprland
-  wayland.windowManager.hyprland.settings.exec = [
-    "sh ${./launch_ags.sh}"
-  ];
-
-  # Auto-reload with inotifywait
-  # Importantly, this _is_ exec-once, so it only runs once
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "inotifywait -m -r --exclude '@girs/' --exclude 'node_modules/' -e close_write $(readlink -f ~/.config/ags) | while read; do sh ${./launch_ags.sh}; done"
-  ];
+    bind = [
+      # Shortcut to reload ags
+      "SUPER, R, exec, sh ${./launch_ags.sh}"
+    ];
+  };
 }

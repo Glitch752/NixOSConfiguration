@@ -1,8 +1,8 @@
 import { bind } from "astal";
 import { App, Astal, Gdk, Gtk } from "astal/gtk3";
 import Mpris from "gi://AstalMpris";
-import { closeMediaControls } from "../app";
 import Pango from "gi://Pango?version=1.0";
+import { hideOpenPopup } from "./WindowCloser";
 
 // const FloatingWindow = astalify(Gtk.Window);
 
@@ -11,6 +11,8 @@ import Pango from "gi://Pango?version=1.0";
 
 export default function MediaControls(monitor: Gdk.Monitor): Gtk.Window | null {
     const mpris = Mpris.get_default();
+    const players = bind(mpris, "players").as(p => p.filter(player => player.title !== ""));
+
     return <window
         className="mediaControls"
         name="mediaControls"
@@ -19,25 +21,20 @@ export default function MediaControls(monitor: Gdk.Monitor): Gtk.Window | null {
 
         exclusivity={Astal.Exclusivity.NORMAL}
         anchor={Astal.WindowAnchor.TOP}
-        marginTop={10}
 
         keymode={Astal.Keymode.EXCLUSIVE}
         application={App}
 
         onKeyPressEvent={(self, event: Gdk.Event) => {
-            if(event.get_keyval()[1] === Gdk.KEY_Escape) closeMediaControls();
+            if(event.get_keyval()[1] === Gdk.KEY_Escape) hideOpenPopup();
         }}
     >
         <box vertical>
-            <button className="close" onClicked={closeMediaControls}>
-                <icon icon="window-close-symbolic" />
-            </button>
-            
-            {bind(mpris, "players").as(arr => arr.map(player => (
+            {players.as(arr => arr.map(player => (
                 <MediaPlayer player={player} />
             )))}
 
-            {bind(mpris, "players").as(arr => arr.length === 0 && (
+            {players.as(arr => arr.length === 0 && (
                 <label className="noMediaPlayers" label="No media players found" />
             ))}
         </box>
@@ -54,7 +51,7 @@ function MediaPlayer({ player }: { player: Mpris.Player }) {
     const title = bind(player, "title").as(t => t || "Unknown Track");
     const artist = bind(player, "artist").as(a => a || "Unknown Artist");
     const coverArt = bind(player, "coverArt").as(c => `background-image: url('${c}')`);
-    const playerIcon = bind(player, "entry").as(e => Astal.Icon.lookup_icon(e) ? e : "audio-x-generic-symbolic");
+    const playerIcon = bind(player, "entry").as(e => Astal.Icon.lookup_icon(String(e)) ? e : "audio-x-generic-symbolic");
     const position = bind(player, "position").as(p => player.length > 0 ? p / player.length : 0);
     const playIcon = bind(player, "playbackStatus").as(s => s === Mpris.PlaybackStatus.PLAYING ? "media-playback-pause-symbolic" : "media-playback-start-symbolic");
     const canQuit = bind(player, "canQuit");

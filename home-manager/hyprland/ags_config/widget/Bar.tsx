@@ -6,11 +6,13 @@ import Network from "gi://AstalNetwork"
 import Battery from "gi://AstalBattery"
 import Tray from "gi://AstalTray"
 import Mpris from "gi://AstalMpris"
-import { openMediaControls } from "../app"
+import { openControlsPopup, openMediaControls } from "../app"
 
 function limitLength(s: string, n: number) {
     return s.length > n ? s.slice(0, n - 3) + "..." : s;
 }
+
+const COMPACT = false;
 
 // Left panel
 
@@ -61,31 +63,37 @@ function FocusedClient() {
 
 // Center panel
 
+function playerPriority(player: Mpris.Player) {
+    // TODO
+    return 0;
+}
+
 function Media() {
     const mpris = Mpris.get_default();
 
     // TODO: Progress bar and time elapsed/remaining
     return <button onClicked={openMediaControls}>
         <box className="media">
-            {bind(mpris, "players").as(ps => ps[0] ? (
-                <box>
+            {bind(mpris, "players").as(players => {
+                const displayedPlayer = players.filter(p => p.title !== "").sort((a, b) => playerPriority(a) - playerPriority(b))[0];
+                if(displayedPlayer) return <box>
                     <icon icon="music" />
                     <box
                         className="Cover"
                         valign={Gtk.Align.CENTER}
-                        css={bind(ps[0], "coverArt").as(cover =>
+                        css={bind(displayedPlayer, "coverArt").as(cover =>
                             `background-image: url('${cover}');`
                         )}
                     />
                     <label
-                        label={bind(ps[0], "title").as(() =>
-                            `${limitLength(ps[0].title, 40)}`
+                        label={bind(displayedPlayer, "title").as(() =>
+                            `${limitLength(displayedPlayer.title, 40)}`
                         )}
                     />
-                </box>
-            ) : (
-                "Nothing Playing"
-            ))}
+                </box>;
+
+                else return "Nothing Playing";
+            })}
         </box>
     </button>
 }
@@ -96,7 +104,7 @@ function Media() {
 function SystemTray() {
     const tray = Tray.get_default()
 
-    return <box>
+    return <box className="systemTray">
         {bind(tray, "items").as(items => items.map(item => {
             if(item.iconThemePath) App.add_icons(item.iconThemePath)
             const menu = item.create_menu();
@@ -107,7 +115,7 @@ function SystemTray() {
                 onClickRelease={self => {
                     menu?.popup_at_widget(self, Gdk.Gravity.SOUTH, Gdk.Gravity.NORTH, null)
                 }}
-                tooltipText={bind(item, "tooltip").as(t => `${t.title}`)}>
+                tooltipText={bind(item, "tooltip").as(t => t ? `${t.title}` : "")}>
                 <icon gIcon={bind(item, "gicon")} />
             </button>
         }))}
@@ -118,21 +126,25 @@ function ResourceUtilization() {
     const CPUUsage = Variable(0).poll(1000, ["bash", "-c", "top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 | gawk '{print $2+$4+$6}'"], parseFloat);
     const RAMUsage = Variable(0).poll(1000, ["bash", "-c", "free | awk '/Mem:/ {print $3/$2 * 100}'"], parseFloat);   
 
-    return <button onClick={() => execAsync("missioncenter")} tooltipText="Resource Utilization">
-        <box vertical className="resourceUtilization" valign={Gtk.Align.CENTER} halign={Gtk.Align.START}>
+    return <button onClick={() => execAsync("missioncenter")} tooltipText="Resource Utilization" className="resourceUtilization">
+        <box vertical={!COMPACT} valign={Gtk.Align.CENTER} halign={Gtk.Align.START}>
             <box>
-                {/* <icon icon="processor" className="name" /> */}
-                <box className="name">
-                    <label label={"CPU"} halign={Gtk.Align.START} />
-                </box>
-                <label label={CPUUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => CPUUsage.drop()} hexpand halign={Gtk.Align.START} className="cpu" />
+                {
+                    COMPACT ? <icon icon="processor" className="name" />
+                    : <box className="name">
+                        <label label={"CPU"} halign={Gtk.Align.START} />
+                    </box>
+                }
+                <label label={CPUUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => CPUUsage.drop()} hexpand halign={Gtk.Align.START} className="percent" />
             </box>
             <box>
-                {/* <icon icon="memory" className="name" /> */}
-                <box className="name">
-                    <label label={"RAM"} halign={Gtk.Align.START} />
-                </box>
-                <label label={RAMUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => RAMUsage.drop()} hexpand halign={Gtk.Align.START} className="ram" />
+                {
+                    COMPACT ? <icon icon="memory" className="name" />
+                    : <box className="name">
+                        <label label={"RAM"} halign={Gtk.Align.START} />
+                    </box>
+                }
+                <label label={RAMUsage().as(u => `${u.toFixed(1)}%`)} onDestroy={() => RAMUsage.drop()} hexpand halign={Gtk.Align.START} className="percent" />
             </box>
         </box>
     </button>
@@ -189,7 +201,7 @@ function Time() {
     const shortDate = Variable("").poll(1000, 'date "+%m/%d/%Y"');
     const tooltipText = Variable("").poll(1000, 'date "+%A, %B %d %Y - %m/%d/%y - %H:%M:%S %Z"');
     return <box
-        vertical
+        vertical={!COMPACT}
         tooltipText={tooltipText()}
         className="time"
         valign={Gtk.Align.CENTER}
@@ -203,43 +215,49 @@ function Time() {
             className="timeLabel"
             label={shortTime()}
         />
-        <label
-            className="dateLabel"
-            label={shortDate()}
-        />
+        {!COMPACT && <label
+                className="dateLabel"
+                label={shortDate()}
+            />
+        }
     </box>;
 }
 
-function Separator() {
-    return <box className="separator" />;
+function ControlsPopupButton() {
+    return <button onClicked={openControlsPopup} className="controlsPopupButton">
+        <icon icon="open-menu-symbolic" />
+    </button>
 }
 
-export default function Bar(gdkmonitor: Gdk.Monitor) {
+export default function Bar(gdkmonitor: Gdk.Monitor): Gtk.Widget {
     return <window
         className="bar"
+        namespace="ags-bar-window"
         gdkmonitor={gdkmonitor}
+        // I'm not sure if it's technically correct for this to be an overlay, but it allows us to put it on top of the "window closer" windows
+        layer={Astal.Layer.OVERLAY}
         exclusivity={Astal.Exclusivity.EXCLUSIVE}
         anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.LEFT | Astal.WindowAnchor.RIGHT}
-        application={App}>
-        <centerbox>
+        application={App}
+    >
+        <centerbox className={COMPACT ? "compact" : ""}>
             <box hexpand halign={Gtk.Align.START}>
                 {/* Left panel */}
-                
-                <NixOSIcon />
+                <box className="segment first">
+                    <NixOSIcon />
 
-                <Separator />
+                    <Workspaces />
 
-                <Workspaces />
-
-                <Separator />
-
-                <FocusedClient />
+                    <FocusedClient />
+                </box>
             </box>
 
             <box halign={Gtk.Align.CENTER}>
                 {/* Center panel */}
 
-                <Media />
+                <box className="segment">
+                    <Media />
+                </box>
             </box>
 
             <box hexpand halign={Gtk.Align.END}>
@@ -247,29 +265,26 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 
                 {/* TODO: Pomodoro timer? */}
 
-                <SystemTray />
+                <box className="segment">
+                    <SystemTray />
+                </box>
 
-                <Separator />
+                <box className="segment">
+                    <ResourceUtilization />
+                </box>
 
-                <ResourceUtilization />
+                <box className="segment">
+                    <Bluetooth />
+                    <Wifi />
+                    <AudioSlider />
+                    {/* TODO: Brightness slider? */}
+                    <BatteryLevel />
+                </box>
 
-                <Separator />
-
-                <Bluetooth />
-                <Wifi />
-
-                <Separator />
-
-                <AudioSlider />
-                {/* TODO: Brightness slider? */}
-
-                <Separator />
-
-                <BatteryLevel />
-
-                <Separator />
-
-                <Time />
+                <box className="segment last">
+                    <Time />
+                    <ControlsPopupButton />
+                </box>
             </box>
         </centerbox>
     </window>

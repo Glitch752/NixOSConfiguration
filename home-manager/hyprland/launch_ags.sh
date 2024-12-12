@@ -1,5 +1,5 @@
 # Kill ags if it's running
-ags quit
+ags quit -i main
 
 # Clear the log
 echo "" > /tmp/ags.log

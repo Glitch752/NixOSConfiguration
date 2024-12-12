@@ -92,7 +92,7 @@ in {
         border_size = 2;
 
         # https://wiki.hyprland.org/Configuring/Variables/#variable-types
-        "col.active_border" = "rgba(e28936ff) rgba(e1ad8dff) 45deg";
+        "col.active_border" = "rgba(36a3e2ff) rgba(5090b5ff) 45deg";
         "col.inactive_border" = "rgba(655653cc) rgba(3b3433cc) 45deg";
 
         # Allow resizing windows by clicking and dragging on borders and gaps
@@ -224,6 +224,8 @@ in {
         # Blur the background when Anyrun is open
         # This doesn't look great since I use a really aggressive blur
         # "blur, ^anyrun$"
+        "blur, ^ags-bar-window$" 
+        "ignorezero, ^ags-bar-window$"
       ];
 
       cursor = {

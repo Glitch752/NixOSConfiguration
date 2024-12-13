@@ -20,14 +20,12 @@ if [ ! -f $DISABLED_WALLPAPERS_STATE_FILE ]; then
 fi
 
 # Read the disabled wallpapers state file into an array
-# TODO: An ags widget to select what wallpapers are active
 mapfile -t disabled_wallpapers < $DISABLED_WALLPAPERS_STATE_FILE
 
 # Read the wallpapers in the directory and store them in an array
 wallpapers=()
 while IFS= read -r wallpaper; do
   # If the wallpaper is not in the disabled wallpapers array, add it to the wallpapers array
-  # TODO: This doesn't work for some reason
   if [[ ! " ${disabled_wallpapers[@]} " =~ " $(basename $wallpaper) " ]]; then
     wallpapers+=("$wallpaper")
   fi

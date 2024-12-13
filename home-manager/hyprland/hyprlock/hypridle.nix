@@ -31,4 +31,8 @@
       ];
     };
   };
+
+  # Required until https://github.com/nix-community/home-manager/pull/6086 is merged;
+  # hypridle currently uses graphical-session-pre.target, which uwsm doesn't launch properly.
+  systemd.user.services.hypridle.Unit.After = lib.mkForce "graphical-session.target";
 }

@@ -15,8 +15,8 @@ const HOME = GLib.getenv("HOME");
 
 // TODO: Shutdown menu
 // TODO: Calendar menu?
+// TODO: Widget to select are active wallpapers
 // TODO: Audio mixer?
-// TODO: Wifi network menu?
 
 // Also not happy with this absolute path, but it works for now...
 const src = `${HOME}/nixos-config/home-manager/hyprland/ags_config/`;

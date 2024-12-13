@@ -194,10 +194,11 @@ in {
 
       # https://wiki.hyprland.org/Configuring/Variables/#misc
       misc = {
-        # 0 or 1 to disable the default random wallpapers
-        force_default_wallpaper = -1;
-        # Disables the random hyprland-related backgrounds
-        disable_hyprland_logo = false;
+        # Disables the random hyprland-related backgrounds; this avoids flickering
+        # at boot if swww doesn't start before the desktop shows and, sometimes, hyprlock.
+        # (although we still have them as part of our randomized wallpaper setup)
+        disable_hyprland_logo = true;
+        force_default_wallpaper = 0;
       };
 
       # https://wiki.hyprland.org/Configuring/Window-Rules/
@@ -247,11 +248,11 @@ in {
     enable = true;
     theme = {
       name = "Adwaita-dark";
-      package = pkgs.gnome.gnome-themes-extra;
+      package = pkgs.gnome-themes-extra;
     };
     iconTheme = {
       name = "Adwaita-dark";
-      package = pkgs.gnome.gnome-themes-extra;
+      package = pkgs.gnome-themes-extra;
     };
   };
 

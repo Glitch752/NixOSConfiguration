@@ -25,6 +25,12 @@
       };
     };
 
+    gestures = {
+      workspace_swipe = true;
+      workspace_swipe_invert = true;
+      workspace_swipe_forever = true;
+    };
+
     # Most stable
     "render:explicit_sync" = 1;
   };
@@ -44,11 +50,33 @@
     ];
   };
 
-  programs.hyprlock.settings.background = [
-    {
-      path = "screenshot"; # We can use this because we're not using Nvidia hardware.
-      blur_passes = 3;
-      blur_size = 2;
-    }
-  ];
+  programs.hyprlock.settings = {
+    background = [
+      {
+        path = "screenshot"; # We can use this because we're not using Nvidia hardware.
+        blur_passes = 3;
+        blur_size = 2;
+      }
+    ];
+
+    label = [ 
+      { # Fingerprint reader message
+        monitor = "";
+        text = "$FPRINTMESSAGE";
+        color = "rgba(242, 243, 244, 0.75)";
+        font_size = 22;
+        font_family = "JetBrains Mono";
+        position = "0, -75";
+        halign = "center";
+        valign = "center";
+        zindex = 5;
+      }
+    ];
+
+    general = {
+      enable_fingerprint = true;
+      fingerprint_ready_message = "Scan fingerprint";
+      fingerprint_present_message = "Scanning fingerprint...";
+    };
+  };
 }

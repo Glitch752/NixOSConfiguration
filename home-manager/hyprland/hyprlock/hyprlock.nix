@@ -1,10 +1,11 @@
 { inputs, lib, config, pkgs, ... }: {
   home.packages = with pkgs; [
-    hyprlock
+    inputs.hyprlock.packages.${pkgs.system}.hyprlock
   ];
   
   programs.hyprlock = {
     enable = true;
+    package = inputs.hyprlock.packages.${pkgs.system}.hyprlock;
 
     # https://wiki.hyprland.org/Hypr-Ecosystem/hyprlock/
 
@@ -15,7 +16,6 @@
         grace = 0;
         hide_cursor = true;
         no_fade_in = false;
-        # enable_fingerprint TODO once I get this set up on my laptop
       };
 
       input-field = [

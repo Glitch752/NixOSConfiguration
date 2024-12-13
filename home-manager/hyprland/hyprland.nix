@@ -44,7 +44,7 @@ in {
   '';
 
   home.packages = with pkgs; [
-    hyprpicker
+    hyprpicker # Color picker for Hyprland
     hyprcursor
     hyprpolkitagent # Polkit authentication agent for Hyprland
 
@@ -198,10 +198,6 @@ in {
         force_default_wallpaper = -1;
         # Disables the random hyprland-related backgrounds
         disable_hyprland_logo = false;
-      };
-
-      gestures = {
-        workspace_swipe = false;
       };
 
       # https://wiki.hyprland.org/Configuring/Window-Rules/

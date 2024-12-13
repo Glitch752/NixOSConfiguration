@@ -11,6 +11,11 @@
     enable = true;
   };
 
+  # Support fingerprint authentication
+  # `sudo fprintd-enroll brody` will enroll a fingerprint.
+  # `fprintd-verify` will verify the fingerprint.
+  services.fprintd.enable = true;
+
   # Bootloader.
   boot.supportedFilesystems = [ "ntfs" ];
 

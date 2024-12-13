@@ -21,7 +21,7 @@
       touchpad = {
         # Scrolling moves the content in the opposite direction of the fingers
         natural_scroll = true;
-        # TODO: Configure more touchpad settings
+        scroll_factor = 0.8;
       };
     };
 

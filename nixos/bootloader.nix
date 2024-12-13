@@ -25,9 +25,6 @@
       };
 
       default = "saved"; # Use the last selected entry as the default
-      
-      # font = "${pkgs.hack-font}/share/fonts/hack/Hack-Regular.ttf";
-      # fontSize = 36;
     };
 
     efi.canTouchEfiVariables = true;

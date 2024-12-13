@@ -240,15 +240,37 @@ in {
     '';
   };
 
+  # Works for a few apps to default to dark mode
+  dconf.settings."org/gnome/desktop/interface" = {
+    color-scheme = "prefer-dark";
+  };
+
   # Gtk theming
   gtk = {
     enable = true;
     theme = {
-      name = "Adwaita";
+      name = "Adwaita-dark";
+      package = pkgs.gnome.gnome-themes-extra;
     };
     iconTheme = {
-      name = "Adwaita";
+      name = "Adwaita-dark";
+      package = pkgs.gnome.gnome-themes-extra;
     };
+  };
+
+  # Qt theming
+  qt = {
+    enable = true;
+    platformTheme = "qtct";
+    style.name = "kvantum";
+  };
+  xdg.configFile = {
+    "Kvantum/kvantum.kvconfig".text = ''
+      [General]
+      theme=ArcDarker
+    '';
+
+    "Kvantum/ArcDarker".source = "${pkgs.arc-kde-theme}/Kvantum/ArcDark"; # Or Arc/ArcDarker 
   };
 
   # Cursor theme

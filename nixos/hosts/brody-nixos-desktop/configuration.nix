@@ -5,7 +5,9 @@
     ../../bootloader.nix
   ];
 
-  boot.loader.grub.gfxmodeEfi = "2560x1440x32,auto";
+  # We intentionally use a lower resolution for the GRUB menu because GRUB
+  # gets incredibly slow with higher resolutions.
+  boot.loader.grub.gfxmodeEfi = "1920x1200x32,2560x1440x32,auto";
 
   boot.kernelParams = [ "module_blacklist=amdgpu" ];
   boot.supportedFilesystems = [ "ntfs" ];

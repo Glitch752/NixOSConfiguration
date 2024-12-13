@@ -62,6 +62,12 @@
     imagemagick # Image manipulation programs
   ];
   
+  xdg.mime.defaultApplications = {
+    # https://specifications.freedesktop.org/mime-apps-spec/latest/default
+    "image/jpeg" = "qimgv";
+    "image/png" = "qimgv";
+  };
+
   programs.firefox.enable = true;
 
   # Install Brave

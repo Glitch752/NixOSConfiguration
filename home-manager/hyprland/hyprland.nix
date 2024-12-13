@@ -211,11 +211,8 @@ in {
 
         # Always float Thunar windows (file manager)
         "float, class:(thunar)"
-        # Always float Kitty windows and make them transparent (terminal)
-        # "float, class:(kitty)" # Not so sure about this one
-        # 80% opacity when active, 50% when inactive, 90% when fullscreen
-        # Nevermind -- I now do this in my kitty config
-        # "opacity 0.8 override 0.5 override 0.9 override, class:(kitty)"
+        # Always float qimgv windows (image viewer)
+        "float, class:(qimgv)"
       ];
 
       layerrule = [

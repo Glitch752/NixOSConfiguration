@@ -72,7 +72,8 @@ eventbox.notification {
 
     .image {
       border: theme.$borderThickness solid theme.$borderColor;
-      border-radius: theme.$borderRadius;
+      // It seems GTK handles image border radius differently for some reason?
+      border-radius: theme.$borderRadius + theme.$borderThickness * 2;
       margin-right: 10px;
       min-width: 100px;
       min-height: 100px;

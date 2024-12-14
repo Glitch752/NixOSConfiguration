@@ -6,7 +6,7 @@ import Network from "gi://AstalNetwork"
 import Battery from "gi://AstalBattery"
 import Tray from "gi://AstalTray"
 import Mpris from "gi://AstalMpris"
-import { openControlsPopup, openMediaControls } from "../app"
+import { openPopup, PopupType } from "../popups"
 
 function limitLength(s: string, n: number) {
     return s.length > n ? s.slice(0, n - 3) + "..." : s;
@@ -72,7 +72,7 @@ function Media() {
     const mpris = Mpris.get_default();
 
     // TODO: Progress bar and time elapsed/remaining
-    return <button onClicked={openMediaControls}>
+    return <button onClicked={() => openPopup(PopupType.MediaControls)}>
         <box className="media">
             {bind(mpris, "players").as(players => {
                 const displayedPlayer = players.filter(p => p.title !== "").sort((a, b) => playerPriority(a) - playerPriority(b))[0];
@@ -224,7 +224,7 @@ function Time() {
 }
 
 function ControlsPopupButton() {
-    return <button onClicked={openControlsPopup} className="controlsPopupButton">
+    return <button onClicked={() => openPopup(PopupType.ControlsPopup)} className="controlsPopupButton">
         <icon icon="open-menu-symbolic" />
     </button>
 }

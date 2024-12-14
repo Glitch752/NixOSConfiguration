@@ -80,6 +80,9 @@ in {
         "dconf write /org/gnome/desktop/interface/cursor-theme \"${cursor}\""
         "dconf write /org/gnome/desktop/interface/cursor-size ${toString cursor_size}"
         "systemctl --user start hyprpolkitagent"
+        
+        # Applications to autostart
+        "uwsm app -- vesktop"
       ];
 
       # https://wiki.hyprland.org/Configuring/Monitors/

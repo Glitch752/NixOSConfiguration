@@ -2,10 +2,6 @@
 @use "./theme.scss" as theme;
 
 window.bar {
-  $shadow: 0 0 3px #000000bb;
-  // This is the best way I've found to make icons relatively readable on any background
-  $iconShadow: 1px 1px 2px #00000040, -1px -1px 2px #00000040, 1px -1px 2px #00000040, -1px 1px 2px #00000040;
-
   background: transparent;
   color: theme.$fg;
 
@@ -18,9 +14,9 @@ window.bar {
       background: #00000001;
       @if theme.$addWidgetBorders {
         @if theme.$floating {
-          border: 1px solid theme.$accent;
+          border: theme.$borderThickness solid theme.$borderColor;
         } @else {
-          border-bottom: 1px solid theme.$accent;
+          border-bottom: theme.$borderThickness solid theme.$borderColor;
         }
       }
 
@@ -114,10 +110,10 @@ window.bar {
   }
 
   icon {
-    -gtk-icon-shadow: $iconShadow;
+    -gtk-icon-shadow: theme.$iconShadow;
   }
   label {
-    text-shadow: $shadow;
+    text-shadow: theme.$shadow;
   }
 
   // Left panel
@@ -241,7 +237,7 @@ window.bar {
     trough {
       background-color: color.adjust(theme.$fg, $alpha: -0.8);
       border-radius: $radius;
-      box-shadow: $shadow;
+      box-shadow: theme.$shadow;
     }
 
     highlight {

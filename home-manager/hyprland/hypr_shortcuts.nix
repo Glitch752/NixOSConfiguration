@@ -30,6 +30,9 @@
       "$mainMod, P, pseudo," # dwindle
       "$mainMod, J, togglesplit," # dwindle
 
+      # Custom ags menu binds
+      "$mainMod, Space, exec, ags request -i main 'open controlsPopup'"
+
       # Screenshots
       "$mainMod SHIFT, S, exec, uwsm app -- grim -g \"$(slurp)\" - | wl-copy"
 

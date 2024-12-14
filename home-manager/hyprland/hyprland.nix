@@ -223,8 +223,12 @@ in {
         # Blur the background when Anyrun is open
         # This doesn't look great since I use a really aggressive blur
         # "blur, ^anyrun$"
-        "blur, ^ags-bar-window$" 
+        "blur, ^ags-bar-window$"
         "ignorezero, ^ags-bar-window$"
+        "blur, ^ags-popup-window$"
+        "ignorezero, ^ags-popup-window$"
+        "blur, ^ags-notifications$"
+        "ignorezero, ^ags-notifications$"
       ];
 
       cursor = {

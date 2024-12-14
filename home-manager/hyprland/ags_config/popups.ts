@@ -3,69 +3,119 @@ import { WindowCloser } from "./widget/WindowCloser";
 import PopupWindow from "./widget/PopupWindow";
 import ControlsPopup from "./widget/ControlsPopup";
 import MediaControls from "./widget/MediaControls";
+import { exec } from "astal";
 
 export enum PopupType {
   MediaControls = "mediaControls",
   ControlsPopup = "controlsPopup",
 }
 
-function getPopup(popupType: PopupType) {
+export type PopupContent = {
+  widget: Gtk.Widget;
+  anchor: Astal.WindowAnchor;
+  backgroundOpacity: number;
+  revealTransitionType: Gtk.RevealerTransitionType;
+};
+
+function getPopup(popupType: PopupType): PopupContent {
   switch (popupType) {
     case PopupType.MediaControls:
       return {
         widget: MediaControls(),
         anchor: Astal.WindowAnchor.TOP,
+        backgroundOpacity: 0.3,
+        revealTransitionType: Gtk.RevealerTransitionType.SLIDE_DOWN
       };
     case PopupType.ControlsPopup:
       return {
         widget: ControlsPopup(),
-        anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT,
+        anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.BOTTOM,
+        backgroundOpacity: 0,
+        revealTransitionType: Gtk.RevealerTransitionType.SLIDE_LEFT
       };
   }
 }
 
+/**
+ * We have to use this hacky solution until astal's gtk4 support is ready since GDK doesn't give us
+ * monitor descriptions or anything else necessary to perfectly map hyprland monitors to GDK monitors.
+ * Furthermore, GDK thinks all our monitors are at (0, 0) on top of each other, so we can't use GDK
+ * to find the focused monitor.  
+ * Technically, this means that if you have multiple monitors with the same resolution, model, and scale,
+ * the popup can open on the wrong one. However, I don't think this is a huge deal for now.  
+ * See https://github.com/Jas-SinghFSU/HyprPanel/blob/955eed6c60a3ea5d6b0b1b8b7086cffbae984277/modules/bar/Bar.ts#L137C1-L173C4
+ * (although this is the inverse of what we're doing here)
+ */
 function getMonitorForPopup(): Gdk.Monitor | null {
-  // Pick the monitor that the mouse is currently on
-  const [window, x, y] = Gdk.Display.get_default()?.get_window_at_pointer() ?? [null, 0, 0];
-  const monitor = window ? Gdk.Display.get_default()?.get_monitor_at_window(window) : null;
-  return monitor ?? null;
+  const monitors = JSON.parse(exec(`hyprctl monitors -j`)) as { width: number, height: number, model: string, scale: number, focused: boolean }[];
+  const activeMonitor = monitors.find((monitor) => monitor.focused);
+  if(!activeMonitor) return null;
+
+  const { width, height, model, scale } = activeMonitor;
+
+  const gdkMonitors = App.get_monitors();
+  for(const monitor of gdkMonitors) {
+    if(
+      monitor.get_geometry().width === width &&
+      monitor.get_geometry().height === height &&
+      monitor.get_scale_factor() === scale &&
+      monitor.get_model() === model
+    ) {
+      return monitor;
+    }
+  }
+
+  // Fallback to the first monitor
+  if(gdkMonitors.length > 0) return gdkMonitors[0];
+
+  return null;
 }
 
-let closeOpenMenus: (() => void) | null = null;
-let windowClosers: Gtk.Window[] = [];
+let openPopupData: {
+  close: () => void,
+  type: PopupType,
+  monitor: Gdk.Monitor,
+  windowClosers: Gtk.Window[],
+} | null = null;
 
 export function closeOpenPopup() {
-  if(closeOpenMenus) {
-    closeOpenMenus();
-    closeOpenMenus = null;
+  if(openPopupData) {
+    openPopupData.close();
+    for(const closer of openPopupData.windowClosers) closer.destroy();
+    openPopupData = null;
   }
 }
 
-function addWindowClosersForPopup(menu: string) {
+function addWindowClosersForPopup(menu: string, popupData: PopupContent): Gtk.Window[] {
   closeOpenPopup();
 
+  let windowClosers: Gtk.Window[] = [];
   for(const monitor of App.get_monitors()) {
-    const closer = WindowCloser(menu, monitor);
+    const closer = WindowCloser(menu, monitor, popupData);
     windowClosers.push(closer);
     App.add_window(closer);
   }
+  return windowClosers;
 }
 
 export function openPopup(popupType: PopupType) {
-  const popupWindow = App.get_window(popupType);
-  if(!popupWindow) {
-    const monitor = getMonitorForPopup();
-    if(monitor === null) return null;
+  const monitor = getMonitorForPopup();
+  if(monitor === null) return;
 
-    addWindowClosersForPopup("mediaControls");
+  if(!openPopupData || openPopupData.type !== popupType || openPopupData.monitor !== monitor) {
+    const popupData = getPopup(popupType);
+    const windowClosers = addWindowClosersForPopup(popupType, popupData);
 
-    const popup = PopupWindow(monitor, popupType, getPopup(popupType));
+    const popup = PopupWindow(monitor, popupType, popupData);
     App.add_window(popup);
 
-    closeOpenMenus = () => {
-      App.get_window(popupType)?.destroy();
-      for(const closer of windowClosers) closer.destroy();
-      windowClosers = [];
+    openPopupData = {
+      close: () => {
+        App.get_window(popupType)?.destroy();
+      },
+      type: popupType,
+      windowClosers: windowClosers,
+      monitor: monitor
     };
 
     return;

@@ -5,7 +5,7 @@ import Notifd from "gi://AstalNotifd";
 
 const isIcon = (icon: string) => Boolean(Astal.Icon.lookup_icon(icon));
 const fileExists = (path: string) => GLib.file_test(path, GLib.FileTest.EXISTS);
-const formatTime = (time: number, format = "%H:%M") => GLib.DateTime.new_from_unix_local(time).format(format)!;
+const formatTime = (time: number, format = "%l:%M:%S %p") => GLib.DateTime.new_from_unix_local(time).format(format)!;
 
 function getUrgencyClass(n: Notifd.Notification) {
   const { LOW, NORMAL, CRITICAL } = Notifd.Urgency;
@@ -21,8 +21,8 @@ function getUrgencyClass(n: Notifd.Notification) {
 };
 
 type Props = {
-  setup(self: EventBox): void;
-  onHoverLost(self: EventBox): void;
+  setup?(self: EventBox): void;
+  onHoverLost?(self: EventBox): void;
   notification: Notifd.Notification;
 };
 
@@ -32,9 +32,9 @@ export default function Notification(props: Props) {
 
   return (
     <eventbox
-      className={`notification ${getUrgencyClass(n)}`}
-      setup={setup}
-      onHoverLost={onHoverLost}
+      className={`notification popup ${getUrgencyClass(n)}`}
+      setup={setup ?? (() => {})}
+      onHoverLost={onHoverLost ?? (() => {})}
     >
       <box vertical>
         <box className="header">
@@ -56,7 +56,9 @@ export default function Notification(props: Props) {
             <icon icon="window-close-symbolic" />
           </button>
         </box>
+        
         <Gtk.Separator visible />
+
         <box className="content">
           {n.image && fileExists(n.image) && (
             <box
@@ -93,6 +95,7 @@ export default function Notification(props: Props) {
             )}
           </box>
         </box>
+
         {n.get_actions().length > 0 && (
           <box className="actions">
             {n.get_actions().map(({ label, id }) => (

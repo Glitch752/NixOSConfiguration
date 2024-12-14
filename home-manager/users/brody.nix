@@ -62,7 +62,8 @@
     imagemagick # Image manipulation programs
   ];
   
-  xdg.mime.defaultApplications = {
+  xdg.mime.enable = true;
+  xdg.mimeApps.defaultApplications = {
     # https://specifications.freedesktop.org/mime-apps-spec/latest/default
     "image/jpeg" = "qimgv";
     "image/png" = "qimgv";

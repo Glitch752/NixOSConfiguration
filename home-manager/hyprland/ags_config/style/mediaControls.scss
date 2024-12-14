@@ -2,24 +2,6 @@
 @use "./theme.scss" as theme;
 
 window.mediaControls {
-  background: transparent;
-  color: theme.$fg;
-  font-weight: bold;
-  font-size: 14px;
-
-  > box {
-    background: theme.$bg;
-    border-radius: theme.$borderRadius;
-    min-height: 34px;
-    
-    @if theme.$addWidgetBorders {
-      border: 1px solid theme.$accent;
-    }
-
-    box-shadow: 0 0 5px #000000aa;
-    margin: 15px;
-  }
-
   button {
     all: unset;
     background-color: transparent;
@@ -41,16 +23,15 @@ window.mediaControls {
     font-size: 20px;
   }
 
-  label,
-  icon {
+  label, icon {
     transition: 200ms;
     padding: 3px 8px;
   }
 
   .noMediaPlayers {
-    padding: 10px;
     font-size: 1.2em;
-    color: #999;
+    color: theme.$mutedText;
+    padding: 0 10px;
   }
 
   .player {

@@ -2,37 +2,37 @@
 @use "./theme.scss" as theme;
 
 window.controlsPopup {
-  background: transparent;
-  color: theme.$fg;
-  font-weight: bold;
-  font-size: 14px;
-
-  > box {
-    background: theme.$bg;
-    border-radius: theme.$borderRadius;
-    
-    @if theme.$addWidgetBorders {
-      border: 1px solid theme.$accent;
-    }
-
-    box-shadow: 0 0 5px #000000aa;
-    margin: 5px 10px;
-    padding: 15px;
+  > revealer > box {
+    min-width: 500px;
+    padding: 10px;
   }
 
-  button {
-    all: unset;
-    background-color: transparent;
+  .section {
+    background: theme.$lightBg;
+    border-radius: theme.$borderRadius;
+    padding: 10px;
 
-    &:hover label,
-    &:hover icon {
-      background-color: color.adjust(theme.$fg, $alpha: -0.84);
-      border-color: color.adjust(theme.$accent, $alpha: -0.8);
+    .title {
+      font-size: 16px;
+      font-weight: normal;
+      margin-bottom: 10px;
     }
 
-    &:active label,
-    &:active icon {
-      background-color: color.adjust(theme.$fg, $alpha: -0.8);
+    &:not(:last-child) {
+      margin-bottom: 10px;
+    }
+  }
+
+  .notifications {
+    scrollable {
+      viewport {
+        border: 0;
+      }
+    }
+
+    .empty {
+      font-weight: normal;
+      color: theme.$mutedText;
     }
   }
 }

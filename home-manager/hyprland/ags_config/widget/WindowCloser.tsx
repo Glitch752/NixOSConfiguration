@@ -1,7 +1,7 @@
 import { App, Astal, Gdk, Gtk } from "astal/gtk3";
-import { closeOpenPopup } from "../popups";
+import { closeOpenPopup, PopupContent } from "../popups";
 
-export function WindowCloser(menu: string, monitor: Gdk.Monitor): Gtk.Window {
+export function WindowCloser(menu: string, monitor: Gdk.Monitor, popupData: PopupContent): Gtk.Window {
   return (
     <window
       name={`${menu}Closer`}
@@ -18,7 +18,7 @@ export function WindowCloser(menu: string, monitor: Gdk.Monitor): Gtk.Window {
     >
       <eventbox
         onClick={closeOpenPopup}
-        css="background-color: rgba(0, 0, 0, 0.3)"
+        css={`background-color: rgba(0, 0, 0, ${String(popupData.backgroundOpacity)})`}
       />
     </window>
   ) as Gtk.Window;

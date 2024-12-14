@@ -1,16 +1,25 @@
 @use "sass:color";
+@use "./utils.scss" as utils;
 
 $floating: true;
 
 $segmented: false;
 $segmentGap: 15px;
 
-$addWidgetBorders: false;
-$borderRadius: 5px;
-
-$bg: #111111;
-$lightBg: #2a2b2c;
+$bg: #11111101;
+$errorBg: #ff000020;
+$lightBg: #636e7740;
 $fg: #f1f1f1;
+
 // TODO: Configure this through Nix and sync with hyprland theme somehow
 $accent: #36a3e2;
 $mutedText: color.adjust($fg, $alpha: -0.2);
+
+$addWidgetBorders: true;
+$borderColor: #f1f1f108;
+$borderThickness: 1px;
+$borderRadius: 5px;
+
+$shadow: 0 0 2px #00000099;
+// This is the best way I've found to make icons relatively readable on any background
+$iconShadow: 1px 1px 2px #00000040, -1px -1px 2px #00000040, 1px -1px 2px #00000040, -1px 1px 2px #00000040;

@@ -42,11 +42,11 @@ class NotifiationMap implements Subscribable {
         Notification({
           notification: notifd.get_notification(id)!,
 
-          /**
-           * When the user finishes hovering over the notification, we can remove it.
-           * @returns 
-           */
-          onHoverLost: () => this.delete(id),
+          // /**
+          //  * When the user finishes hovering over the notification, we can remove it.
+          //  * @returns 
+          //  */
+          // onHoverLost: () => this.delete(id),
 
           /**
            * By default, notifd doesn't close notifications until user input or the timeout specified by the sender.
@@ -110,18 +110,17 @@ class NotifiationMap implements Subscribable {
   }
 }
 
-export default function NotificationPopups(gdkmonitor: Gdk.Monitor) {
+export default function NotificationPopups(gdkmonitor: Gdk.Monitor): Gtk.Window {
   const { TOP, RIGHT } = Astal.WindowAnchor;
   const notifs = new NotifiationMap();
 
-  return (
-    <window
-      className="notificationPopups"
-      gdkmonitor={gdkmonitor}
-      exclusivity={Astal.Exclusivity.EXCLUSIVE}
-      anchor={TOP | RIGHT}
-    >
-      <box vertical>{bind(notifs)}</box>
-    </window>
-  );
+  return <window
+    className="notificationPopups"
+    namespace="ags-notifications"
+    gdkmonitor={gdkmonitor}
+    exclusivity={Astal.Exclusivity.EXCLUSIVE}
+    anchor={TOP | RIGHT}
+  >
+    <box vertical>{bind(notifs)}</box>
+  </window> as Gtk.Window;
 }

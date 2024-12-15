@@ -23,13 +23,13 @@ function getPopup(popupType: PopupType): PopupContent {
       return {
         widget: MediaControls(),
         anchor: Astal.WindowAnchor.TOP,
-        backgroundOpacity: 0.3,
+        backgroundOpacity: 0,
         revealTransitionType: Gtk.RevealerTransitionType.SLIDE_DOWN
       };
     case PopupType.ControlsPopup:
       return {
         widget: ControlsPopup(),
-        anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.BOTTOM,
+        anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT,
         backgroundOpacity: 0,
         revealTransitionType: Gtk.RevealerTransitionType.SLIDE_LEFT
       };

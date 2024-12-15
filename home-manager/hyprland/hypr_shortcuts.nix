@@ -32,6 +32,7 @@
 
       # Custom ags menu binds
       "$mainMod, Space, exec, ags request -i main 'open controlsPopup'"
+      "$mainMod, M, exec, ags request -i main 'open mediaControls'"
 
       # Screenshots
       "$mainMod SHIFT, S, exec, uwsm app -- grim -g \"$(slurp)\" - | wl-copy"

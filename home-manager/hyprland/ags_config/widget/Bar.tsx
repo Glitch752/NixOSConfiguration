@@ -9,7 +9,7 @@ import Mpris from "gi://AstalMpris"
 import { openPopup, PopupType } from "../popups"
 import { limitLength } from "../utils"
 
-const COMPACT = true;
+const COMPACT = false;
 
 // Left panel
 
@@ -24,7 +24,6 @@ function Workspaces() {
 
   return <box className="workspaces">
     {bind(hypr, "workspaces").as(wss => wss
-      // .filter(ws => ws.id > 0) // Negative-numbered workspaces are special ones that we don't want to show
       .sort((a, b) => a.id - b.id)
       .map(ws => (
         <button
@@ -148,6 +147,7 @@ function ResourceUtilization() {
 }
 
 function Bluetooth() {
+  // TODO: Shortcut to run systemctl --user restart pipewire for bluetooth audio?
   return <button className="bluetooth" onCLicked={() => execAsync("overskride")}>
     <icon
       tooltipText="Bluetooth"

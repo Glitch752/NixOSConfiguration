@@ -71,10 +71,7 @@ window.controlsPopup {
             background-color: color.adjust(theme.$accent, $alpha: -0.4);
           }
           &.differentMonth {
-            color: color.adjust(theme.$fg, $lightness: -40%);
-          }
-          &:hover {
-            color: red;
+            color: color.adjust(theme.$fg, $alpha: -0.5);
           }
         }
       }

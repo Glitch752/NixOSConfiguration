@@ -116,8 +116,14 @@ function InfiniteScrollWindow({
     return ((index + elementMarginTop) * elementHeight) - scrollPosition;
   }
 
+  let lastUpdate = Date.now();
   function updateDisplayedElements() {
-    scrollPosition = (scrollPosition * 0.9) + (scrollTarget * 0.1);
+    const time = Date.now();
+    const deltaTime = Math.min(time - lastUpdate, 100);
+    lastUpdate = time;
+
+    const lerpFactor = Math.min(deltaTime / 200, 1);
+    scrollPosition = scrollPosition + (scrollTarget - scrollPosition) * lerpFactor;
     if(Math.abs(scrollPosition - scrollTarget) < 1) {
       scrollPosition = scrollTarget;
     }
@@ -151,10 +157,11 @@ function InfiniteScrollWindow({
     for(let [i, element] of displayedElements) {
       if(!newDisplayedElements.has(i)) {
         layout.remove(element);
+        element.destroy();
+      } else {
+        // Update the element's position to be relative to the scroll position.
+        layout.move(element, 0, getWidgetPosition(i));
       }
-
-      // Update the element's position to be relative to the scroll position.
-      layout.move(element, 0, getWidgetPosition(i));
     }
 
     displayedElements = newDisplayedElements;
@@ -250,20 +257,19 @@ export default function Calendar() {
     />
     {/* Control buttons */}
     <box vertical className="calendarControls">
-      {/* TODO: There's weird behavior when clicking these buttons while it transitions; months are skipped. */}
-      <button onClick={() => {
+      <button onClicked={() => {
         displayedMonth.set(displayedMonth.get() - 1);
-      }}>
+      }} tooltipText="Previous month">
         <icon icon="go-up-symbolic" />
       </button>
-      <button onClick={() => {
+      <button onClicked={() => {
         displayedMonth.set(displayedMonth.get() + 1);
-      }}>
+      }} tooltipText="Next month">
         <icon icon="go-down-symbolic" />
       </button>
-      <button onClick={() => {
+      <button onClicked={() => {
         displayedMonth.set(monthToIndex(new Date().getMonth(), new Date().getFullYear()));
-      }}>
+      }} tooltipText="Current month">
         <icon icon="go-home-symbolic" />
       </button>
     </box>

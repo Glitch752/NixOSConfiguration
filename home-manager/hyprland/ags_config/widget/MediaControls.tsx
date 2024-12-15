@@ -2,6 +2,7 @@ import { bind } from "astal";
 import { App, Astal, Gdk, Gtk } from "astal/gtk3";
 import Mpris from "gi://AstalMpris";
 import Pango from "gi://Pango?version=1.0";
+import AudioControls from "./AudioControls";
 
 // const FloatingWindow = astalify(Gtk.Window);
 
@@ -14,6 +15,7 @@ export default function MediaControls() {
 
   return (
     <box vertical>
+      {/* <AudioControls /> */}
       {players.as((arr) => arr.map((player) => <MediaPlayer player={player} />))}
       {players.as((arr) => arr.length === 0 && (<label className="noMediaPlayers" label="No media players found" />))}
     </box>

@@ -7,12 +7,9 @@ import Battery from "gi://AstalBattery"
 import Tray from "gi://AstalTray"
 import Mpris from "gi://AstalMpris"
 import { openPopup, PopupType } from "../popups"
+import { limitLength } from "../utils"
 
-function limitLength(s: string, n: number) {
-  return s.length > n ? s.slice(0, n - 3) + "..." : s;
-}
-
-const COMPACT = false;
+const COMPACT = true;
 
 // Left panel
 
@@ -176,11 +173,14 @@ function AudioSlider() {
   const speaker = Wp.get_default()?.audio.defaultSpeaker!;
 
   return <box className="audio">
-    <icon icon={bind(speaker, "volumeIcon").as(icon => icon ?? "audio-volume-low-symbolic")} />
+    <button onClicked={() => execAsync("pavucontrol")}>
+      <icon icon={bind(speaker, "volumeIcon").as(icon => icon ?? "audio-volume-low-symbolic")} />
+    </button>
     <slider
       hexpand
       onDragged={({ value }) => speaker.volume = value}
       value={bind(speaker, "volume")}
+      className="audioSlider"
     />
   </box>
 }

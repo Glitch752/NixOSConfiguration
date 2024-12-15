@@ -1,0 +1,38 @@
+@use "sass:color";
+@use "./theme.scss" as theme;
+
+.audioControls {
+  .endpointControl {
+    $radius: 7px;
+    margin: -10px 0 -10px 15px;
+
+    trough, highlight, slider {
+      all: unset;
+    }
+
+    icon {
+      color: theme.$accent;
+    }
+
+    trough {
+      min-width: 150px;
+      background-color: color.adjust(theme.$fg, $alpha: -0.8);
+      border-radius: $radius;
+      box-shadow: theme.$shadow;
+    }
+
+    highlight {
+      background-color: theme.$accent;
+      min-height: 8px;
+      border-radius: $radius;
+    }
+
+    slider {
+      background-color: theme.$fg;
+      border-radius: $radius;
+      min-height: 10px;
+      min-width: 10px;
+      margin: -5px;
+    }
+  }
+}

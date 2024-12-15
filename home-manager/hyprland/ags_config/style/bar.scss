@@ -224,10 +224,14 @@ window.bar {
   .audio {
     min-width: 120px;
     $radius: 7px;
-    margin: -10px 0 -10px 15px;
+    margin: 0 0 0 15px;
 
     trough, highlight, slider {
       all: unset;
+    }
+
+    .audioSlider {
+      margin: -10px -5px;
     }
 
     icon {

@@ -19,6 +19,9 @@
 
     overskride # Bluetooth client
     mission-center # Essentially task manager
+
+    alsa-utils # Advanced audio controls
+    pavucontrol # PulseAudio volume control
   ];
 
   # https://github.com/0thElement/nixconf/blob/main/packages/ags/default.nix

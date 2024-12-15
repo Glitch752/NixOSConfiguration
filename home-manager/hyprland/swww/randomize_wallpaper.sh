@@ -57,5 +57,8 @@ selectedWallpaper=${unused_wallpapers[$RANDOM % ${#unused_wallpapers[@]}]}
 swww img "$selectedWallpaper" --transition-step 20 --transition-fps 60\
   --transition-type wipe --transition-angle $((RANDOM % 360))
 
+# TODO: automatic wallpaper-based theming with https://codeberg.org/explosion-mental/wallust/ or similar?
+# https://gitlab.com/fazzi/dotfiles/-/tree/hyprland-pc is an example of hyprland configuration for wallust
+
 # Add the selected wallpaper to the state file
 echo $(basename $selectedWallpaper) >> $WALLPAPER_STATE_FILE

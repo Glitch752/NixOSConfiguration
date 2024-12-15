@@ -41,36 +41,58 @@ window.controlsPopup {
   }
 
   .calendar {
-    .calendarHeader {
-      label {
-        font-size: 18px;
-        font-weight: normal;
-        padding: 0 5px;
-        margin-bottom: 8px;
-        // background-color: theme.$lightBg;
-        // border-radius: 50px;
+    .monthSelector {
+      margin-right: 10px;
+    }
+
+    .calendarMonth {
+      .calendarHeader {
+        label {
+          font-size: 18px;
+          font-weight: normal;
+          padding: 0 5px;
+          margin-bottom: 8px;
+          // background-color: theme.$lightBg;
+          // border-radius: 50px;
+        }
+      }
+
+      > box {
+        // Row
+        .calendarDay {
+          // Column item
+          border-radius: 100%;
+          min-width: 40px;
+          min-height: 40px;
+          font-size: 16px;
+          margin: 3px;
+
+          &.today {
+            background-color: color.adjust(theme.$accent, $alpha: -0.4);
+          }
+          &.differentMonth {
+            color: color.adjust(theme.$fg, $lightness: -40%);
+          }
+          &:hover {
+            color: red;
+          }
+        }
       }
     }
 
-    > box {
-      // Row
-      .calendarDay {
-        // Column item
-        border-radius: 100%;
-        min-width: 40px;
-        min-height: 40px;
-        font-size: 16px;
-        margin: 3px;
+    .yearSelector {
+      margin: 0 15px 0 10px;
+    }
+    .calendarYear {
+      all: unset;
+      &.selected {
+        color: theme.$accent;
+      }
+    }
 
-        &.today {
-          background-color: color.adjust(theme.$accent, $alpha: -0.4);
-        }
-        &.differentMonth {
-          color: color.adjust(theme.$fg, $lightness: -40%);
-        }
-        &:hover {
-          color: red;
-        }
+    .calendarControls {
+      button {
+        margin: 5px;
       }
     }
   }

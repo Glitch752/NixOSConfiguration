@@ -63,7 +63,7 @@
 
     bind = [
       # Shortcut to reload ags
-      "SUPER, R, exec, sh ${./launch_ags.sh}"
+      "SUPER, R, exec, sh ${./force_reload_ags.sh}"
     ];
   };
 }

@@ -1,9 +1,7 @@
-import { bind, Binding, Variable } from "astal";
-import { Subscribable } from "astal/binding";
-import { App, Astal, Gdk, Gtk } from "astal/gtk3";
-import Mpris from "gi://AstalMpris";
-import Notifd from "gi://AstalNotifd";
+import { bind, Binding } from "astal";
+import { Gtk } from "astal/gtk3";
 import Notification from "./notifications/Notification";
+import Notifd from "gi://AstalNotifd";
 import { Scrollable } from "astal/gtk3/widget";
 import Calendar from "./calendar/Calendar";
 
@@ -57,7 +55,12 @@ export default function ControlsPopup() {
     </Section>
 
     <Section>
-      <Calendar />
+      {/* Please forgive me for this incredibly hacky centering solution */}
+      <centerbox>
+        <box></box>
+        <Calendar />
+        <box></box>
+      </centerbox>
     </Section>
   </box>;
 }

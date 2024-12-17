@@ -167,15 +167,8 @@ window.bar {
       color: theme.$accent;
     }
 
-    .cover {
-      min-height: 1.2em;
-      min-width: 1.2em;
-      background-position: center;
-      background-size: contain;
-    }
-
     label {
-      padding-left: 0;
+      padding-left: 10px;
       color: theme.$mutedText;
       padding-top: 2px; // Makes the text more visually centered
     }

@@ -2,12 +2,7 @@ import { bind } from "astal";
 import { App, Astal, Gdk, Gtk } from "astal/gtk3";
 import Mpris from "gi://AstalMpris";
 import Pango from "gi://Pango?version=1.0";
-import AudioControls from "./AudioControls";
-
-// const FloatingWindow = astalify(Gtk.Window);
-
-// TODO: Allow selecting what controls are shown and modifying what the
-// bar shows (e.g. the title, time, nothing)
+import { formatDuration } from "../utils";
 
 export default function MediaControls() {
   const mpris = Mpris.get_default();
@@ -20,12 +15,6 @@ export default function MediaControls() {
       {players.as((arr) => arr.length === 0 && (<label className="noMediaPlayers" label="No media players found" />))}
     </box>
   );
-}
-
-function formatDuration(duration: number) {
-  const minutes = Math.floor(duration / 60);
-  const seconds = Math.floor(duration % 60);
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 function MediaPlayer({ player }: { player: Mpris.Player }) {

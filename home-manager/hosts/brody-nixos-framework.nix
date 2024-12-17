@@ -79,4 +79,31 @@
       fingerprint_present_message = "Scanning fingerprint...";
     };
   };
+
+  # Fusuma is a multitouch gesture recognizer for Linux
+  services.fusuma = {
+    enable = true;
+    extraPackages = with pkgs; [
+      xdotool # Keypress emulation
+    ];
+    settings = {
+      threshold = {
+        swipe = 0.1;
+      };
+      interval = {
+        swipe = 0.7;
+      };
+      swipe = {
+        # For browsers: ctrl+tab / ctrl+shift+tab with 4-finger swipe
+        "4" = {
+          left = {
+            command = "xdotool key ctrl+shift+Tab";
+          };
+          right = {
+            command = "xdotool key ctrl+Tab";
+          };
+        };
+      };
+    };
+  };
 }

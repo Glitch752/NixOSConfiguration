@@ -1,5 +1,5 @@
 import { bind, Binding } from "astal";
-import { Gtk } from "astal/gtk3";
+import { Astal, Gtk } from "astal/gtk3";
 import Notification from "./notifications/Notification";
 import Notifd from "gi://AstalNotifd";
 import { Scrollable } from "astal/gtk3/widget";
@@ -21,7 +21,7 @@ function Section({ child, children, title, className }: {
 const MAX_NOTIFICATIONS = Infinity;
 
 function NotificationsDisplay(notifd: Notifd.Notifd, notifications: Gtk.Widget[]) {
-  return <box vertical vexpand={false}>
+  return <box vertical>
     <Scrollable maxContentHeight={400} propagateNaturalHeight={true}>
       <box vertical>
         {
@@ -44,7 +44,7 @@ export default function ControlsPopup() {
     .map(notif => Notification({ notification: notif }))
   );
 
-  return <box vertical>
+  return <box vertical valign={Gtk.Align.START}>
     {/* TODO: Better battery status? */}
     {/* TODO: More control buttons */}
     

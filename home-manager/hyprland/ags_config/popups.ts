@@ -29,7 +29,7 @@ function getPopup(popupType: PopupType): PopupContent {
     case PopupType.ControlsPopup:
       return {
         widget: ControlsPopup(),
-        anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT,
+        anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.BOTTOM,
         backgroundOpacity: 0,
         revealTransitionType: Gtk.RevealerTransitionType.SLIDE_LEFT
       };

@@ -10,7 +10,6 @@
 
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
-    fastfetch # A fast neofetch alternative
     nnn # Terminal file manager
 
     # archives
@@ -55,11 +54,11 @@
 
     spotube # Spotify client using Youtube as an audio source
 
-    # nemo-with-extensions # Nemo file manager with extensions
-    # Nevermind... nemo crashes wayland on my system lol
-
     qimgv # Qt5 image viewer
     imagemagick # Image manipulation programs
+
+    krita # Digital image editing application
+    gimp # GNU Image Manipulation Program
   ];
   
   xdg.mime.enable = true;
@@ -112,7 +111,7 @@
 
   programs.bash = {
     enable = true;
-    enableCompletion = true;
+    package = pkgs.bashInteractive;
     # The bashrc file
     bashrcExtra = '''';
   };

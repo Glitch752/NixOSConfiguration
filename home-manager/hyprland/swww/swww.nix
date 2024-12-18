@@ -35,7 +35,6 @@
     Service = {
       Type = "oneshot";
       ExecStart = "${pkgs.writeShellScript "rerandomize_wallpaper" ''
-        #!/usr/bin/env sh
         sh ${./randomize_wallpaper.sh}
       ''}";
     };

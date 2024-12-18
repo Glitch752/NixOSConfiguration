@@ -71,7 +71,19 @@
       enable = true;
       settings = rec {
         initial_session = {
-          command = "${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop";
+          command = "${pkgs.writeShellScript "boot-message-and-de" ''
+            # Silly boot message :)
+            ${pkgs.bash}/bin/bash ${./bootMessage.sh}
+            
+            # If the boot message exits with code 1, start normally.
+            # If it exists with code 0, hide all terminal output from uwsm.
+            if [ $? -eq 1 ]; then
+              ${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop
+            else
+              echo "" > /tmp/uwsm-stdout.log
+              ${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop > /tmp/uwsm-stdout.log 2>&1
+            fi
+          ''}";
           user = "brody";
         };
         default_session = initial_session;
@@ -102,6 +114,10 @@
       })
 
       acpi # hardware states
+
+      # Used for my goofy boot message
+      lolcat
+      fortune
     ];
   };
 }

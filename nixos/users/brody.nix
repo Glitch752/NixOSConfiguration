@@ -96,9 +96,12 @@
     git
     git-credential-oauth
     
+    # A few tools I want on a system level
     wget
     htop
     neovim
+
+    fastfetch # A fast neofetch alternative
 
     bluez # Bluetooth
 

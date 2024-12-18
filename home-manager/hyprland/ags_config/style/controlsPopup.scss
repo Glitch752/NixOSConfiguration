@@ -28,6 +28,7 @@ window.controlsPopup {
       viewport {
         border: 0;
       }
+      margin-bottom: 10px;
     }
 
     .empty {
@@ -36,6 +37,7 @@ window.controlsPopup {
     }
 
     .notification > box {
+      margin: 0 0 10px 0;
       background-color: theme.$lightBg;
     }
   }

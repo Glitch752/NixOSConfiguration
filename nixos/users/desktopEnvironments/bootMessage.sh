@@ -206,14 +206,13 @@ $(fortune -s)")
 
 rm /tmp/fastfetch.json
 
-sleep_ 0.3
-
-echo
-
-sleep_ 0.5
-
-slowTypeLines "$ANSI_GREEN> Done."
-
-sleep_ 1.4
-
 echo -e -n "$ANSI_RESET"
+(
+  sleep_ 0.3
+
+  echo
+
+  sleep_ 0.5
+
+  slowTypeLines "$ANSI_GREEN> Done.$ANSI_RESET"
+) & disown # Run in the background and disown so that the script can exit

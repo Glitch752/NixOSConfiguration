@@ -1,3 +1,25 @@
+# I would love to somehow switch to a better terminal environment than the Linux TTY.
+# I tried for a _long_ time to get kmscon or fbterm to work, but there are a few issues:
+# - It's difficult to start them and continue execution from inside the TTY,
+#   since we still need to start our desktop environment from outside of them.
+# - Both kmscon and fbterm freeze occasionally on Intel integrated graphics for some reason.
+
+# It would be ideal if we could run a real Wayland terminal emulator like Alacritty, but I don't know
+# how to set that up securely with hyprland. I don't really care about how the boot message looks enough
+# to set up an entire separate Wayland environment just for it. If this is a route I want to take in the
+# future, maybe lightdm is a good environment? I'm not sure how much overhead that would add.
+
+# A feasible alternative is to render the boot message to a gif and display it with Plymouth, but
+# I would prefer to have it match the resolution of the screen, so I would need to make a separate gif
+# for every system and ideally have some sort of automated process for that. It's more work than I want
+# to put in right now.
+
+# One other solution I have in mind is making a custom "lock screen" application using the ext-session-lock-v1
+# Wayland protocol which opens the normal lock screen when exiting. It would be an interesting project,
+# but I have stability and security concerns... and, again, it's a lot of work for something small.
+
+
+
 # This boot message takes slightly less than 16 seconds to display. It's long, but it's fun.
 # You can skip it at most points with a key press.
 
@@ -182,27 +204,23 @@ cat <<'EOF' > /tmp/fastfetch.json
 }
 EOF
 
-while IFS= read -r line; do
-  echo -e "$ANSI_GREEN> $line"
-  # Lol, this is a bad way to do this
-  # We use normal sleep because sleep_ reads from the fetch output and exists immediately
-  if [[ $RANDOM -lt 10000 ]]; then
-    sleep 0.02
-  fi
-  if [[ $RANDOM -lt 10000 ]]; then
-    sleep 0.02
-  fi
-  if [[ $RANDOM -lt 10000 ]]; then
-    sleep 0.02
-  fi
-  if [[ $RANDOM -lt 10000 ]]; then
-    sleep 0.02
-  fi
-  sleep 0.02
-done < <(
-echo "$(fastfetch -c /tmp/fastfetch.json)
+# With a 10% chance, colorize with lolcat and animate instead
 
-$(fortune -s)")
+if [[ $((RANDOM % 10)) -eq 0 ]]; then
+  echo "Luck is on your side! Enjoy the lolcat (even though the colors are a bit messed up... thanks Linux TTY)!
+
+$(fastfetch -c /tmp/fastfetch.json)
+
+$(fortune -s)" | lolcat -t -a -d 1
+else
+  while IFS= read -r line; do
+    echo -e "$ANSI_GREEN> $line"
+    sleep 0.04
+  done < <(
+  echo "$(fastfetch -c /tmp/fastfetch.json)
+
+  $(fortune -s)")
+fi
 
 rm /tmp/fastfetch.json
 

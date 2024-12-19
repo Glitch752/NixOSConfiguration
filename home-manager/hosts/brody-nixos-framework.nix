@@ -35,17 +35,27 @@
     "render:explicit_sync" = 1;
   };
 
+  # The Framework 13 has 4 lights we can adjust:
+  # input0::scrolllock
+  # input0::capslock
+  # input0::numlock
+  # framework_laptop::kbd_backlight
+
   services.hypridle.settings = {
     listener = [
       {
         timeout = 150; # 2.5 minutes
-        on-timeout = "brightnessctl -s set 10"; # Set monitor backlight to minimum; avoid 0 on OLED monitor.
-        on-resume = "brightnessctl -r"; # Monitor backlight restore.
+        on-timeout = "brillo -O && brillo -S 10% -u 1000000"; # Set monitor backlight to minimum; avoid 0 on OLED monitor.
+        on-resume = "brillo -I -u 200000"; # Monitor backlight restore.
       }
       { 
         timeout = 150; # 2.5 minutes
-        on-timeout = "brightnessctl -sd rgb:kbd_backlight set 0"; # Turn off keyboard backlight.
-        on-resume = "brightnessctl -rd rgb:kbd_backlight"; # Turn on keyboard backlight.
+        # Sadly, the keyboard backlight's current brightness can't
+        # be read, so animations and restoring to the previous
+        # brightness level are not possible.
+        # I just turn the backlight fully on when resuming no matter what.
+        on-timeout = "brillo -S 0% -k framework_laptop:kbd_backlight";
+        on-resume = "brillo -S 100% -k framework_laptop:kbd_backlight";
       }
     ];
   };

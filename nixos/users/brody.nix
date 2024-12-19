@@ -67,9 +67,6 @@
   hardware.bluetooth.enable = true; # Enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.brody = {
     isNormalUser = true;
@@ -77,7 +74,7 @@
     openssh.authorizedKeys.keys = [
       # TODO
     ];
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "video" ];
     shell = pkgs.zsh;
   };
 

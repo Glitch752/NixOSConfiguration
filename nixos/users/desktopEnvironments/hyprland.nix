@@ -90,6 +90,8 @@
       };
     };
 
+    hardware.brillo.enable = true; # Brightness control
+
     nixpkgs.overlays = [
       inputs.nixpkgs-wayland.overlay
     ];
@@ -104,9 +106,6 @@
 
       kitty # Needed for hyprland
 
-      # TODO: Switch to brillo for smooth transitions?
-      # https://github.com/CameronNemo/brillo
-      brightnessctl # Control background
       playerctl # Control audio
 
       (inputs.hyprland.packages.${pkgs.system}.hyprland.override {

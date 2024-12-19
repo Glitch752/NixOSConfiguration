@@ -23,13 +23,16 @@ fi
 mapfile -t disabled_wallpapers < $DISABLED_WALLPAPERS_STATE_FILE
 
 # Read the wallpapers in the directory and store them in an array
-wallpapers=()
-while IFS= read -r wallpaper; do
-  # If the wallpaper is not in the disabled wallpapers array, add it to the wallpapers array
-  if [[ ! " ${disabled_wallpapers[@]} " =~ " $(basename $wallpaper) " ]]; then
-    wallpapers+=("$wallpaper")
-  fi
-done < <(find "$WALLPAPERS_DIR" -type f,l)
+get_wallpapers() {
+  wallpapers=()
+  while IFS= read -r wallpaper; do
+    # If the wallpaper is not in the disabled wallpapers array, add it to the wallpapers array
+    if [[ ! " ${disabled_wallpapers[@]} " =~ " $(basename $wallpaper) " ]]; then
+      wallpapers+=("$wallpaper")
+    fi
+  done < <(find "$WALLPAPERS_DIR" -type f,l)
+}
+get_wallpapers
 
 # Read the state file into an array
 mapfile -t state_files < "$WALLPAPER_STATE_FILE"
@@ -47,7 +50,8 @@ done
 # If all wallpapers have been used, reset the state file
 if [ ${#unused_wallpapers[@]} -eq 0 ]; then
   > $WALLPAPER_STATE_FILE
-  unused_wallpapers=($(find $WALLPAPERS_DIR -maxdepth 1 -type f,l))
+  get_wallpapers
+  unused_wallpapers=("${wallpapers[@]}")
 fi
 
 # Select a random wallpaper

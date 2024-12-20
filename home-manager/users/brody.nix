@@ -123,6 +123,8 @@
     shellAliases = {
       ll = "ls -l";
       nixos-switch = "sudo nixos-rebuild switch";
+      # Faster rebuilds that don't require updating boot
+      nixos-test = "sudo nixos-rebuild test --fast";
       shit = "fuck";
       oops = "fuck";
       explorer = "thunar";

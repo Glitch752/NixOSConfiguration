@@ -22,14 +22,29 @@ fi
 # Read the disabled wallpapers state file into an array
 mapfile -t disabled_wallpapers < $DISABLED_WALLPAPERS_STATE_FILE
 
+# $DISABLE_WALLPAPERS can be default (yes), no, or invert
+if [ -z $DISABLE_WALLPAPERS ]; then
+  invert_disabled="yes"
+else
+  invert_disabled=$DISABLE_WALLPAPERS
+fi
+
+if [ "$invert_disabled" != "yes" ] && [ "$invert_disabled" != "no" ] && [ "$invert_disabled" != "invert" ]; then
+  echo "DISABLE_WALLPAPERS must be 'yes', 'no', or 'invert'"
+  exit 1
+fi
+
 # Read the wallpapers in the directory and store them in an array
 get_wallpapers() {
   wallpapers=()
   while IFS= read -r wallpaper; do
     # If the wallpaper is not in the disabled wallpapers array, add it to the wallpapers array
-    if [[ ! " ${disabled_wallpapers[@]} " =~ " $(basename $wallpaper) " ]]; then
-      wallpapers+=("$wallpaper")
+    if [[ " ${disabled_wallpapers[@]} " =~ " $(basename $wallpaper) " ]] && [ "$invert_disabled" = "yes" ]; then
+      continue
+    elif [[ ! " ${disabled_wallpapers[@]} " =~ " $(basename $wallpaper) " ]] && [ "$invert_disabled" = "invert" ]; then
+      continue
     fi
+    wallpapers+=("$wallpaper")
   done < <(find "$WALLPAPERS_DIR" -type f,l)
 }
 get_wallpapers

@@ -6,6 +6,12 @@
     ./desktopEnvironments/hyprland.nix
   ];
 
+  # This is a pretty big change... I use now use Lix as my Nix implementation.
+  # I'm not sure if this will have negative consequences, but I'm going to try it
+  # for a while.
+  # See https://lix.systems/about/
+  nix.package = pkgs.lix;
+
   desktopEnvironments.hyprland.enable = true;
   desktopEnvironments.gnome.enable = false;
 

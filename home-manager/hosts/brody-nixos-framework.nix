@@ -94,7 +94,11 @@
   services.fusuma = {
     enable = true;
     extraPackages = with pkgs; [
-      xdotool # Keypress emulation
+      # Required for some reason? Fusuma crashes otherwise.
+      # https://discourse.nixos.org/t/fusuma-not-working/21416/4
+      coreutils-full
+
+      wtype # Keypress emulation
     ];
     settings = {
       threshold = {
@@ -107,13 +111,15 @@
         # For browsers: ctrl+tab / ctrl+shift+tab with 4-finger swipe
         "4" = {
           left = {
-            command = "xdotool key ctrl+shift+Tab";
+            command = "wtype -M ctrl -M shift -P Tab -p Tab -m ctrl -m shift";
           };
           right = {
-            command = "xdotool key ctrl+Tab";
+            command = "wtype -M ctrl -P Tab -p Tab -m ctrl";
           };
         };
       };
     };
   };
+  # Also add wtype to normal packages for testing
+  home.packages = [ pkgs.wtype ];
 }

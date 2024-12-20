@@ -80,7 +80,7 @@
     openssh.authorizedKeys.keys = [
       # TODO
     ];
-    extraGroups = [ "networkmanager" "wheel" "video" ];
+    extraGroups = [ "networkmanager" "wheel" "video" "input" ];
     shell = pkgs.zsh;
   };
 

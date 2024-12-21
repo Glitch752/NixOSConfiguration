@@ -18,6 +18,7 @@
     hyprland.url = "github:hyprwm/Hyprland";
     hyprlock.url = "github:hyprwm/hyprlock";
     pyprland.url = "github:hyprland-community/pyprland";
+    woomer.url = "github:coffeeispower/woomer";
     swww.url = "github:LGFae/swww";
 
     # walker.url = "github:abenz1267/walker";

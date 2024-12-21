@@ -23,6 +23,14 @@
     bind = [
       "$mainMod, Q, exec, $terminal"
 
+      # Pyprland shortcuts
+      "$mainMod, X, exec, pypr fetch_client_menu"
+      "$mainMod SHIFT, X, exec, pypr unfetch_client"
+      "$mainMod, O, exec, pypr shift_monitors +1"
+      "$mainMod SHIFT, O, exec, pypr shift_monitors -1"
+
+      "$mainMod SHIFT, Z, exec, woomer" # Zoom utility
+
       "$mainMod, C, killactive,"
       "$mainMod, L, exec, $lockScreen"
       "$mainMod, E, exec, $fileManager"

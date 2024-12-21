@@ -8,8 +8,8 @@ in {
   imports = [
     ./ags.nix
     # ./wayvnc.nix # TODO: Figure out how to get this working
-    ./pyprland.nix
-
+    
+    ./pyprland/pyprland.nix
     ./anyrun/anyrun.nix
     ./swww/swww.nix
     ./hyprlock/hyprlock.nix
@@ -53,9 +53,11 @@ in {
     slurp # Select a region in wayland
     grim # Screenshot utility for wayland
     wl-clipboard # Wayland clipboard utilities
+
+    # TODO: This fails to launch with a segfault on my laptop but works on my desktop?
+    inputs.woomer.packages.${system}.default # Zoomer application for wayland
   ];
 
-  # TODO: Configure pyprland https://github.com/hyprland-community/pyprland  
   # TODO: Look into https://github.com/hyprland-community/hyprland-autoname-workspaces
 
   # https://gitlab.com/Zaney/zaneyos/-/blob/main/config/hyprland.nix

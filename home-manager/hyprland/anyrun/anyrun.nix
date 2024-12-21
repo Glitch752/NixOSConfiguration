@@ -54,6 +54,8 @@
         inputs.anyrun.packages.${pkgs.system}.rink
         inputs.anyrun.packages.${pkgs.system}.websearch
         inputs.anyrun.packages.${pkgs.system}.kidex
+
+        inputs.anyrun.packages.${pkgs.system}.stdin
       ];
     };
 
@@ -109,13 +111,6 @@
           // "name": "text to be copied"
           "shrug": "¯\\_(ツ)_/¯",
         },
-        max_entries: 3,
-      )
-    '';
-    extraConfigFiles."translate.ron".text = ''
-      Config(
-        prefix: "translate",
-        language_delimiter: ">",
         max_entries: 3,
       )
     '';

@@ -44,10 +44,6 @@
     networkmanagerapplet # NetworkManager applet for the system tray
 
     vesktop # Vencord optimized for wayland
-    (discord.override {
-      withOpenASAR = true;
-      withVencord = true;
-    })
 
     bitwarden-desktop # Bitwarden password manager
     bitwarden-cli # Bitwarden password manager CLI

@@ -1,0 +1,59 @@
+@use "sass:color";
+@use "./theme.scss" as theme;
+
+window.runPopup {
+  > revealer > box {
+    min-width: 700px;
+    padding: 10px;
+  }
+
+  .module {
+    .moduleHeader {
+      color: theme.$fg;
+      font-size: 20px;
+      font-weight: normal;
+      padding: 12px 5px;
+
+      label {
+        margin-left: 10px;
+      }
+    }
+
+    .entry {
+      &:not(:last-child) {
+        margin-bottom: 5px;
+      }
+
+      all: unset;
+
+      padding: 5px;
+      font-size: 16px;
+      border: theme.$borderThickness solid transparent;
+      border-radius: theme.$borderRadius;
+
+      transition: background-color 0.15s, border-color 0.15s;
+      
+      &:hover, &.highlighted {
+        border-color: theme.$borderColor;
+        background: theme.$lightBg;
+      }
+
+      icon {
+        font-size: 34px;
+      }
+
+      .text {
+        margin-left: 10px;
+      }
+      .name {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .description {
+        font-size: 14px;
+        font-weight: normal;
+        color: theme.$mutedText;
+      }
+    }
+  }
+}

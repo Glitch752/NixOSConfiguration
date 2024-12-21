@@ -42,6 +42,7 @@
       # gtksourceview
       # webkitgtk
       
+      inputs.ags.packages.${pkgs.system}.apps
       inputs.ags.packages.${pkgs.system}.hyprland
       inputs.ags.packages.${pkgs.system}.wireplumber
       inputs.ags.packages.${pkgs.system}.battery

@@ -4,10 +4,12 @@ import PopupWindow from "./widget/PopupWindow";
 import ControlsPopup from "./widget/ControlsPopup";
 import MediaControls from "./widget/MediaControls";
 import { exec } from "astal";
+import RunPopup from "./widget/RunPopup";
 
 export enum PopupType {
   MediaControls = "mediaControls",
   ControlsPopup = "controlsPopup",
+  RunPopup = "runPopup",
 }
 
 export type PopupContent = {
@@ -32,6 +34,13 @@ function getPopup(popupType: PopupType): PopupContent {
         anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT | Astal.WindowAnchor.BOTTOM,
         backgroundOpacity: 0,
         revealTransitionType: Gtk.RevealerTransitionType.SLIDE_LEFT
+      };
+    case PopupType.RunPopup:
+      return {
+        widget: RunPopup(),
+        anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP,
+        backgroundOpacity: 0,
+        revealTransitionType: Gtk.RevealerTransitionType.SLIDE_RIGHT
       };
   }
 }

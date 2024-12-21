@@ -105,5 +105,10 @@
       ", XF86AudioPlay, exec, playerctl play-pause"
       ", XF86AudioPrev, exec, playerctl previous"
     ];
+
+    wayland.windowManager.hyprland.settings.bindr = [
+      # Open our app launcher with just meta
+      "SUPER, SUPER_L, exec, ags request -i main 'open runPopup'"
+    ];
   };
 }

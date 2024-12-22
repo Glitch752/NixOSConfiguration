@@ -293,8 +293,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "rink_wrapper"
-version = "0.1.0"
+name = "rust_launcher_utils"
+version = "0.0.2"
 dependencies = [
  "rink-core",
  "serde_json",

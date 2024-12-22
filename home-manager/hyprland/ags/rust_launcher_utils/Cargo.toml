@@ -1,6 +1,6 @@
 [package]
-name = "rink_wrapper"
-version = "0.1.0"
+name = "rust_launcher_utils"
+version = "0.0.2"
 edition = "2021"
 
 [dependencies]

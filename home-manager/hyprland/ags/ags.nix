@@ -25,23 +25,22 @@
   ];
 
   home.sessionVariables =
-    # A derivation for our wrapper around rink; build with cargo build --release
-    # rink-wrapper
-    let rinkDerivation = pkgs.rustPlatform.buildRustPackage {
-      pname = "rink-wrapper";
-      version = "0.0.1";
-      src = ./rink_wrapper;
+    # A derivation for our Rust library used by the launcher
+    let launcherUtilsDerivation = pkgs.rustPlatform.buildRustPackage {
+      pname = "rust_launcher_utils";
+      version = "0.0.2";
+      src = ./rust_launcher_utils;
       buildInputs = [ pkgs.cargo ];
       buildPhase = ''
         cargo build --release
       '';
       installPhase = ''
         mkdir -p $out/bin
-        cp target/release/rink_wrapper $out/bin
+        cp target/release/rust_launcher_utils $out/bin
       '';
-      cargoHash = "sha256-kgxhkgF8LEKLOwBzUGXaHcACg0v+kCh4nbVPpCyZM3A=";
+      cargoHash = "sha256-osUVfd2x+/P4kZrciS/SG/F0gJUhnvbhErBrzer65qk=";
   }; in {
-    RINK_WRAPPER_PATH = "${rinkDerivation}/bin/rink_wrapper";
+    RUST_LAUNCHER_UTILS_PATH = "${launcherUtilsDerivation}/bin/rust_launcher_utils";
   };
 
   # https://github.com/0thElement/nixconf/blob/main/packages/ags/default.nix

@@ -2,6 +2,15 @@ use rink_core::{loader::gnu_units, parsing::datetime, ast, CURRENCY_FILE};
 use std::process::exit;
 
 fn main() {
+  let subcommand = std::env::args().nth(1).unwrap();
+
+  match subcommand.as_str() {
+    "rink" => rink(),
+    _ => panic!("Unknown subcommand: {}", subcommand),
+  }
+}
+
+fn rink() {
   let mut ctx = rink_core::Context::new();
 
   let units = gnu_units::parse_str(rink_core::DEFAULT_FILE.unwrap());
@@ -28,34 +37,24 @@ fn main() {
   });
   ctx.load_dates(dates);
 
-  let input = std::env::args().skip(1).collect::<Vec<String>>().join(" ");
+  let input = std::env::args().skip(2).collect::<Vec<String>>().join(" ");
   
   match rink_core::one_line(&mut ctx, &input) {
     Ok(result) => {
-      let (title, desc) = parse_result(result);
-      
-      // Format as JSON
       let output = serde_json::json!({
-        "title": title,
-        "description": desc,
+        "error": false,
+        "output": result,
       });
       println!("{}", output);
       exit(0);
     }
-    Err(_) => exit(1),
+    Err(result) => {
+      let output = serde_json::json!({
+        "error": true,
+        "output": result,
+      });
+      println!("{}", output);
+      exit(1);
+    }
   }
-}
-
-/// Extracts the title and description from `rink` result.
-/// The description is anything inside brackets from `rink`, if present.
-fn parse_result(result: String) -> (String, Option<String>) {
-  result
-    .split_once(" (")
-    .map(|(title, desc)| {
-      (
-        title.to_string(),
-        Some(desc.trim_end_matches(')').to_string()),
-      )
-    })
-    .unwrap_or((result, None))
 }

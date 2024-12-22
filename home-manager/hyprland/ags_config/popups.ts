@@ -38,7 +38,7 @@ function getPopup(popupType: PopupType): PopupContent {
     case PopupType.RunPopup:
       return {
         widget: RunPopup(),
-        anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP,
+        anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM,
         backgroundOpacity: 0,
         revealTransitionType: Gtk.RevealerTransitionType.SLIDE_RIGHT
       };

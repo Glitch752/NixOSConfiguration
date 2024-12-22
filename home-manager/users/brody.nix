@@ -1,6 +1,7 @@
 { inputs, lib, config, pkgs, ... }: {
   imports = [
     ../hyprland/hyprland.nix
+    ./modules/rust.nix
   ];
 
   home = {
@@ -55,6 +56,8 @@
 
     krita # Digital image editing application
     gimp # GNU Image Manipulation Program
+
+    rink # A unit-aware calculator
   ];
   
   xdg.mime.enable = true;

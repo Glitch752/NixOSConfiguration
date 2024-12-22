@@ -4,7 +4,7 @@ import PopupWindow from "./widget/PopupWindow";
 import ControlsPopup from "./widget/ControlsPopup";
 import MediaControls from "./widget/MediaControls";
 import { exec } from "astal";
-import RunPopup from "./widget/RunPopup";
+import RunPopup from "./widget/launcher/RunPopup";
 
 export enum PopupType {
   MediaControls = "mediaControls",

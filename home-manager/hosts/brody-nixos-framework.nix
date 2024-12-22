@@ -81,6 +81,16 @@
         valign = "center";
         zindex = 5;
       }
+
+      { # Battery percentage
+        monitor = "";
+        text = ''cmd[update:1000] sh ${./scripts/battery.sh}'';
+        font_size = 18;
+        font_family = "JetBrains Mono";
+        position = "-15, -15";
+        halign = "right";
+        valign = "top";
+      }
     ];
 
     general = {

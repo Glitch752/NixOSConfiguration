@@ -6,9 +6,9 @@ in {
   # TODO: Only include if hyprland is enabled as the desktop environment?
 
   imports = [
-    ./ags.nix
     # ./wayvnc.nix # TODO: Figure out how to get this working
     
+    ./ags/ags.nix
     ./pyprland/pyprland.nix
     ./anyrun/anyrun.nix
     ./swww/swww.nix
@@ -80,6 +80,7 @@ in {
         "$lockScreen --no-fade-in --immediate-render" # We automatically boot into hyprland, so we need to lock the screen on startup
         "hyprctl setcursor ${cursor} ${toString cursor_size}"
         "dconf write /org/gnome/desktop/interface/cursor-theme \"${cursor}\""
+        # x8 is required to have a correct cursor size with fractional scaling
         "dconf write /org/gnome/desktop/interface/cursor-size ${toString cursor_size}"
         "systemctl --user start hyprpolkitagent"
         

@@ -1,7 +1,9 @@
-import { bind, timeout, Variable } from "astal";
+import { Variable } from "astal";
 import { Gdk, Gtk } from "astal/gtk3";
-import Apps from "gi://AstalApps";
-import { closeOpenPopup } from "../popups";
+import { closeOpenPopup } from "../../popups";
+import { ApplicationsModule } from "./modules/applicationsModule";
+import { RinkModule } from "./modules/rinkModule";
+import { Module, ModuleEntry } from "./module";
 
 // An alternative to anyrun for my application launcher.
 
@@ -15,51 +17,9 @@ import { closeOpenPopup } from "../popups";
 // - [ ] kidex
 // - [ ] stdin (possibly a separate, centered, popup?)
 
-class ModuleEntry {
-  constructor(
-    public name: string,
-    public description: string,
-    public icon: string,
-    public onClick: () => void
-  ) {}
-}
-
-abstract class Module {
-  constructor(
-    public name: string,
-    public icon: string
-  ) {}
-
-  getActive(query: string): boolean {
-    return true;
-  }
-  abstract getEntries(query: string): ModuleEntry[];
-}
-
-class ApplicationsModule extends Module {
-  static MAX_RESULTS = 8;
-  static apps = new Apps.Apps();
-
-  constructor() {
-    super("Applications", "run-applications");
-  }
-
-  getActive(query: string): boolean {
-    return query.length > 0;
-  }
-  getEntries(query: string): ModuleEntry[] {
-    // TODO: Custom implementation that supports app Desktop Actions defined in the desktop files, e.g. "New Window" from LibreWolf
-    return ApplicationsModule.apps
-      .fuzzy_query(query)
-      .slice(0, ApplicationsModule.MAX_RESULTS)
-      .map(app => new ModuleEntry(app.name, app.description, app.iconName, () => {
-        app.launch();
-      }));
-  }
-}
-
 let modules: Module[] = [
-  new ApplicationsModule()
+  new ApplicationsModule(),
+  new RinkModule()
 ];
 
 type IndexedModuleEntry = ModuleEntry & { index: number };
@@ -156,7 +116,7 @@ export default function RunPopup() {
                 onClicked={entry.onClick}
               >
                 <box>
-                  <icon icon={entry.icon} />
+                  <icon visible={entry.icon !== null} icon={entry.icon ?? ""} />
                   <box vertical className="text">
                     <label halign={Gtk.Align.START} label={entry.name} className="name" />
                     <label halign={Gtk.Align.START} label={entry.description} className="description" wrap />

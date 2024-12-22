@@ -12,8 +12,9 @@ import { openPopup, PopupType } from "./popups";
 // TODO: Audio mixer?
 
 // Also not happy with this absolute path, but it works for now...
-const HOME = GLib.getenv("HOME");
-const src = `${HOME}/nixos-config/home-manager/hyprland/ags_config/`;
+export function src() {
+  return `${GLib.getenv("HOME")}/nixos-config/home-manager/hyprland/ags_config/`;
+}
 
 /**
  * The widgets displayed on every monitor and automatically updated when monitors are added or removed.
@@ -35,7 +36,7 @@ class MonitorWindows {
 }
 
 App.start({
-  icons: `${src}/icons/`,
+  icons: `${src()}/icons/`,
   css: styles,
   instanceName: "main",
   requestHandler(request: string, res) {

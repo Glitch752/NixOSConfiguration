@@ -24,6 +24,26 @@
     pavucontrol # PulseAudio volume control
   ];
 
+  home.sessionVariables =
+    # A derivation for our wrapper around rink; build with cargo build --release
+    # rink-wrapper
+    let rinkDerivation = pkgs.rustPlatform.buildRustPackage {
+      pname = "rink-wrapper";
+      version = "0.0.1";
+      src = ./rink_wrapper;
+      buildInputs = [ pkgs.cargo ];
+      buildPhase = ''
+        cargo build --release
+      '';
+      installPhase = ''
+        mkdir -p $out/bin
+        cp target/release/rink_wrapper $out/bin
+      '';
+      cargoHash = "sha256-kgxhkgF8LEKLOwBzUGXaHcACg0v+kCh4nbVPpCyZM3A=";
+  }; in {
+    RINK_WRAPPER_PATH = "${rinkDerivation}/bin/rink_wrapper";
+  };
+
   # https://github.com/0thElement/nixconf/blob/main/packages/ags/default.nix
   programs.ags = {
     enable = true;
@@ -35,7 +55,9 @@
     # However, I couldn't find a better solution.
     # Technically, using an absolute path like this violates flakes' purity, but I'm not particularly concerned about that for development.
     # There may be a better solution using home-manager's activation scripts, but I haven't looked into that yet.
-      configDir = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nixos-config/home-manager/hyprland/ags_config";
+
+    # TODO: ags_config should probably be a child folder of this?
+    configDir = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nixos-config/home-manager/hyprland/ags_config";
 
     # Additional packages to add to gjs's runtime
     extraPackages = with pkgs; [

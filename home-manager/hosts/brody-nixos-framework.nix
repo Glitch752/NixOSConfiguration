@@ -84,7 +84,7 @@
 
       { # Battery percentage
         monitor = "";
-        text = ''cmd[update:1000] sh ${./scripts/battery.sh}'';
+        text = ''cmd[update:1000] sh ${../hyprland/hyprlock/scripts/battery.sh}'';
         font_size = 18;
         font_family = "JetBrains Mono";
         position = "-15, -15";

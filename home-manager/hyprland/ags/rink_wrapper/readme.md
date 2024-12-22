@@ -1,1 +1,0 @@
-A thin wrapper around [Rink](https://github.com/tiffany352/rink-rs/tree/master) to return results in a JSON format we can easily parse in the frontend.

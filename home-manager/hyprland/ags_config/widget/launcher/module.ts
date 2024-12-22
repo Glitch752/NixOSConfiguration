@@ -16,5 +16,10 @@ export abstract class Module {
   getActive(query: string): boolean {
     return true;
   }
-  abstract getEntries(query: string): ModuleEntry[];
+
+  /**
+   * Get the entries for the given query.  
+   * If returning a promise, it must be cancellable with the given AbortSignal.
+   */
+  abstract getEntries(query: string, abortSignal: AbortSignal): ModuleEntry[] | Promise<ModuleEntry[]>;
 }

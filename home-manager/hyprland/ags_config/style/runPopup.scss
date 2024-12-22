@@ -7,6 +7,26 @@ window.runPopup {
     padding: 10px;
   }
 
+  .query {
+    background-color: theme.$lightBg;
+  }
+
+  scrollable {
+    viewport {
+      border: 0;
+    }
+    padding: 0;
+    margin: 0;
+  }
+
+  .noResults {
+    // I have no clue why there's such extreme margin on the bottom here
+    margin: 10px 10px -45px 10px;
+    font-size: 20px;
+    font-weight: normal;
+    color: theme.$fg;
+  }
+
   .module {
     .moduleHeader {
       color: theme.$fg;

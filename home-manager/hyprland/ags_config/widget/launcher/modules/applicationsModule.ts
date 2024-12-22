@@ -12,7 +12,7 @@ export class ApplicationsModule extends Module {
   getActive(query: string): boolean {
     return query.length > 0;
   }
-  getEntries(query: string): ModuleEntry[] {
+  getEntries(query: string, _abortSignal: AbortSignal): ModuleEntry[] {
     // TODO: Custom implementation that supports app Desktop Actions defined in the desktop files, e.g. "New Window" from LibreWolf
     return ApplicationsModule.apps
       .fuzzy_query(query)

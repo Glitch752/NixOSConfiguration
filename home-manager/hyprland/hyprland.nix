@@ -289,8 +289,11 @@ in {
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;
-    package = cursorPackage;
-    name = cursor;
+    # package = cursorPackage;
+    # Fixes cursor size issues for some reason... I want to fix this
+    # so we use a consistent cursor theme, but I've already spent too much time on it.
+    package = pkgs.xorg.xcursorthemes;
+    name = "Adwaita";
     size = cursor_size;
   };
 }

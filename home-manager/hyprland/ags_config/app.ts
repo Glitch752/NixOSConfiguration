@@ -38,6 +38,7 @@ class MonitorWindows {
 App.start({
   icons: `${src()}/icons/`,
   css: styles,
+  cursorTheme: "Adwaita",
   instanceName: "main",
   requestHandler(request: string, res) {
     const data = request.split(" ");

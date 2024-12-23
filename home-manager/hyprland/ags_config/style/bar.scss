@@ -11,7 +11,7 @@ window.bar {
 
   > centerbox {
     @if not theme.$segmented {
-      background: #00000001;
+      background: theme.$bg;
       @if theme.$addWidgetBorders {
         @if theme.$floating {
           border: theme.$borderThickness solid theme.$borderColor;

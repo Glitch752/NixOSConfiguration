@@ -28,7 +28,7 @@
     # A derivation for our Rust library used by the launcher
     let launcherUtilsDerivation = pkgs.rustPlatform.buildRustPackage {
       pname = "rust_launcher_utils";
-      version = "0.0.2";
+      version = "0.0.3";
       src = ./rust_launcher_utils;
       buildInputs = [ pkgs.cargo ];
       buildPhase = ''
@@ -38,7 +38,7 @@
         mkdir -p $out/bin
         cp target/release/rust_launcher_utils $out/bin
       '';
-      cargoHash = "sha256-osUVfd2x+/P4kZrciS/SG/F0gJUhnvbhErBrzer65qk=";
+      cargoHash = "sha256-dorfb27wL/W52PIgZDnxRtmMkeyeZo0ojDKaPwtYMHk=";
   }; in {
     RUST_LAUNCHER_UTILS_PATH = "${launcherUtilsDerivation}/bin/rust_launcher_utils";
   };

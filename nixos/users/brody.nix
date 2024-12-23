@@ -23,6 +23,9 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  
+  # Avahi is an mDNS/DNS-SD (Zeroconf) implementation.
+  services.avahi.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -112,6 +115,10 @@
 
     xfce.thunar # Thunar file manager; needs to be installed at a system level for some reason
   ];
+
+  environment.sessionVariables = {
+    __HM_SESS_VARS_SOURCED = ""; # Workaround for GH-755 and GH-890
+  };
 
   systemd.packages = [ pkgs.dbus-broker ];
 

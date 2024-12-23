@@ -21,6 +21,11 @@
 
     # https://wiki.hyprland.org/Configuring/Binds/
     bind = [
+      # TODO: This is _very_ temporary. I want to add a user interface or configuration file for this.
+      # It should only show when on my home network.
+      # I just think this is cool for now.
+      "$mainMod, BackSpace, exec, curl -X POST http://192.168.68.112/switch/kauf_plug/toggle"
+
       "$mainMod, Q, exec, $terminal"
 
       # Pyprland shortcuts

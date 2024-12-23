@@ -1,10 +1,11 @@
 import { exec, execAsync, timeout } from "astal";
 import { Module, ModuleEntry } from "../module";
 import GLib from "gi://GLib";
-import { abortableExecAsync, AbortSignal } from "../../../utils";
+import { abortableExecAsync, AbortSignal, StdIOSocketProcess } from "../../../utils";
 
 // This is kind of sketchy, but whatever
 const rustLauncherUtilsPath = GLib.getenv("RUST_LAUNCHER_UTILS_PATH") ?? "";
+const rustLauncherUtils: StdIOSocketProcess = new StdIOSocketProcess([rustLauncherUtilsPath]);
 
 export class RinkModule extends Module {
   constructor() {
@@ -14,13 +15,13 @@ export class RinkModule extends Module {
   async getEntries(query: string, abortSignal: AbortSignal): Promise<ModuleEntry[]> {
     try {
       // Maybe this isn't the best solution, but it's the cleanest I could come up with.
-      // I created a simple wrapper around Rink in Rust that returned the result as a JSON string
+      // I created a simple wrapper around Rink in Rust that returns the result as a JSON string
       // and whether there were any errors. The defualt Rink CLI does't return a non-zero exit
       // code or otherwise indicate an error, so this is the best solution I've come up with.
-      const result = await abortableExecAsync([rustLauncherUtilsPath, "rink", query], abortSignal);
-      if(!result) return [];
-
-      const { error, output }: { error: boolean, output: string } = JSON.parse(result.stdout);
+      // I opened an issue here: https://github.com/tiffany352/rink-rs/issues/194
+      const { error, output }: { error: boolean, output: string } = JSON.parse(
+        await rustLauncherUtils.sendAsync(`rink ${query}`) ?? "{ \"error\": true, \"output\": \"\" }"
+      );
       // if(error) return [];
 
       const { title, description } = this.parseRinkOutput(output);
@@ -28,7 +29,8 @@ export class RinkModule extends Module {
       return [new ModuleEntry(title, description, null, () => {
         // TODO: Copy the result to the clipboard
       })];
-    } catch {
+    } catch(e) {
+      print(`Error running Rink: ${e}`);
       return [];
     }
   }

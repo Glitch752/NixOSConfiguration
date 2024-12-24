@@ -1,4 +1,5 @@
 import { Gio, GLib } from "astal";
+import { Gdk, Gtk } from "astal/gtk3";
 
 export function limitLength(s: string, n: number) {
   return s.length > n ? s.slice(0, n - 3) + "..." : s;
@@ -8,6 +9,15 @@ export function formatDuration(duration: number) {
   const minutes = Math.floor(duration / 60);
   const seconds = Math.floor(duration % 60);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+export function copyToClipboard(text: string) {
+  const display = Gdk.Display.get_default();
+  if(!display) return;
+  const clipboard = Gtk.Clipboard.get_default(display);
+  
+  clipboard.set_text(text, -1);
+  clipboard.store();
 }
 
 /** An incredibly simple abort signal implementation. */
@@ -150,8 +160,22 @@ export class StdIOSocketProcess {
 Array.prototype.defaultIfEmpty = function<T>(defaultValue: T): T[] {
   return this.length > 0 ? this : [defaultValue];
 }
+Array.prototype.all = function<T>(predicate: (value: T) => boolean): boolean {
+  for(let value of this) {
+    if(!predicate(value)) return false;
+  }
+  return true;
+}
+Array.prototype.any = function<T>(predicate: (value: T) => boolean): boolean {
+  for(let value of this) {
+    if(predicate(value)) return true;
+  }
+  return false;
+}
 declare global {
   interface Array<T> {
     defaultIfEmpty(defaultValue: T): T[];
+    all(predicate: (value: T) => boolean): boolean;
+    any(predicate: (value: T) => boolean): boolean;
   }
 }

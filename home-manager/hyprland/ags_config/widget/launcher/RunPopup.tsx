@@ -76,10 +76,10 @@ export default function RunPopup() {
     abortSignal = new AbortSignal();
     moduleResults.set(getModuleResults(q, abortSignal));
   });
-  let highlightedIndex = Variable(0);
+  let highlightedIndex = Variable(-1);
 
   let skipUpdate = false; // This is a hack to prevent infinite loops
-  moduleResults.subscribe((results) => {
+  function updateResultPromises(results: MaybePromise<ModuleResult>[]) {
     if(skipUpdate) {
       skipUpdate = false;
       return;
@@ -95,21 +95,38 @@ export default function RunPopup() {
         });
       }
     });
-  });
+  }
+  updateResultPromises(moduleResults.get());
+  moduleResults.subscribe(updateResultPromises);
 
   const getAllEntries = () => moduleResults.get()
     .flatMap(result => result instanceof Promise ? [] : result.entries);
+  
+  /** If no highlightable entries are found, this will do nothing. */
   const previousHighlight = () => {
+    const entries = getAllEntries();
+    if(entries.length === 0) return;
+    if(entries.all(entry => entry.onActivate === null)) return;
+
     let currentHighlightedIndex = highlightedIndex.get();
     currentHighlightedIndex--;
-    if(currentHighlightedIndex < 0) currentHighlightedIndex = getAllEntries().length - 1;
+    if(currentHighlightedIndex < 0) currentHighlightedIndex = entries.length - 1;
     highlightedIndex.set(currentHighlightedIndex);
+
+    if(entries[currentHighlightedIndex].onActivate === null) previousHighlight();
   };
+  /** If no highlightable entries are found, this will do nothing. */
   const nextHighlight = () => {
+    const entries = getAllEntries();
+    if(entries.length === 0) return;
+    if(entries.all(entry => entry.onActivate === null)) return;
+
     let currentHighlightedIndex = highlightedIndex.get();
     currentHighlightedIndex++;
-    if(currentHighlightedIndex >= getAllEntries().length) currentHighlightedIndex = 0;
+    if(currentHighlightedIndex >= entries.length) currentHighlightedIndex = 0;
     highlightedIndex.set(currentHighlightedIndex);
+
+    if(entries[currentHighlightedIndex].onActivate === null) nextHighlight();
   };
 
   return <box vertical valign={Gtk.Align.START}>
@@ -117,7 +134,8 @@ export default function RunPopup() {
       placeholderText=""
       onChanged={self => {
         query.set(self.text);
-        highlightedIndex.set(0);
+        highlightedIndex.set(-1);
+        nextHighlight();
       }}
       onRealize={self => {
         self.grab_focus();
@@ -136,7 +154,7 @@ export default function RunPopup() {
           return true;
         } else if(keyval === Gdk.KEY_Return) {
           const entry = getAllEntries()[highlightedIndex.get()];
-          if(entry !== null) entry.onClick();
+          if(entry !== null && entry.onActivate) entry.onActivate();
           closeOpenPopup();
           return true;
         }
@@ -168,7 +186,7 @@ export default function RunPopup() {
                 {
                   entries.map(entry => <button
                     className={highlightedIndex().as(idx => `entry ${idx === entry.index ? "highlighted" : ""}`)}
-                    onClicked={entry.onClick}
+                    onClicked={entry.onActivate ?? (() => {})}
                   >
                     <box>
                       <icon visible={entry.icon !== null} icon={entry.icon ?? ""} />

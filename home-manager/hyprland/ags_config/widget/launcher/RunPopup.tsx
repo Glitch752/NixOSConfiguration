@@ -7,6 +7,7 @@ import { Module, ModuleEntry } from "./module";
 import { AbortSignal } from "../../utils";
 import { Scrollable } from "astal/gtk3/widget";
 import { ShellModule } from "./modules/shellModule";
+import { DictionaryModule } from "./modules/dictionaryModule";
 
 // An alternative to anyrun for my application launcher.
 
@@ -23,7 +24,8 @@ import { ShellModule } from "./modules/shellModule";
 let modules: Module[] = [
   new ApplicationsModule(),
   new RinkModule(),
-  new ShellModule()
+  new ShellModule(),
+  new DictionaryModule()
 ];
 
 type IndexedModuleEntry = ModuleEntry & { index: number };

@@ -18,7 +18,7 @@ export class ShellModule extends Module {
     if(!ShellModule.TERMINAL) {
       console.warn("No terminal found for ShellModule");
     }
-    super("Applications", "run-applications");
+    super("Shell", "run-shell"); // TODO: Actually add this icon
   }
 
   getActive(query: string): boolean {

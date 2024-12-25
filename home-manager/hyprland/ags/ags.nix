@@ -1,9 +1,9 @@
 { inputs, lib, config, pkgs, flakePath, ... }: {
   nix.settings = {
-    substituters = [
+    extra-substituters = [
       "https://ags.cachix.org"
     ];
-    trusted-public-keys = [
+    extra-trusted-public-keys = [
       "ags.cachix.org-1:naAvMrz0CuYqeyGNyLgE010iUiuf/qx6kYrUv3NwAJ8="
     ];
   };
@@ -24,24 +24,24 @@
     pavucontrol # PulseAudio volume control
   ];
 
-  home.sessionVariables =
-    # A derivation for our Rust library used by the launcher
-    let launcherUtilsDerivation = pkgs.rustPlatform.buildRustPackage {
-      pname = "rust_launcher_utils";
-      version = "0.0.3";
-      src = ./rust_launcher_utils;
-      buildInputs = [ pkgs.cargo ];
-      buildPhase = ''
-        cargo build --release
-      '';
-      installPhase = ''
-        mkdir -p $out/bin
-        cp target/release/rust_launcher_utils $out/bin
-      '';
-      cargoHash = "sha256-dorfb27wL/W52PIgZDnxRtmMkeyeZo0ojDKaPwtYMHk=";
-  }; in {
-    RUST_LAUNCHER_UTILS_PATH = "${launcherUtilsDerivation}/bin/rust_launcher_utils";
-  };
+  # home.sessionVariables =
+  #   # A derivation for our Rust library used by the launcher
+  #   let launcherUtilsDerivation = pkgs.rustPlatform.buildRustPackage {
+  #     pname = "rust_launcher_utils";
+  #     version = "0.0.3";
+  #     src = ./rust_launcher_utils;
+  #     buildInputs = [ pkgs.cargo ];
+  #     buildPhase = ''
+  #       cargo build --release
+  #     '';
+  #     installPhase = ''
+  #       mkdir -p $out/bin
+  #       cp target/release/rust_launcher_utils $out/bin
+  #     '';
+  #     cargoHash = "sha256-dorfb27wL/W52PIgZDnxRtmMkeyeZo0ojDKaPwtYMHk=";
+  # }; in {
+  #   RUST_LAUNCHER_UTILS_PATH = "${launcherUtilsDerivation}/bin/rust_launcher_utils";
+  # };
 
   # https://github.com/0thElement/nixconf/blob/main/packages/ags/default.nix
   programs.ags = {

@@ -10,8 +10,8 @@
 
     [fetch_client_menu]
     separator = " | "
-    engine = "anyrun"
-    parameters = "--show-results-immediately true --plugins ${inputs.anyrun.packages.${pkgs.system}.stdin}/lib/libstdin.so"
+    engine = "sh"
+    parameters = "${./fetch_client_menu.sh}"
   '';
 
   wayland.windowManager.hyprland.settings.exec-once = [

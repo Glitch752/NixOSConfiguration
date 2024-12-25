@@ -4,7 +4,7 @@ import PopupWindow from "./widget/PopupWindow";
 import ControlsPopup from "./widget/ControlsPopup";
 import MediaControls from "./widget/MediaControls";
 import { exec } from "astal";
-import RunPopup from "./widget/launcher/RunPopup";
+import RunPopup, { CenteredRunPopup } from "./widget/launcher/RunPopup";
 
 export enum PopupType {
   MediaControls = "mediaControls",
@@ -19,7 +19,7 @@ export type PopupContent = {
   revealTransitionType: Gtk.RevealerTransitionType;
 };
 
-function getPopup(popupType: PopupType): PopupContent {
+function getPopup(popupType: PopupType, data?: PopupData): PopupContent {
   switch (popupType) {
     case PopupType.MediaControls:
       return {
@@ -37,8 +37,8 @@ function getPopup(popupType: PopupType): PopupContent {
       };
     case PopupType.RunPopup:
       return {
-        widget: RunPopup(),
-        anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM,
+        widget: data ? CenteredRunPopup(data) : RunPopup(),
+        anchor: Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM | (data ? Astal.WindowAnchor.RIGHT : 0),
         backgroundOpacity: 0,
         revealTransitionType: Gtk.RevealerTransitionType.SLIDE_RIGHT
       };
@@ -107,12 +107,17 @@ function addWindowClosersForPopup(menu: string, popupData: PopupContent): Gtk.Wi
   return windowClosers;
 }
 
-export function openPopup(popupType: PopupType) {
+export type PopupData = {
+  input: string,
+  respond: (response: string) => void
+};
+
+export function openPopup(popupType: PopupType, data?: PopupData) {
   const monitor = getMonitorForPopup();
   if(monitor === null) return;
 
   if(!openPopupData || openPopupData.type !== popupType || openPopupData.monitor !== monitor) {
-    const popupData = getPopup(popupType);
+    const popupData = getPopup(popupType, data);
     const windowClosers = addWindowClosersForPopup(popupType, popupData);
 
     const popup = PopupWindow(monitor, popupType, popupData);
@@ -121,6 +126,7 @@ export function openPopup(popupType: PopupType) {
     openPopupData = {
       close: () => {
         App.get_window(popupType)?.destroy();
+        if(data) data.respond("");
       },
       type: popupType,
       windowClosers: windowClosers,

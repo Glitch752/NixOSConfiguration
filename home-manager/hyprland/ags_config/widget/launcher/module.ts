@@ -3,7 +3,7 @@ import { AbortSignal } from "../../utils";
 export class ModuleEntry {
   constructor(
     public name: string,
-    public description: string,
+    public description: string | null,
     public icon: string | null,
     /** If null, the entry can't be selected. */
     public onActivate: (() => void) | null

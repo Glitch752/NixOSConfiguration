@@ -21,11 +21,6 @@
     woomer.url = "github:coffeeispower/woomer";
     swww.url = "github:LGFae/swww";
 
-    # walker.url = "github:abenz1267/walker";
-    anyrun = {
-      url = "github:anyrun-org/anyrun";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
     ags = {
       url = "github:aylur/ags";
       inputs.nixpkgs.follows = "nixpkgs";

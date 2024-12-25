@@ -1,6 +1,6 @@
 import { bind, Variable } from "astal";
 import { Gdk, Gtk } from "astal/gtk3";
-import { closeOpenPopup } from "../../popups";
+import { closeOpenPopup, PopupData } from "../../popups";
 import { ApplicationsModule } from "./modules/applicationsModule";
 import { RinkModule } from "./modules/rinkModule";
 import { Module, ModuleEntry } from "./module";
@@ -10,26 +10,9 @@ import { ShellModule } from "./modules/shellModule";
 import { DictionaryModule } from "./modules/dictionaryModule";
 import { WebSearchModule } from "./modules/webSearchModule";
 import { SymbolsModule } from "./modules/symbolsModule";
+import { InputListModule } from "./modules/inputListModule";
 
 // An alternative to anyrun for my application launcher.
-
-// TODO for anyrun parity:
-// - [X] applications
-// - [X] dictionary
-// - [ ] symbols
-// - [X] shell
-// - [X] rink
-// - [X] websearch
-// - [ ] stdin (possibly a separate, centered, popup?)
-
-let modules: Module[] = [
-  new ApplicationsModule(),
-  new RinkModule(),
-  new ShellModule(),
-  new DictionaryModule(),
-  new WebSearchModule(),
-  new SymbolsModule()
-];
 
 type IndexedModuleEntry = ModuleEntry & { index: number };
 type MaybePromise<T> = T | Promise<T>;
@@ -46,7 +29,7 @@ type ModuleResult = {
  * @param abortSignal 
  * @returns 
  */
-function getModuleResults(query: string, abortSignal: AbortSignal): MaybePromise<ModuleResult>[] {
+function getModuleResults(modules: Module[], query: string, abortSignal: AbortSignal): MaybePromise<ModuleResult>[] {
   let results: MaybePromise<ModuleResult>[] = [];
   let i = 0;
   for(let module of modules) {
@@ -69,19 +52,36 @@ function getModuleResults(query: string, abortSignal: AbortSignal): MaybePromise
   return results;
 }
 
-export default function RunPopup() {
+export function CenteredRunPopup(data: PopupData) {
+  return <box vertical valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER}>
+    {RunPopup(data)}
+  </box>;
+}
+
+export default function RunPopup(data?: PopupData) {
   let query = Variable("");
   let abortSignal = new AbortSignal();
 
+  let modules: Module[] = data ? [
+    new InputListModule(data)
+  ] : [
+    new ApplicationsModule(),
+    new RinkModule(),
+    new ShellModule(),
+    new DictionaryModule(),
+    new WebSearchModule(),
+    new SymbolsModule()
+  ];
+
   // TODO: Our handling of promises is really overcomplicated and hacky here
 
-  let moduleResults = Variable<MaybePromise<ModuleResult>[]>(getModuleResults("", abortSignal));
+  let moduleResults = Variable<MaybePromise<ModuleResult>[]>(getModuleResults(modules, "", abortSignal));
   query.subscribe(q => {
     // If we're already fetching results, abort the previous fetch
     abortSignal.abort();
 
     abortSignal = new AbortSignal();
-    moduleResults.set(getModuleResults(q, abortSignal));
+    moduleResults.set(getModuleResults(modules, q, abortSignal));
   });
   let highlightedIndex = Variable(-1);
 
@@ -202,7 +202,7 @@ export default function RunPopup() {
                       <icon visible={entry.icon !== null} icon={entry.icon ?? ""} />
                       <box vertical className="text">
                         <label halign={Gtk.Align.START} label={entry.name} className="name" wrap />
-                        <label halign={Gtk.Align.START} label={entry.description} className="description" wrap />
+                        <label halign={Gtk.Align.START} label={entry.description ?? ""} visible={entry.description != null} className="description" wrap />
                       </box>
                     </box>
                   </button>)

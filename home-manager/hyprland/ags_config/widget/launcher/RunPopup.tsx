@@ -6,6 +6,7 @@ import { RinkModule } from "./modules/rinkModule";
 import { Module, ModuleEntry } from "./module";
 import { AbortSignal } from "../../utils";
 import { Scrollable } from "astal/gtk3/widget";
+import { ShellModule } from "./modules/shellModule";
 
 // An alternative to anyrun for my application launcher.
 
@@ -13,15 +14,16 @@ import { Scrollable } from "astal/gtk3/widget";
 // - [X] applications
 // - [ ] dictionary
 // - [ ] symbols
-// - [ ] shell
+// - [X] shell
 // - [X] rink
 // - [ ] websearch
-// - [ ] kidex
+// - ~~[ ] kidex~~ The daemon isn't available on NixOS easily, and I don't care that much about file searching
 // - [ ] stdin (possibly a separate, centered, popup?)
 
 let modules: Module[] = [
   new ApplicationsModule(),
-  new RinkModule()
+  new RinkModule(),
+  new ShellModule()
 ];
 
 type IndexedModuleEntry = ModuleEntry & { index: number };

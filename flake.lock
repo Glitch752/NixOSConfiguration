@@ -96,6 +96,21 @@
       }
     },
     "crane": {
+      "locked": {
+        "lastModified": 1734808813,
+        "narHash": "sha256-3aH/0Y6ajIlfy7j52FGZ+s4icVX0oHhqBzRdlOeztqg=",
+        "owner": "ipetkov",
+        "repo": "crane",
+        "rev": "72e2d02dbac80c8c86bf6bf3e785536acf8ee926",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ipetkov",
+        "repo": "crane",
+        "type": "github"
+      }
+    },
+    "crane_2": {
       "inputs": {
         "nixpkgs": [
           "woomer",
@@ -956,6 +971,7 @@
       "inputs": {
         "ags": "ags",
         "anyrun": "anyrun",
+        "crane": "crane",
         "home-manager": "home-manager",
         "hyprland": "hyprland",
         "hyprlock": "hyprlock",
@@ -964,8 +980,29 @@
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixpkgs-wayland": "nixpkgs-wayland",
         "pyprland": "pyprland",
+        "rust-overlay": "rust-overlay",
         "swww": "swww",
         "woomer": "woomer"
+      }
+    },
+    "rust-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1735093658,
+        "narHash": "sha256-eIUYGDtairggo7+JXSwN7b6Zr03BJ7tsZL/U0NkDr0s=",
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "rev": "ca249a1d98eff27e92665ac462b9d47f58141925",
+        "type": "github"
+      },
+      "original": {
+        "owner": "oxalica",
+        "repo": "rust-overlay",
+        "type": "github"
       }
     },
     "swww": {
@@ -1186,7 +1223,7 @@
     },
     "woomer": {
       "inputs": {
-        "crane": "crane",
+        "crane": "crane_2",
         "flake-utils": "flake-utils_3",
         "nixpkgs": "nixpkgs_8"
       },

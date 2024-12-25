@@ -107,6 +107,9 @@
       map ctrl+shift+f toggle_fullscreen
       map ctrl+w close_tab
       map ctrl+t new_tab
+
+      map ctrl+shift+plus increase_font_size
+      map ctrl+shift+minus decrease_font_size
     '';
   };
 

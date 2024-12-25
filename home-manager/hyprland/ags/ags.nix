@@ -22,26 +22,15 @@
 
     alsa-utils # Advanced audio controls
     pavucontrol # PulseAudio volume control
-  ];
 
-  # home.sessionVariables =
-  #   # A derivation for our Rust library used by the launcher
-  #   let launcherUtilsDerivation = pkgs.rustPlatform.buildRustPackage {
-  #     pname = "rust_launcher_utils";
-  #     version = "0.0.3";
-  #     src = ./rust_launcher_utils;
-  #     buildInputs = [ pkgs.cargo ];
-  #     buildPhase = ''
-  #       cargo build --release
-  #     '';
-  #     installPhase = ''
-  #       mkdir -p $out/bin
-  #       cp target/release/rust_launcher_utils $out/bin
-  #     '';
-  #     cargoHash = "sha256-dorfb27wL/W52PIgZDnxRtmMkeyeZo0ojDKaPwtYMHk=";
-  # }; in {
-  #   RUST_LAUNCHER_UTILS_PATH = "${launcherUtilsDerivation}/bin/rust_launcher_utils";
-  # };
+    (import ./rust_launcher_utils {
+      inherit (inputs) crane rust-overlay;
+      inherit (pkgs) system;
+      # Makes the binary cache happy for some reason, idk
+      # Maybe we could use normal nixpkgs with some other configuration and have it work?
+      nixpkgs = inputs.nixpkgs-unstable;
+    }).crate
+  ];
 
   # https://github.com/0thElement/nixconf/blob/main/packages/ags/default.nix
   programs.ags = {

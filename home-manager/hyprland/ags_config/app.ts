@@ -1,4 +1,4 @@
-import { App, Gdk, Gtk } from "astal/gtk3";
+import { App, Astal, Gdk, Gtk } from "astal/gtk3";
 import styles from "./style/styles.scss";
 import Bar from "./widget/Bar";
 import GLib from "gi://GLib";
@@ -61,6 +61,17 @@ App.start({
         }
         openPopup(popup as PopupType);
         res("Opened popup");
+        break;
+      }
+      case "launcherList": {
+        if(data.length < 2) {
+          res("No launcher list specified");
+          return;
+        }
+        openPopup(PopupType.RunPopup, {
+          input: data.slice(1).join(" "),
+          respond: res
+        });
         break;
       }
       default: {

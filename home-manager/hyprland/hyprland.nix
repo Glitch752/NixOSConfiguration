@@ -10,7 +10,6 @@ in {
     
     ./ags/ags.nix
     ./pyprland/pyprland.nix
-    ./anyrun/anyrun.nix
     ./swww/swww.nix
     ./hyprlock/hyprlock.nix
     ./hyprlock/hypridle.nix
@@ -223,9 +222,6 @@ in {
       ];
 
       layerrule = [
-        # Blur the background when Anyrun is open
-        # This doesn't look great since I use a really aggressive blur
-        # "blur, ^anyrun$"
         "blur, ^ags-bar-window$"
         "ignorezero, ^ags-bar-window$"
         "blur, ^ags-popup-window$"

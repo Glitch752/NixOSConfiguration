@@ -11,3 +11,16 @@ export async function rinkQuery(query: string): Promise<RinkQueryResult> {
   if(result) return JSON.parse(result);
   return { error: true, output: "" };
 }
+
+export type SymbolsQueryResult = {
+  error: boolean,
+  output: {
+    name: string,
+    value: string
+  }[]
+}
+export async function symbolsQuery(query: string): Promise<SymbolsQueryResult> {
+  const result = await rustLauncherUtils.sendAsync(`symbols ${query}`);
+  if(result) return JSON.parse(result);
+  return { error: true, output: [] };
+}

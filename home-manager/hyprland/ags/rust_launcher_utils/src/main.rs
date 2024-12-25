@@ -1,18 +1,21 @@
 use std::process::exit;
 
 mod rink;
+mod symbols;
 
 // TODO: Switch to a socket-based IPC system to reduce latency?
 
 struct State {
-  rink_ctx: rink_core::Context
+  rink_ctx: rink_core::Context,
+  symbols: symbols::Symbols
 }
 
 fn main() {
   let stdin = std::io::stdin();
 
   let mut state = State {
-    rink_ctx: rink::create_context()
+    rink_ctx: rink::create_context(),
+    symbols: symbols::load_symbols()
   };
 
   // Listen for stdin input, and run commands on newlines
@@ -27,6 +30,7 @@ fn main() {
     let command = input[0];
     match command {
       "rink" => rink::execute(&mut state.rink_ctx, &input[1..].join(" ")),
+      "symbols" => symbols::execute(&mut state.symbols, &input[1..].join(" ")),
       "exit" => exit(0),
       _ => {
         println!("Invalid command");

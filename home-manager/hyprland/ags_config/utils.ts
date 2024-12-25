@@ -80,11 +80,34 @@ export async function abortableExecAsync(args: string[], abortSignal: AbortSigna
   }
 }
 
+class AsyncMutex {
+  private queue: (() => void)[] = [];
+  private locked = false;
+
+  async lock() {
+    if(this.locked) {
+      await new Promise<void>((resolve) => this.queue.push(resolve));
+    } else {
+      this.locked = true;
+    }
+  }
+
+  unlock() {
+    if(this.queue.length > 0) {
+      const resolve = this.queue.shift()!;
+      resolve();
+    } else {
+      this.locked = false;
+    }
+  }
+}
+
 export class StdIOSocketProcess {
   private process: Gio.Subprocess;
   private stdin: Gio.OutputStream;
   private stdout: Gio.DataInputStream;
   private stderr: Gio.DataInputStream;
+  private lock = new AsyncMutex();
 
   constructor(args: string[]) {
     this.process = new Gio.Subprocess({
@@ -115,41 +138,43 @@ export class StdIOSocketProcess {
   private activeRead: Gio.Cancellable | null = null;
 
   async sendAsync(data: string): Promise<string | null> {
-    if(this.activeRead) {
-      this.activeRead.cancel();
-      this.activeRead = null;
-    }
-
-    const cancellable = new Gio.Cancellable();
-    this.activeRead = cancellable;
-
-    // Clear the stdout buffer
-    if(this.stdout.get_available() > 0) {
-      await this.stdout.skip_async(this.stdout.get_available(), GLib.PRIORITY_DEFAULT, cancellable);
-      if(cancellable.is_cancelled()) return null;
-    }
-
-    await this.write_stdin_async(data, cancellable);
-    if(cancellable.is_cancelled()) return null;
-    // const stdout = await this.read_stdout_line_async();
+    await this.lock.lock();
     
-    const ANSI_BLUE = "\x1b[34m";
-    const ANSI_RESET = "\x1b[0m";
+    try {
+      if(this.activeRead) {
+        this.activeRead.cancel();
+        this.activeRead = null;
+      }
 
-    await this.stdout.fill_async(-1, GLib.PRIORITY_DEFAULT, cancellable);
-    if(cancellable.is_cancelled()) return null;
+      const cancellable = new Gio.Cancellable();
+      this.activeRead = cancellable;
 
-    const bytes = this.stdout.peek_buffer();
-    const text = new TextDecoder().decode(bytes);
-    print(ANSI_BLUE, text, ANSI_RESET);
+      // Clear the stdout buffer
+      if(this.stdout.get_available() > 0) {
+        await this.stdout.skip_async(this.stdout.get_available(), GLib.PRIORITY_DEFAULT, cancellable);
+        if(cancellable.is_cancelled()) return null;
+      }
 
-    const [lineBytes] = await this.stdout.read_line_async(GLib.PRIORITY_DEFAULT, cancellable);
-    if(cancellable.is_cancelled()) return null;
-    if(!lineBytes) return null;
+      await this.write_stdin_async(data, cancellable);
+      if(cancellable.is_cancelled()) return null;
+      // const stdout = await this.read_stdout_line_async();
+      
+      await this.stdout.fill_async(-1, GLib.PRIORITY_DEFAULT, cancellable);
+      if(cancellable.is_cancelled()) return null;
 
-    const line = new TextDecoder().decode(lineBytes);
+      const bytes = this.stdout.peek_buffer();
+      const text = new TextDecoder().decode(bytes);
 
-    return line;
+      const [lineBytes] = await this.stdout.read_line_async(GLib.PRIORITY_DEFAULT, cancellable);
+      if(cancellable.is_cancelled()) return null;
+      if(!lineBytes) return null;
+
+      const line = new TextDecoder().decode(lineBytes);
+
+      return line;
+    } finally {
+      this.lock.unlock();
+    }
   }
 
   close() {

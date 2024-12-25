@@ -8,12 +8,13 @@ import { AbortSignal } from "../../utils";
 import { Scrollable } from "astal/gtk3/widget";
 import { ShellModule } from "./modules/shellModule";
 import { DictionaryModule } from "./modules/dictionaryModule";
+import { WebSearchModule } from "./modules/webSearchModule";
 
 // An alternative to anyrun for my application launcher.
 
 // TODO for anyrun parity:
 // - [X] applications
-// - [ ] dictionary
+// - [X] dictionary
 // - [ ] symbols
 // - [X] shell
 // - [X] rink
@@ -25,7 +26,8 @@ let modules: Module[] = [
   new ApplicationsModule(),
   new RinkModule(),
   new ShellModule(),
-  new DictionaryModule()
+  new DictionaryModule(),
+  new WebSearchModule()
 ];
 
 type IndexedModuleEntry = ModuleEntry & { index: number };

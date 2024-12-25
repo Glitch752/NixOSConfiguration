@@ -1,8 +1,6 @@
-import { GLib } from "astal";
 import { StdIOSocketProcess } from "../../utils";
 
-const rustLauncherUtilsPath = GLib.getenv("RUST_LAUNCHER_UTILS_PATH") ?? "";
-const rustLauncherUtils: StdIOSocketProcess = new StdIOSocketProcess([rustLauncherUtilsPath]);
+const rustLauncherUtils: StdIOSocketProcess = new StdIOSocketProcess(["rust_launcher_utils"]);
 
 export type RinkQueryResult = {
   error: boolean,

@@ -4,7 +4,7 @@ version = "0.0.3"
 edition = "2021"
 
 [dependencies]
-kidex-common = "0.1.0"
+fuzzy-matcher = "0.3.7"
 reqwest = { version = "0.12.9", features = ["blocking", "json"] }
 rink-core = { version = "0.8.0", features = ["bundle-files"] }
 serde_json = "1.0.133"

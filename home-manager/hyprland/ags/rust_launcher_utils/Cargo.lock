@@ -972,6 +972,7 @@ dependencies = [
  "fuzzy-matcher",
  "reqwest",
  "rink-core",
+ "serde",
  "serde_json",
 ]
 

@@ -9,6 +9,7 @@ import { Scrollable } from "astal/gtk3/widget";
 import { ShellModule } from "./modules/shellModule";
 import { DictionaryModule } from "./modules/dictionaryModule";
 import { WebSearchModule } from "./modules/webSearchModule";
+import { SymbolsModule } from "./modules/symbolsModule";
 
 // An alternative to anyrun for my application launcher.
 
@@ -18,8 +19,7 @@ import { WebSearchModule } from "./modules/webSearchModule";
 // - [ ] symbols
 // - [X] shell
 // - [X] rink
-// - [ ] websearch
-// - ~~[ ] kidex~~ The daemon isn't available on NixOS easily, and I don't care that much about file searching
+// - [X] websearch
 // - [ ] stdin (possibly a separate, centered, popup?)
 
 let modules: Module[] = [
@@ -27,7 +27,8 @@ let modules: Module[] = [
   new RinkModule(),
   new ShellModule(),
   new DictionaryModule(),
-  new WebSearchModule()
+  new WebSearchModule(),
+  new SymbolsModule()
 ];
 
 type IndexedModuleEntry = ModuleEntry & { index: number };
@@ -95,9 +96,12 @@ export default function RunPopup() {
         // This shouldn't return results from previous queries since we use AbortControllers
         result.then((finishedResult) => {
           if(!moduleResults.get().includes(result)) return;
+          if(finishedResult.entries.length === 0) return;
 
           skipUpdate = true;
           moduleResults.set([...moduleResults.get(), finishedResult]);
+
+          if(highlightedIndex.get() === -1) nextHighlight();
         });
       }
     });

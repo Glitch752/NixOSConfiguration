@@ -11,6 +11,13 @@
   # for a while.
   # See https://lix.systems/about/
   nix.package = pkgs.lix;
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    auto-optimise-store = true;
+
+    # https://mynixos.com/nixpkgs/option/nix.settings.trusted-users
+    trusted-users = [ "root" "brody" ];
+  };
 
   desktopEnvironments.hyprland.enable = true;
   desktopEnvironments.gnome.enable = false;
@@ -93,9 +100,6 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search ___
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   environment.systemPackages = with pkgs; [
     # Git is a prerequisite to using flakes, so we install it at
     # a system level.
@@ -144,7 +148,6 @@
     dates = "weekly";
     options = "--delete-older-than 1w";
   };
-  nix.settings.auto-optimise-store = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

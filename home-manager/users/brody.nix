@@ -1,7 +1,6 @@
 { inputs, lib, config, pkgs, ... }: {
   imports = [
     ../hyprland/hyprland.nix
-    ./modules/rust.nix
   ];
 
   home = {
@@ -37,6 +36,7 @@
     # Provides the command `nom` works just like `nix`
     # with more details log output
     nix-output-monitor
+    nix-top # A top-like program for monitoring Nix builds
 
     glow # markdown previewer in terminal
 
@@ -58,6 +58,8 @@
     gimp # GNU Image Manipulation Program
 
     rink # A unit-aware calculator
+
+    direnv # An environment switcher for the shell
   ];
   
   xdg.mime.enable = true;
@@ -139,7 +141,7 @@
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "fzf" "thefuck" ];
+      plugins = [ "git" "fzf" "thefuck" "direnv" ];
       theme = "philips"; # nebirhos, norm, robbyrussell
     };
 

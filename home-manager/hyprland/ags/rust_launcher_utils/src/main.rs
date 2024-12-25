@@ -12,16 +12,15 @@ fn main() {
 
   let mut currency_defs = Vec::new();
 
-  // TODO: Get reqwest building; openssl dependency issues cause weird errors
-  // match reqwest::blocking::get("https://rinkcalc.app/data/currency.json") {
-  //   Ok(response) => match response.json::<ast::Defs>() {
-  //     Ok(mut live_defs) => {
-  //       currency_defs.append(&mut live_defs.defs);
-  //     }
-  //     Err(why) => println!("Error parsing currency json: {}", why),
-  //   },
-  //   Err(why) => println!("Error fetching up-to-date currency conversions: {}", why),
-  // }
+  match reqwest::blocking::get("https://rinkcalc.app/data/currency.json") {
+    Ok(response) => match response.json::<ast::Defs>() {
+      Ok(mut live_defs) => {
+        currency_defs.append(&mut live_defs.defs);
+      }
+      Err(why) => println!("Error parsing currency json: {}", why),
+    },
+    Err(why) => println!("Error fetching up-to-date currency conversions: {}", why),
+  }
 
   currency_defs.append(&mut gnu_units::parse_str(CURRENCY_FILE.unwrap()).defs);
 

@@ -7,7 +7,7 @@ export class SymbolsModule extends Module {
   static MAXIMUM_RESULTS = 3;
 
   constructor() {
-    super("Symbols", "run-symbols"); // TODO: Actually add this icon
+    super("Symbols", "run-symbols");
   }
 
   getActive(query: string): boolean {

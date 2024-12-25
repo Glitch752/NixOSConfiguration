@@ -33,7 +33,7 @@ export class DictionaryModule extends Module {
   static DICTIONARY_LOOKUP_PREFIX = "define ";
 
   constructor() {
-    super("Dictionary", "run-dictionary"); // TODO: Actually add this icon
+    super("Dictionary", "run-dictionary");
   }
 
   getActive(query: string): boolean {

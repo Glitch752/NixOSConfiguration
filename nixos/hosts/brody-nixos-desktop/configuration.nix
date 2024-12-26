@@ -3,6 +3,8 @@
     ./hardware-configuration.nix
     ../../nvidia.nix
     ../../bootloader.nix
+    # Currently only needed on my desktop computer, and I don't want to compile everything on my laptop.
+    ../../unrealEngine.nix
   ];
 
   # We intentionally use a lower resolution for the GRUB menu because GRUB

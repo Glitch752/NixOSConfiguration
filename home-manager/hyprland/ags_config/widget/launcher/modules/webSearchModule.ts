@@ -17,7 +17,7 @@ export class WebSearchModule extends Module {
   ];
 
   constructor() {
-    super("Web search", "run-search"); // TODO: Actually add this icon
+    super("Web search", "run-search");
   }
 
   getActive(query: string): boolean {

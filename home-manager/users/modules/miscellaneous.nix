@@ -55,12 +55,35 @@
     direnv # An environment switcher for the shell
 
     gparted # Graphical disk partitioning tool
+    squirreldisk # Disk usage analyzer
   ];
+
+  xdg.desktopEntries.gparted = {
+    name = "GParted";
+    genericName = "GParted";
+    # This is really hacky and probably insecure, but it works for now.
+    exec = "kitty sudo -E gparted";
+    terminal = false;
+    categories = [ "System" ];
+    icon = "${pkgs.gparted}/share/icons/hicolor/48x48/apps/gparted.png";
+  };
   
   xdg.mime.enable = true;
   xdg.mimeApps.defaultApplications = {
     # https://specifications.freedesktop.org/mime-apps-spec/latest/default
     "image/jpeg" = "qimgv";
     "image/png" = "qimgv";
+  };
+
+  services.udiskie = {
+    enable = true;
+    automount = true;
+    notify = true;
+    tray = "auto";
+    settings = {
+      # https://github.com/coldfix/udiskie/blob/master/doc/udiskie.8.txt#configuration
+      file_manager = "thunar";
+      terminal = "kitty";
+    };
   };
 }

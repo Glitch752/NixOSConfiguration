@@ -24,11 +24,8 @@
     pavucontrol # PulseAudio volume control
 
     (import ./rust_launcher_utils {
-      inherit (inputs) crane rust-overlay;
+      inherit (inputs) crane rust-overlay nixpkgs;
       inherit (pkgs) system;
-      # Makes the binary cache happy for some reason, idk
-      # Maybe we could use normal nixpkgs with some other configuration and have it work?
-      nixpkgs = inputs.nixpkgs-unstable;
     }).crate
   ];
 

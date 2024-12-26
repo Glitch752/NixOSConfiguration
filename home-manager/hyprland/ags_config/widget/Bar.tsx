@@ -341,8 +341,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor): Gtk.Window {
       <box hexpand halign={Gtk.Align.END}>
         {/* Right panel */}
 
-        {/* TODO: Pomodoro timer? */}
-
         <box className="segment">
           <SystemTray />
         </box>
@@ -355,7 +353,6 @@ export default function Bar(gdkmonitor: Gdk.Monitor): Gtk.Window {
           <Bluetooth />
           <Wifi />
           <AudioSlider />
-          {/* TODO: Brightness slider? */}
           <BatteryLevel />
         </box>
 

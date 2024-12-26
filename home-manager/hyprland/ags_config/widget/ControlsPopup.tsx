@@ -45,9 +45,6 @@ export default function ControlsPopup() {
   );
 
   return <box vertical valign={Gtk.Align.START}>
-    {/* TODO: Better battery status? */}
-    {/* TODO: More control buttons */}
-    
     <Section title={notifications.as(notifs => notifs.length > 0 ? `Notifications (${notifs.length})` : `Notifications`)} className="notifications">
       {notifications.as(notifications =>
         notifications.length > 0 ? NotificationsDisplay(notifd, notifications) : <label label="No notifications" className="empty" />

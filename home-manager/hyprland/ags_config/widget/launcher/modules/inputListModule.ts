@@ -1,7 +1,7 @@
 import { Module, ModuleEntry } from "../module";
 import { AbortSignal, copyToClipboard } from "../../../utils";
 import Gio from "gi://Gio";
-import { PopupData } from "../../../popups";
+import { closeOpenPopup, PopupData } from "../../../popups";
 
 type DictionaryResponse = DictionaryWord[];
 type DictionaryWord = {
@@ -51,6 +51,7 @@ export class InputListModule extends Module {
     
     return scores.map(({ line }) => new ModuleEntry(line, null, null, () => {
       this.respond(line);
+      closeOpenPopup();
     }));
   }
 }

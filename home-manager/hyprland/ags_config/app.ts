@@ -5,11 +5,14 @@ import GLib from "gi://GLib";
 import NotificationPopups from "./widget/notifications/NotificationPopups";
 import { openPopup, PopupType } from "./popups";
 
-
 // TODO: Shutdown menu
-// TODO: Calendar menu?
-// TODO: Widget to select are active wallpapers
+// TODO: Widget to select active wallpapers
 // TODO: Audio mixer?
+// TODO: Controls menu battery status
+// TODO: Controls menu quick actions
+// TODO: Brightness slider
+// TODO: Pomodoro timer
+// TODO: Better media controls
 
 // Also not happy with this absolute path, but it works for now...
 export function src() {

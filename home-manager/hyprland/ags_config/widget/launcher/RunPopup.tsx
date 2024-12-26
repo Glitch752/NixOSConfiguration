@@ -175,18 +175,12 @@ export default function RunPopup(data?: PopupData) {
       vscroll={Gtk.PolicyType.AUTOMATIC}
       hscroll={Gtk.PolicyType.NEVER}
       propagateNaturalHeight
-      setup={(self) => {
-        // TODO: relayout on resize or something since
-        // wrapped text causes scrolling even when it's not needed
-        // query.subscribe(() => self.);
-      }}
     >
       <box vertical className="results">
         {
           bind(moduleResults).as(results => (results
             .filter(result => !(result instanceof Promise)) as ModuleResult[])
             .map(({ module, entries }) =>
-              // TODO: Allow collapsing modules
               <box vertical className="module">
               <box className="moduleHeader">
                 <icon icon={module.icon} />
@@ -202,7 +196,14 @@ export default function RunPopup(data?: PopupData) {
                       <icon visible={entry.icon !== null} icon={entry.icon ?? ""} />
                       <box vertical className="text">
                         <label halign={Gtk.Align.START} label={entry.name} className="name" wrap />
-                        <label halign={Gtk.Align.START} label={entry.description ?? ""} visible={entry.description != null} className="description" wrap />
+                        <label
+                          maxWidthChars={80}
+                          halign={Gtk.Align.START}
+                          label={entry.description ?? ""}
+                          visible={entry.description != null}
+                          className="description"
+                          wrap
+                        />
                       </box>
                     </box>
                   </button>)

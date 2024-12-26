@@ -44,7 +44,6 @@
     # Technically, using an absolute path like this violates flakes' purity, but I'm not particularly concerned about that for development.
     # There may be a better solution using home-manager's activation scripts, but I haven't looked into that yet.
 
-    # TODO: ags_config should probably be a child folder of this?
     configDir = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nixos-config/home-manager/hyprland/ags_config";
 
     # Additional packages to add to gjs's runtime

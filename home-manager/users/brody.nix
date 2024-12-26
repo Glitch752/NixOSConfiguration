@@ -7,6 +7,7 @@
     ./modules/terminal.nix
     ./modules/editors.nix
     ./modules/miscellaneous.nix
+    ./modules/games.nix
   ];
 
   home = {

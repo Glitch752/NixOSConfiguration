@@ -3,117 +3,25 @@
 
 window.bar {
   background: transparent;
-  color: theme.$fg;
+  color: theme.$text;
 
   font-weight: bold;
   font-size: 14px;
   // font-family: monospace;
 
   > centerbox {
-    @if not theme.$segmented {
-      background: theme.$bg;
-      @if theme.$addWidgetBorders {
-        @if theme.$floating {
-          border: theme.$borderThickness solid theme.$borderColor;
-        } @else {
-          border-bottom: theme.$borderThickness solid theme.$borderColor;
-        }
-      }
-
-      border-radius: theme.$borderRadius;
-    }
-
-    @if theme.$floating {
-      margin: 5px 10px 0px 10px;
-    }
+    margin: 5px 10px 0px 10px;
   }
 
-  button {
+  button.widget {
     all: unset;
     background-color: transparent;
     padding: 0 8px;
 
-    &:hover {
-      background-color: color.adjust(theme.$fg, $alpha: -0.84);
-      border-color: color.adjust(theme.$accent, $alpha: -0.8);
-    }
-
-    &:active {
-      background-color: color.adjust(theme.$fg, $alpha: -0.8);
-    }
+    background: theme.$base;
+    border-radius: theme.$borderRadius;
 
     transition: 200ms;
-  }
-
-  .segment {
-    // This is a disaster lol
-
-    @if theme.$segmented {
-      background: #00000001;
-      @if theme.$addWidgetBorders {
-        @if theme.$floating {
-          border: 1px solid theme.$accent;
-        } @else {
-          border-bottom: 1px solid theme.$accent;
-          &:not(.first) {
-            border-left: 1px solid theme.$accent;
-          }
-          &:not(.last) {
-            border-right: 1px solid theme.$accent;
-          }
-        }
-      }
-
-      border-radius: theme.$borderRadius;
-    }
-    
-    > :first-child {
-      border-radius: theme.$borderRadius 0 0 theme.$borderRadius;
-      @if theme.$segmented and not theme.$floating {
-        border-top-left-radius: 0;
-      }
-    }
-    > :last-child {
-      border-radius: 0 theme.$borderRadius theme.$borderRadius 0;
-      @if theme.$segmented and not theme.$floating {
-        border-top-right-radius: 0;
-      }
-    }
-
-    &.first, &.first > :first-child {
-      @if theme.$segmented and not theme.$floating {
-        border-bottom-left-radius: 0;
-      }
-    }
-    &.last, &.last > :last-child {
-      @if theme.$segmented and not theme.$floating {
-        border-bottom-right-radius: 0;
-      }
-    }
-
-    > :only-child {
-      border-radius: theme.$borderRadius;
-      @if theme.$segmented and not theme.$floating {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-      }
-    }
-
-    &:not(:first-child) {
-      margin-left: theme.$segmentGap;
-    }
-
-    @if theme.$segmented and not theme.$floating {
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
-    }
-  }
-
-  icon {
-    -gtk-icon-shadow: theme.$iconShadow;
-  }
-  label {
-    text-shadow: theme.$shadow;
   }
 
   // Left panel
@@ -128,32 +36,29 @@ window.bar {
     font-size: 28px;
 
     &:hover {
-      color: theme.$accent;
+      color: theme.$sapphire;
     }
-  }
-  centerbox.compact .nixosIcon {
-    font-size: 18px;
   }
 
   .workspaces {
     .focused {
-      color: theme.$accent;
-      border-color: theme.$accent;
+      color: theme.$sapphire;
+      border-color: theme.$sapphire;
     }
     label {
       min-width: 10px;
     }
     > button:hover {
-      color: color.adjust(theme.$accent, $lightness: 20%);
+      color: color.adjust(theme.$sapphire, $lightness: 20%);
     }
 
     font-size: 16px;
-    color: theme.$mutedText;
+    color: theme.$subtext1;
   }
 
   .focusedClient {
     font-weight: normal;
-    color: theme.$mutedText;
+    color: theme.$subtext1;
     padding: 0 15px;
   }
 
@@ -164,12 +69,12 @@ window.bar {
 
     icon {
       font-size: 20px;
-      color: theme.$accent;
+      color: theme.$sapphire;
     }
 
     label {
       padding-left: 10px;
-      color: theme.$mutedText;
+      color: theme.$subtext1;
       padding-top: 2px; // Makes the text more visually centered
     }
   }
@@ -185,33 +90,26 @@ window.bar {
       margin-left: 5px;
 
       label {
-        color: theme.$accent;
+        color: theme.$sapphire;
         padding: 0;
         margin: 0;
       }
     }
 
     .percent {
-      color: theme.$mutedText;
+      color: theme.$subtext1;
     }
     icon {
-      color: theme.$accent;
-    }
-  }
-  centerbox.compact .resourceUtilization {
-    min-width: unset;
-    .name {
-      min-width: unset;
-      margin: 0 10px;
+      color: theme.$sapphire;
     }
   }
 
   .bluetooth,
   .wifi {
     &:hover {
-      color: color.adjust(theme.$accent, $lightness: 20%);
+      color: color.adjust(theme.$sapphire, $lightness: 20%);
     }
-    color: theme.$accent;
+    color: theme.$sapphire;
   }
 
   .audio {
@@ -228,23 +126,22 @@ window.bar {
     }
 
     icon {
-      color: theme.$accent;
+      color: theme.$sapphire;
     }
 
     trough {
-      background-color: color.adjust(theme.$fg, $alpha: -0.8);
+      background-color: color.adjust(theme.$text, $alpha: -0.8);
       border-radius: $radius;
-      box-shadow: theme.$shadow;
     }
 
     highlight {
-      background-color: theme.$accent;
+      background-color: theme.$sapphire;
       min-height: 8px;
       border-radius: $radius;
     }
 
     slider {
-      background-color: theme.$fg;
+      background-color: theme.$text;
       border-radius: $radius;
       min-height: 10px;
       min-width: 10px;
@@ -270,11 +167,11 @@ window.bar {
     font-weight: normal;
 
     .timeLabel {
-      color: theme.$fg;
+      color: theme.$text;
       font-size: 13px;
     }
     .dateLabel {
-      color: theme.$mutedText;
+      color: theme.$subtext1;
       font-size: 11px;
     }
   }

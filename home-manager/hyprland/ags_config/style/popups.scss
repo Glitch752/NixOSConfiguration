@@ -4,38 +4,26 @@
 
 .popup {
   background: transparent;
-  color: theme.$fg;
+  color: theme.$text;
   font-weight: bold;
   font-size: 14px;
 
   > box, > revealer > box {
-    background: theme.$bg;
+    background: utils.gtkalpha(theme.$mantle, theme.$backgroundAlpha);
 
     border-radius: theme.$borderRadius;
     
-    @if theme.$addWidgetBorders {
-      border: theme.$borderThickness solid theme.$borderColor;
-    }
-
     margin: 10px;
     padding: 20px;
   }
 
-  icon {
-    -gtk-icon-shadow: theme.$iconShadow;
-  }
-  label {
-    text-shadow: theme.$shadow;
-  }
-
   button {
-    border: theme.$borderThickness solid theme.$borderColor;
     border-radius: theme.$borderRadius;
 
-    background: theme.$lightBg;
+    background: theme.$mantle;
 
     &:hover {
-      background: color.adjust(theme.$lightBg, $lightness: 15%);
+      background: color.adjust(theme.$mantle, $lightness: 15%);
     }
   }
 }

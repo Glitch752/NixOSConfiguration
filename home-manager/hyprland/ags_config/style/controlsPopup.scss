@@ -1,5 +1,6 @@
 @use "sass:color";
 @use "./theme.scss" as theme;
+@use "./utils.scss" as utils;
 
 window.controlsPopup {
   > revealer > box {
@@ -8,7 +9,7 @@ window.controlsPopup {
   }
 
   .section {
-    background: theme.$lightBg;
+    background: utils.gtkalpha(theme.$surface0, theme.$backgroundAlpha);
     border-radius: theme.$borderRadius;
     padding: 10px;
 
@@ -23,6 +24,18 @@ window.controlsPopup {
     }
   }
 
+  .section.dateTime {
+    .time {
+      font-size: 2rem;
+      color: theme.$text;
+      margin-bottom: 5px;
+    }
+    .date {
+      font-size: 1rem;
+      color: theme.$subtext0;
+    }
+  }
+
   .notifications {
     scrollable {
       viewport {
@@ -33,12 +46,23 @@ window.controlsPopup {
 
     .empty {
       font-weight: normal;
-      color: theme.$mutedText;
+      color: theme.$subtext1;
+    }
+
+    .dismissButton {
+      background-color: utils.gtkalpha(theme.$surface0, 0.5);
+      border: none;
+
+      &:hover {
+        background-color: utils.gtkalpha(theme.$surface1, 0.7);
+      }
     }
 
     .notification > box {
+      background-color: utils.gtkalpha(theme.$surface0, 0.5);
+      color: theme.$text;
+
       margin: 0 0 10px 0;
-      background-color: theme.$lightBg;
     }
   }
 
@@ -54,7 +78,7 @@ window.controlsPopup {
           font-weight: normal;
           padding: 0 5px;
           margin-bottom: 8px;
-          // background-color: theme.$lightBg;
+          // background-color: theme.$mantle;
           // border-radius: 50px;
         }
       }
@@ -70,10 +94,10 @@ window.controlsPopup {
           margin: 3px;
 
           &.today {
-            background-color: color.adjust(theme.$accent, $alpha: -0.4);
+            background-color: color.adjust(theme.$sapphire, $alpha: -0.4);
           }
           &.differentMonth {
-            color: color.adjust(theme.$fg, $alpha: -0.5);
+            color: color.adjust(theme.$text, $alpha: -0.5);
           }
         }
       }
@@ -84,20 +108,27 @@ window.controlsPopup {
     }
     .calendarYear {
       all: unset;
-      color: theme.$mutedText;
+      color: theme.$subtext1;
       transition: color 0.2s;
       padding: 10px;
       &:hover {
-        color: theme.$fg;
+        color: theme.$text;
       }
       &.selected {
-        color: theme.$accent;
+        color: theme.$sapphire;
       }
     }
 
     .calendarControls {
       button {
         margin: 5px;
+        
+        background-color: utils.gtkalpha(theme.$surface0, 0.5);
+        border: none;
+  
+        &:hover {
+          background-color: utils.gtkalpha(theme.$surface1, 0.7);
+        }
       }
     }
   }

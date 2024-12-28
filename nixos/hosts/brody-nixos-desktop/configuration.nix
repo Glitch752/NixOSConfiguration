@@ -3,6 +3,8 @@
     ./hardware-configuration.nix
     ../../nvidia.nix
     ../../bootloader.nix
+    # Currently only needed on my desktop computer, and I don't want to compile everything on my laptop.
+    ../../unrealEngine.nix
   ];
 
   # We intentionally use a lower resolution for the GRUB menu because GRUB
@@ -22,6 +24,25 @@
       PermitRootLogin = "no";
       # Remove if SSH using passwords is needed
       PasswordAuthentication = false;
+    };
+  };
+
+  # nixos-generate-config can't automatically configure FUSE (NTFS) filesystems, so we configure the mount points manually.
+  fileSystems = {
+    "/mnt/HardDrive" = {
+      device = "/dev/disk/by-uuid/E6FE0039FE000491";
+      fsType = "ntfs";
+      options = [ "nofail" "uid=1000" "gid=100" ];
+    };
+    "/mnt/SSD" = {
+      device = "/dev/disk/by-uuid/4816D95C16D94C16";
+      fsType = "ntfs";
+      options = [ "nofail" "uid=1000" "gid=100" ];
+    };
+    "/mnt/Windows" = {
+      device = "/dev/disk/by-uuid/327A3A117A39D279";
+      fsType = "ntfs";
+      options = [ "nofail" "uid=1000" "gid=100" ];
     };
   };
 }

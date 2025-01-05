@@ -11,24 +11,23 @@
     }
 
     icon {
-      color: theme.$accent;
+      color: theme.$sapphire;
     }
 
     trough {
       min-width: 150px;
-      background-color: color.adjust(theme.$fg, $alpha: -0.8);
+      background-color: color.adjust(theme.$text, $alpha: -0.8);
       border-radius: $radius;
-      box-shadow: theme.$shadow;
     }
 
     highlight {
-      background-color: theme.$accent;
+      background-color: theme.$sapphire;
       min-height: 8px;
       border-radius: $radius;
     }
 
     slider {
-      background-color: theme.$fg;
+      background-color: theme.$text;
       border-radius: $radius;
       min-height: 10px;
       min-width: 10px;

@@ -12,6 +12,7 @@
     ./modules/versionControl.nix
     ./modules/programs.nix
     ./modules/dbus-broker.nix
+    ./modules/devices.nix
   ];
 
   # Allow unfree packages
@@ -27,7 +28,13 @@
     openssh.authorizedKeys.keys = [
       # TODO
     ];
-    extraGroups = [ "networkmanager" "wheel" "video" "input" ];
+    extraGroups = [
+      "networkmanager" # For network management
+      "wheel" # Enable ‘sudo’ for the user.
+      "video" # For video devices
+      "input" # For input devices
+      "dialout" # For serial ports
+    ];
     shell = pkgs.zsh;
   };
 

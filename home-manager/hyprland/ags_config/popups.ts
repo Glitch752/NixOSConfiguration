@@ -2,9 +2,10 @@ import { App, Astal, Gdk, Gtk } from "astal/gtk3";
 import { WindowCloser } from "./widget/WindowCloser";
 import PopupWindow from "./widget/PopupWindow";
 import ControlsPopup from "./widget/ControlsPopup";
-import MediaControls from "./widget/MediaControls";
+import MediaControls, { drawMediaControlsBackground } from "./widget/MediaControls";
 import { exec } from "astal";
 import RunPopup, { CenteredRunPopup } from "./widget/launcher/RunPopup";
+import cairo from "cairo";
 
 export enum PopupType {
   MediaControls = "mediaControls",
@@ -12,9 +13,16 @@ export enum PopupType {
   RunPopup = "runPopup",
 }
 
+export type DrawBackgroundContext = {
+  onRealize: (self: Gtk.DrawingArea) => void;
+  onDraw: (self: Gtk.DrawingArea, cr: cairo.Context) => void;
+  onDestroy: (self: Gtk.DrawingArea) => void;
+}
+
 export type PopupContent = {
   widget: Gtk.Widget;
   anchor: Astal.WindowAnchor;
+  drawBackground?: DrawBackgroundContext;
   backgroundOpacity: number;
   revealTransitionType: Gtk.RevealerTransitionType;
 };
@@ -25,6 +33,7 @@ function getPopup(popupType: PopupType, data?: PopupData): PopupContent {
       return {
         widget: MediaControls(),
         anchor: Astal.WindowAnchor.TOP,
+        drawBackground: drawMediaControlsBackground(),
         backgroundOpacity: 0,
         revealTransitionType: Gtk.RevealerTransitionType.SLIDE_DOWN
       };

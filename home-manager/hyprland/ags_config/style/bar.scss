@@ -1,5 +1,6 @@
 @use "sass:color";
 @use "./theme.scss" as theme;
+@use "./utils.scss" as utils;
 
 window.bar {
   background: transparent;
@@ -13,31 +14,46 @@ window.bar {
     margin: 5px 10px 0px 10px;
   }
 
-  button.widget {
-    all: unset;
-    background-color: transparent;
+  .widgetOuter:not(:last-child) {
+    margin-right: 5px;
+  }
+
+  .widget {
+    background: utils.gtkalpha(theme.$mantle, theme.$backgroundAlpha);
+    border-radius: theme.$borderRadius;
     padding: 0 8px;
 
-    background: theme.$base;
-    border-radius: theme.$borderRadius;
+    icon {
+      color: theme.$red;
+      &:not(:only-child) {
+        margin-right: 10px;
+      }
+    }
+  }
 
+  button {
+    all: unset;
     transition: 200ms;
+
+    &:hover {
+      color: white;
+    }
   }
 
   // Left panel
   .nixosIcon {
     // Puts the icon off-center, but fixes the icon shadow slightly overflowing at the top of the bar
     padding-top: 1px;
+
+    padding: 0 3px;
     
+    color: theme.$text;
+
     icon {
-      background-image: url("icons/nixos.svg");
+      color: inherit;
     }
 
     font-size: 28px;
-
-    &:hover {
-      color: theme.$sapphire;
-    }
   }
 
   .workspaces {
@@ -47,6 +63,9 @@ window.bar {
     }
     label {
       min-width: 10px;
+    }
+    > button {
+      padding: 0 5px;
     }
     > button:hover {
       color: color.adjust(theme.$sapphire, $lightness: 20%);
@@ -64,19 +83,9 @@ window.bar {
 
   // Center panel
 
-  .media {
-    margin: 0 10px;
-
-    icon {
-      font-size: 20px;
-      color: theme.$sapphire;
-    }
-
-    label {
-      padding-left: 10px;
-      color: theme.$subtext1;
-      padding-top: 2px; // Makes the text more visually centered
-    }
+  .media label {
+    color: theme.$subtext1;
+    padding: 2px 5px 0 5px;
   }
 
   .resourceUtilization {
@@ -101,51 +110,6 @@ window.bar {
     }
     icon {
       color: theme.$sapphire;
-    }
-  }
-
-  .bluetooth,
-  .wifi {
-    &:hover {
-      color: color.adjust(theme.$sapphire, $lightness: 20%);
-    }
-    color: theme.$sapphire;
-  }
-
-  .audio {
-    min-width: 120px;
-    $radius: 7px;
-    margin: 0 0 0 15px;
-
-    trough, highlight, slider {
-      all: unset;
-    }
-
-    .audioSlider {
-      margin: -10px -5px;
-    }
-
-    icon {
-      color: theme.$sapphire;
-    }
-
-    trough {
-      background-color: color.adjust(theme.$text, $alpha: -0.8);
-      border-radius: $radius;
-    }
-
-    highlight {
-      background-color: theme.$sapphire;
-      min-height: 8px;
-      border-radius: $radius;
-    }
-
-    slider {
-      background-color: theme.$text;
-      border-radius: $radius;
-      min-height: 10px;
-      min-width: 10px;
-      margin: -5px;
     }
   }
 

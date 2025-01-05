@@ -2,7 +2,15 @@ import { App, Astal, Gdk, Gtk } from "astal/gtk3";
 import { closeOpenPopup, PopupContent } from "../popups";
 import { DrawingArea } from "astal/gtk3/widget";
 
-export function WindowCloser(menu: string, monitor: Gdk.Monitor, popupData: PopupContent): Gtk.Window {
+export function WindowCloser(
+  menu: string,
+  monitor: Gdk.Monitor,
+  popupData: PopupContent
+): Gtk.Window {
+  const drawBackground = popupData.drawBackground
+    ? popupData.drawBackground()
+    : null;
+
   return (
     <window
       name={`${menu}Closer`}
@@ -19,15 +27,22 @@ export function WindowCloser(menu: string, monitor: Gdk.Monitor, popupData: Popu
     >
       <eventbox
         onClick={closeOpenPopup}
-        css={ `background-color: rgba(0, 0, 0, ${String(popupData.backgroundOpacity)})` }
+        css={`
+          background-color: rgba(
+            0,
+            0,
+            0,
+            ${String(popupData.backgroundOpacity)}
+          );
+        `}
       >
-        { popupData.drawBackground ? (
+        {drawBackground ? (
           <DrawingArea
-            onRealize={popupData.drawBackground.onRealize}
-            onDraw={popupData.drawBackground.onDraw as any}
-            onDestroy={popupData.drawBackground.onDestroy}
+            onRealize={drawBackground.onRealize}
+            onDraw={drawBackground.onDraw as any}
+            onDestroy={drawBackground.onDestroy}
           />
-        ) : null }
+        ) : null}
       </eventbox>
     </window>
   ) as Gtk.Window;

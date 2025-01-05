@@ -47,6 +47,7 @@
     extraPackages = with pkgs; [
       # gtksourceview
       # webkitgtk
+      cava
       
       inputs.ags.packages.${pkgs.system}.apps
       inputs.ags.packages.${pkgs.system}.hyprland

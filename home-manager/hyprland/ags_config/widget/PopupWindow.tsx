@@ -1,6 +1,7 @@
 import { App, Astal, Gdk, Gtk } from "astal/gtk3";
 import { closeOpenPopup, PopupContent } from "../popups";
 import { timeout } from "astal";
+import { DrawingArea, Overlay, Revealer } from "astal/gtk3/widget";
 
 export default function PopupWindow(
   monitor: Gdk.Monitor,

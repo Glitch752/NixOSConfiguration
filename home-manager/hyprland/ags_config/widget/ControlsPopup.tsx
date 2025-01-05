@@ -5,6 +5,8 @@ import Notifd from "gi://AstalNotifd";
 import { Scrollable } from "astal/gtk3/widget";
 import Calendar from "./calendar/Calendar";
 
+// TODO: Power profile switcher
+
 function Section({ child, children, title, className }: {
   child?: JSX.Element | Binding<JSX.Element> | Binding<Array<JSX.Element>>
   children?: Array<JSX.Element> | Binding<Array<JSX.Element>>,

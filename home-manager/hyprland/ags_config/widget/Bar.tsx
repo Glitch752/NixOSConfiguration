@@ -8,35 +8,63 @@ import Tray from "gi://AstalTray"
 import { openPopup, PopupType } from "../popups"
 import { limitLength } from "../utils"
 import Media from "./bar/BarMedia"
+import { BindableChild } from "astal/gtk3/astalify"
 
-function Widget({
+export function Widget({
+  className,
+  child,
   children,
   icon,
-  className
+  tooltipText,
+  visible,
+
+  onClicked,
+  onButtonReleaseEvent
 }: {
-  children: JSX.Element[],
-  icon?: string | Binding<string>,
   className?: string
+
+  child?: BindableChild
+  children?: Array<BindableChild>
+  icon?: string | Binding<string>,
+  tooltipText?: string | Binding<string>,
+  visible?: boolean | Binding<boolean>,
+  
+  onClicked?: () => any,
+  onButtonReleaseEvent?: (widget: Gtk.Button, event: Gdk.Event) => any,
 }) {
-  return <box className={`widget ${className}`}>
+  if(onClicked || onButtonReleaseEvent) {
+    return <box vexpand className="widgetOuter">
+      <button
+      tooltipText={tooltipText ?? ""}
+      visible={visible ?? true} className={`widget ${icon ? "icon" : ""} ${className}`}
+      onClicked={onClicked} onButtonReleaseEvent={onButtonReleaseEvent}
+    >
+        <box>
+          {icon && <icon icon={icon} />}
+          {child}
+          {children}
+        </box>
+      </button>
+    </box>
+  }
+
+  return <box vexpand tooltipText={tooltipText ?? ""} visible={visible ?? true} className={`widget widgetOuter ${icon ? "icon" : ""} ${className}`}>
     {icon && <icon icon={icon} />}
+    {child}
     {children}
   </box>
-
 }
 
 // Left panel
 
 function NixOSIcon() {
-  return <button className="nixosIcon" onClicked={() => execAsync('kitty sh -lic "fastfetch && read -n 1 -s"')}>
-    <icon icon="nixos" />
-  </button>
+  return <Widget className="nixosIcon" onClicked={() => execAsync('kitty sh -lic "fastfetch && read -n 1 -s"')} icon="nixos" />
 }
 
 function Workspaces() {
   const hypr = Hyprland.get_default();
 
-  return <box className="workspaces">
+  return <Widget className="workspaces">
     {bind(hypr, "workspaces").as(wss => wss
       .sort((a, b) => a.id - b.id)
       .map(ws => (
@@ -54,20 +82,20 @@ function Workspaces() {
         </button>
       ))
     )}
-  </box>
+  </Widget>
 }
 
 function FocusedClient() {
   const hypr = Hyprland.get_default();
   const focused = bind(hypr, "focusedClient");
 
-  return <box
+  return <Widget
     className="focusedClient"
     visible={focused.as(Boolean)}>
     {focused.as(client => (
       client && <label label={bind(client, "title").as((s) => limitLength(String(s), 60))} />
     ))}
-  </box>
+  </Widget>
 }
 
 // Right panel
@@ -75,7 +103,7 @@ function FocusedClient() {
 function SystemTray() {
   const tray = Tray.get_default()
 
-  return <box className="systemTray">
+  return <Widget className="systemTray">
     {bind(tray, "items").as(items => items.map(item => {
       if(item.iconThemePath) App.add_icons(item.iconThemePath)
       const menu = item.create_menu();
@@ -90,75 +118,62 @@ function SystemTray() {
         <icon gIcon={bind(item, "gicon")} />
       </button>
     }))}
-  </box>
+  </Widget>
 }
 
-function ResourceUtilization() {
+function CPUUtilization() {
   const CPUUsage = Variable(0).poll(1000, ["bash", "-c", "top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 | gawk '{print $2+$4+$6}'"], parseFloat);
+
+  return <Widget icon="processor" onClicked={() => execAsync("missioncenter")} tooltipText="CPU Utilization">
+    <label label={CPUUsage().as(u => `${u.toFixed(0)}%`)} onDestroy={() => CPUUsage.drop()} hexpand halign={Gtk.Align.START} />
+  </Widget>
+}
+
+function RAMUtilization() {
   const RAMUsage = Variable(0).poll(1000, ["bash", "-c", "free | awk '/Mem:/ {print $3/$2 * 100}'"], parseFloat);   
 
-  return <button onClick={() => execAsync("missioncenter")} tooltipText="Resource Utilization" className="resourceUtilization">
-    <box valign={Gtk.Align.CENTER} halign={Gtk.Align.START}>
-      <box>
-        <icon icon="processor" className="name" />
-        <label label={CPUUsage().as(u => `${u.toFixed(0)}%`)} onDestroy={() => CPUUsage.drop()} hexpand halign={Gtk.Align.START} className="percent" />
-      </box>
-      <box>
-        <icon icon="memory" className="name" />
-        <label label={RAMUsage().as(u => `${u.toFixed(0)}%`)} onDestroy={() => RAMUsage.drop()} hexpand halign={Gtk.Align.START} className="percent" />
-      </box>
-    </box>
-  </button>
+  return <Widget icon="memory" onClicked={() => execAsync("missioncenter")} tooltipText="RAM Utilization">
+    <label label={RAMUsage().as(u => `${u.toFixed(0)}%`)} onDestroy={() => RAMUsage.drop()} hexpand halign={Gtk.Align.START} />
+  </Widget>
 }
 
 function Bluetooth() {
   // TODO: Shortcut to run systemctl --user restart pipewire for bluetooth audio?
-  return <button className="bluetooth" onCLicked={() => execAsync("overskride")}>
-    <icon
-      tooltipText="Bluetooth"
-      className="bluetoothIcon"
-      icon="bluetooth"
-    />
-  </button>
+  return <Widget
+    className="bluetooth"
+    tooltipText="Bluetooth"
+    icon="bluetooth"
+    onClicked={() => execAsync("overskride")}
+  />
 }
 
 function Wifi() {
   const { wifi } = Network.get_default();
 
-  return <button className="wifi" onCLicked={() => execAsync("nm-connection-editor")}>
-    <icon
-      tooltipText={bind(wifi, "ssid").as(String)}
-      className="wifi"
-      icon={bind(wifi, "iconName")}
-    />
-  </button>
+  return <Widget
+    className="wifi"
+    tooltipText={bind(wifi, "ssid").as(String)}
+    onClicked={() => execAsync("nm-connection-editor")}
+    icon={bind(wifi, "iconName")}
+  />
 }
 
-function AudioSlider() {
+function Audio() {
   const speaker = Wp.get_default()?.audio.defaultSpeaker!;
 
-  return <box className="audio">
-    <button onClicked={() => execAsync("pavucontrol")}>
-      <icon icon={bind(speaker, "volumeIcon").as(icon => icon ?? "audio-volume-low-symbolic")} />
-    </button>
-    <slider
-      hexpand
-      onDragged={({ value }) => speaker.volume = value}
-      value={bind(speaker, "volume")}
-      className="audioSlider"
-    />
-  </box>
+  return <Widget className="audio" onClicked={() => execAsync("pavucontrol")} icon={bind(speaker, "volumeIcon").as(icon => icon ?? "audio-volume-low-symbolic")}>
+    <label label={bind(speaker, "volume").as(v => `${Math.round(v * 100)}%`)}></label>
+  </Widget>
 }
 
 function BatteryLevel() {
   const battery = Battery.get_default();
 
-  return <box className="battery" visible={bind(battery, "isPresent")}>
-    <icon icon={bind(battery, "batteryIconName")} />
+  return <Widget icon={bind(battery, "batteryIconName")} visible={bind(battery, "isPresent")}>
     <label label={bind(battery, "percentage").as(p =>
       `${Math.floor(p * 100)}%`
     )} />
-  </box>
+  </Widget>
 }
 
 function Time() {
@@ -193,6 +208,7 @@ function ControlsPopupButton() {
   </button>
 }
 
+
 export default function Bar(gdkmonitor: Gdk.Monitor): Gtk.Window {
   return <window
     className="bar"
@@ -216,13 +232,17 @@ export default function Bar(gdkmonitor: Gdk.Monitor): Gtk.Window {
 
       <box hexpand halign={Gtk.Align.END}>
         <SystemTray />
-        <ResourceUtilization />
+        <CPUUtilization />
+        <RAMUtilization />
         <Bluetooth />
         <Wifi />
-        <AudioSlider />
+        <Audio />
         <BatteryLevel />
-        <Time />
-        <ControlsPopupButton />
+        
+        <Widget icon="preferences-system-time">
+          <Time />
+          <ControlsPopupButton />
+        </Widget>
       </box>
     </centerbox>
   </window> as Gtk.Window;

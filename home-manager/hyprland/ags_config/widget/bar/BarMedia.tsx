@@ -69,7 +69,7 @@ export default function Media() {
   let playerMode = new PlayerMode();
 
   // TODO: Progress bar and time elapsed/remaining
-  return <Widget className="media" onButtonReleaseEvent={(self, event) => {
+  return <Widget icon="music" className="media" onButtonReleaseEvent={(self, event) => {
     if(event.get_button()[1] === Gdk.BUTTON_SECONDARY) {
       playerMode.next();
       return true;
@@ -81,7 +81,6 @@ export default function Media() {
     {bind(mpris, "players").as(players => {
       const displayedPlayer = players.filter(p => p.title !== "").sort((a, b) => playerPriority(a) - playerPriority(b))[0];
       if(displayedPlayer) return <box>
-        <icon icon="music" />
         {bind(playerMode).as(display => {
           switch(display) {
             case DisplayedPlayerData.SongName:
@@ -112,7 +111,7 @@ export default function Media() {
         })}
       </box>;
 
-      else return "Nothing Playing";
+      else return <label label="Nothing Playing" />;
     })}
   </Widget>
 }

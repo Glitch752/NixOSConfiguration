@@ -64,7 +64,7 @@ function NixOSIcon() {
 function Workspaces() {
   const hypr = Hyprland.get_default();
 
-  return <Widget className="workspaces">
+  return <Widget icon="workspace" className="workspaces">
     {bind(hypr, "workspaces").as(wss => wss
       .sort((a, b) => a.id - b.id)
       .map(ws => (

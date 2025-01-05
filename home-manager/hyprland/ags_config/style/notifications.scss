@@ -23,7 +23,7 @@ eventbox.notification {
 
   &.critical > box {
     .summary, .body {
-      color: mix(theme.$red, theme.$text, 50%);
+      color: color.mix(theme.$red, theme.$text, 50%);
     }
     .header {
       color: theme.$red;

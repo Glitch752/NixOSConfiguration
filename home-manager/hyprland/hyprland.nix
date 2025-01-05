@@ -52,6 +52,7 @@ in {
     slurp # Select a region in wayland
     grim # Screenshot utility for wayland
     wl-clipboard # Wayland clipboard utilities
+    wl-clip-persist # Keep clipboard content even after programs exit
 
     # TODO: This fails to launch with a segfault on my laptop but works on my desktop?
     inputs.woomer.packages.${system}.default # Zoomer application for wayland
@@ -82,6 +83,8 @@ in {
         # x8 is required to have a correct cursor size with fractional scaling
         "dconf write /org/gnome/desktop/interface/cursor-size ${toString cursor_size}"
         "systemctl --user start hyprpolkitagent"
+        # TODO: This breaks the clipboard for some reason?
+        # "wl-clip-persist --clipboard regular --all-mime-type-regex '(?i)^(?!image/).+'"
         
         # Applications to autostart
         "uwsm app -- vesktop"
@@ -219,6 +222,11 @@ in {
         "float, class:(thunar)"
         # Always float qimgv windows (image viewer)
         "float, class:(qimgv)"
+
+        # Fixes for Unreal Engine
+        "unset,class:^(UnrealEditor)$"
+        "noinitialfocus,class:^(UnrealEditor)$"
+        "suppressevent activate,class:^(UnrealEditor)$"
       ];
 
       layerrule = [

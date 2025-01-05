@@ -52,8 +52,6 @@
 
     rink # A unit-aware calculator
 
-    direnv # An environment switcher for the shell
-
     gparted # Graphical disk partitioning tool
     squirreldisk # Disk usage analyzer
   ];

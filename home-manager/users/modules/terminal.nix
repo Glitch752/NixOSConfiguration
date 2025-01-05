@@ -59,4 +59,10 @@
       fastfetch
     '';
   };
+
+  # Direnv is an environment switcher for the shell
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 }

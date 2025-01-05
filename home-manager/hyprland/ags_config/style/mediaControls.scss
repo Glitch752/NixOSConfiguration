@@ -8,13 +8,13 @@ window.mediaControls {
 
     &:hover label,
     &:hover icon {
-      background-color: color.adjust(theme.$fg, $alpha: -0.84);
-      border-color: color.adjust(theme.$accent, $alpha: -0.8);
+      background-color: color.adjust(theme.$text, $alpha: -0.84);
+      border-color: color.adjust(theme.$sapphire, $alpha: -0.8);
     }
 
     &:active label,
     &:active icon {
-      background-color: color.adjust(theme.$fg, $alpha: -0.8);
+      background-color: color.adjust(theme.$text, $alpha: -0.8);
     }
   }
 
@@ -30,7 +30,7 @@ window.mediaControls {
 
   .noMediaPlayers {
     font-size: 1.2em;
-    color: theme.$mutedText;
+    color: theme.$subtext1;
     padding: 0 10px;
   }
 
@@ -39,8 +39,8 @@ window.mediaControls {
     padding: 10px 15px 10px 0px;
 
     border-radius: theme.$borderRadius;
-    background: theme.$lightBg;
-    color: theme.$fg;
+    background: theme.$mantle;
+    color: theme.$text;
 
     font-size: 14px;
     font-weight: bold;
@@ -85,18 +85,18 @@ window.mediaControls {
       }
 
       trough {
-        background-color: color.adjust(theme.$fg, $alpha: -0.8);
+        background-color: color.adjust(theme.$text, $alpha: -0.8);
         border-radius: $radius;
       }
 
       highlight {
-        background-color: theme.$accent;
+        background-color: theme.$sapphire;
         min-height: 8px;
         border-radius: $radius;
       }
 
       slider {
-        background-color: theme.$fg;
+        background-color: theme.$text;
         border-radius: $radius;
         min-height: 10px;
         min-width: 10px;

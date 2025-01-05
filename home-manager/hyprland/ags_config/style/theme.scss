@@ -1,26 +1,41 @@
 @use "sass:color";
 @use "./utils.scss" as utils;
 
-$floating: true;
-
-$segmented: false;
-$segmentGap: 15px;
-
-$bg: #11111101;
-// $bg: #15141a;
-$errorBg: #ff000020;
-$lightBg: #636e7740;
-$fg: #f1f1f1;
-
-// TODO: Configure this through Nix and sync with hyprland theme somehow
-$accent: #36a3e2;
-$mutedText: color.adjust($fg, $alpha: -0.2);
-
-$addWidgetBorders: true;
-$borderColor: #f1f1f108;
-$borderThickness: 1px;
 $borderRadius: 5px;
+$backgroundAlpha: 0.3;
 
-$shadow: 0 0 2px #00000099;
-// This is the best way I've found to make icons relatively readable on any background
-$iconShadow: 1px 1px 2px #00000040, -1px -1px 2px #00000040, 1px -1px 2px #00000040, -1px 1px 2px #00000040;
+// Catpuccin mocha
+// See https://github.com/catppuccin/catppuccin/blob/main/docs/style-guide.md
+$rosewater: #f5e0dc;
+$flamingo: #f2cdcd;
+$pink: #f5c2e7;
+$mauve: #cba6f7;
+$red: #f38ba8;
+$maroon: #eba0ac;
+$peach: #fab387;
+$yellow: #f9e2af;
+$green: #a6e3a1;
+$teal: #94e2d5;
+$sky: #89dceb;
+$sapphire: #74c7ec;
+$blue: #89b4fa;
+$lavender: #b4befe;
+
+$text: #cdd6f4;
+$subtext1: #bac2de;
+$subtext0: #a6adc8;
+
+$overlay2: #9399b2;
+$overlay1: #7f849c;
+$overlay0: #6c7086;
+
+$surface2: #585b70;
+$surface1: #45475a;
+$surface0: #313244;
+
+$base: #1e1e2e;
+$mantle: #181825;
+$crust: #11111b;
+
+$inverted-text: $crust;
+$selection-color: $mauve;

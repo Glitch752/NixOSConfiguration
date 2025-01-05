@@ -31,4 +31,13 @@
       PasswordAuthentication = false;
     };
   };
+
+  # nixos-generate-config can't automatically configure FUSE (NTFS) filesystems, so we configure the mount points manually.
+  fileSystems = {
+    "/mnt/Windows" = {
+      device = "/dev/disk/by-uuid/3402A20B02A1D262";
+      fsType = "ntfs";
+      options = [ "nofail" "uid=1000" "gid=100" ];
+    };
+  };
 }

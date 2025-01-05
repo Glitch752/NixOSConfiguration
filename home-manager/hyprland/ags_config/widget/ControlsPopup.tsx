@@ -1,9 +1,11 @@
-import { bind, Binding } from "astal";
+import { bind, Binding, Variable } from "astal";
 import { Astal, Gtk } from "astal/gtk3";
 import Notification from "./notifications/Notification";
 import Notifd from "gi://AstalNotifd";
 import { Scrollable } from "astal/gtk3/widget";
 import Calendar from "./calendar/Calendar";
+
+// TODO: Power profile switcher
 
 function Section({ child, children, title, className }: {
   child?: JSX.Element | Binding<JSX.Element> | Binding<Array<JSX.Element>>
@@ -31,7 +33,7 @@ function NotificationsDisplay(notifd: Notifd.Notifd, notifications: Gtk.Widget[]
         }
       </box>
     </Scrollable>
-    <button onClicked={() => {
+    <button className="dismissButton" onClicked={() => {
       notifd.get_notifications().forEach(notif => notif.dismiss());
     }}>Dismiss all</button>
   </box>;
@@ -44,10 +46,20 @@ export default function ControlsPopup() {
     .map(notif => Notification({ notification: notif }))
   );
 
+  const time = Variable("").poll(1000, 'date "+%l:%M:%S %p"');
+  const date = Variable("").poll(1000, 'date "+%A, %B %e"');
+
   return <box vertical valign={Gtk.Align.START}>
-    {/* TODO: Better battery status? */}
-    {/* TODO: More control buttons */}
-    
+    <Section className="dateTime">
+      {/* TODO: Fancy animated time? Could be cool. */}
+      <label label={bind(time)} className="time" />
+      <label label={bind(date)} className="date" />
+    </Section>
+
+    <Section title="Quick settings">
+      {/* TODO */}
+    </Section>
+
     <Section title={notifications.as(notifs => notifs.length > 0 ? `Notifications (${notifs.length})` : `Notifications`)} className="notifications">
       {notifications.as(notifications =>
         notifications.length > 0 ? NotificationsDisplay(notifd, notifications) : <label label="No notifications" className="empty" />

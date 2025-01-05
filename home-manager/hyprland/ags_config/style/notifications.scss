@@ -1,5 +1,6 @@
 @use "./theme.scss" as theme;
 @use "./utils.scss" as utils;
+@use "sass:color";
 
 window.notificationPopups {
   all: unset;
@@ -17,15 +18,23 @@ eventbox.notification {
   > box {
     min-width: 400px;
     padding: 5px;
+    background-color: utils.gtkalpha(theme.$surface0, theme.$backgroundAlpha);
   }
 
   &.critical > box {
-    background-color: theme.$errorBg;
+    .summary, .body {
+      color: color.mix(theme.$red, theme.$text, 50%);
+    }
+    .header {
+      color: theme.$red;
+    }
+
+    border: 1px solid theme.$red;
   }
 
   .header {
     padding: 0.5rem;
-    color: theme.$mutedText;
+    color: theme.$subtext1;
 
     .app-icon {
       margin: 0 0.4rem;
@@ -48,12 +57,20 @@ eventbox.notification {
       padding: 0.2rem;
       min-width: 0;
       min-height: 0;
+      background-color: transparent;
+      margin-top: -3px; // Makes it look more visually centered
+      border: none;
+
+      &:hover {
+        background-color: utils.gtkalpha(theme.$crust, 0.2);
+        color: theme.$red;
+      }
     }
   }
 
   separator {
     margin: 0 0.4rem;
-    background-color: utils.gtkalpha(theme.$fg, 0.1);
+    background-color: utils.gtkalpha(theme.$text, 0.2);
   }
 
   .content {
@@ -62,18 +79,16 @@ eventbox.notification {
 
     .summary {
       font-size: 18px;
-      color: theme.$fg;
+      color: theme.$text;
     }
 
     .body {
       font-size: 13px;
-      color: theme.$fg;
+      color: theme.$text;
     }
 
     .image {
-      border: theme.$borderThickness solid theme.$borderColor;
-      // It seems GTK handles image border radius differently for some reason?
-      border-radius: theme.$borderRadius + theme.$borderThickness * 2;
+      border-radius: theme.$borderRadius;
       margin-right: 10px;
       min-width: 100px;
       min-height: 100px;

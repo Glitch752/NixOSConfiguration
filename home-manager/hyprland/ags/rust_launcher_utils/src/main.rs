@@ -3,8 +3,6 @@ use std::process::exit;
 mod rink;
 mod symbols;
 
-// TODO: Switch to a socket-based IPC system to reduce latency?
-
 struct State {
   rink_ctx: rink_core::Context,
   symbols: symbols::Symbols

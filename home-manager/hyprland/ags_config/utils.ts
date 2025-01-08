@@ -1,4 +1,4 @@
-import { Gio, GLib } from "astal";
+import { execAsync, Gio, GLib } from "astal";
 import { Gdk, Gtk } from "astal/gtk3";
 
 export function limitLength(s: string, n: number) {
@@ -13,11 +13,15 @@ export function formatDuration(duration: number) {
 
 export function copyToClipboard(text: string) {
   const display = Gdk.Display.get_default();
-  if(!display) return;
+  if (!display) return;
   const clipboard = Gtk.Clipboard.get_default(display);
-  
+
   clipboard.set_text(text, -1);
   clipboard.store();
+}
+
+export function startApplication(cmd: string) {
+  execAsync(["uwsm", "app", cmd]);
 }
 
 /** An incredibly simple abort signal implementation. */
@@ -30,7 +34,7 @@ export class AbortSignal {
   }
 
   abort() {
-    for(let listener of this.listeners) {
+    for (let listener of this.listeners) {
       listener();
     }
     this.aborted = true;
@@ -50,10 +54,13 @@ const Bytes = (s: string) => new GLib.Bytes(s as any);
 /**
  * Execute a command asynchronously, while allowing it to be aborted.
  */
-export async function abortableExecAsync(args: string[], abortSignal: AbortSignal): Promise<{
-  stdout: string,
-  stderr: string,
-  status: number
+export async function abortableExecAsync(
+  args: string[],
+  abortSignal: AbortSignal
+): Promise<{
+  stdout: string;
+  stderr: string;
+  status: number;
 } | null> {
   const cancellable = new Gio.Cancellable();
   abortSignal.listen(() => cancellable.cancel());
@@ -64,19 +71,23 @@ export async function abortableExecAsync(args: string[], abortSignal: AbortSigna
   const process = new Gio.Subprocess({ argv: args, flags });
   process.init(cancellable);
 
-  if(cancellable instanceof Gio.Cancellable) cancelId = cancellable.connect(() => process.force_exit());
+  if (cancellable instanceof Gio.Cancellable)
+    cancelId = cancellable.connect(() => process.force_exit());
 
   try {
-    const [stdout, stderr] = await process.communicate_utf8_async(null, cancellable);
+    const [stdout, stderr] = await process.communicate_utf8_async(
+      null,
+      cancellable
+    );
     const status = process.get_exit_status();
 
     return { stdout, stderr, status };
-  } catch(e) {
-    if(!(e instanceof GLib.Error) || e.code !== Gio.IOErrorEnum.CANCELLED)
+  } catch (e) {
+    if (!(e instanceof GLib.Error) || e.code !== Gio.IOErrorEnum.CANCELLED)
       print(`Error executing command ${args.join(" ")}: ${e}`);
     return null;
   } finally {
-    if(cancelId > 0) cancellable.disconnect(cancelId);
+    if (cancelId > 0) cancellable.disconnect(cancelId);
   }
 }
 
@@ -85,7 +96,7 @@ class AsyncMutex {
   private locked = false;
 
   async lock() {
-    if(this.locked) {
+    if (this.locked) {
       await new Promise<void>((resolve) => this.queue.push(resolve));
     } else {
       this.locked = true;
@@ -93,7 +104,7 @@ class AsyncMutex {
   }
 
   unlock() {
-    if(this.queue.length > 0) {
+    if (this.queue.length > 0) {
       const resolve = this.queue.shift()!;
       resolve();
     } else {
@@ -112,26 +123,34 @@ export class StdIOSocketProcess {
   constructor(args: string[]) {
     this.process = new Gio.Subprocess({
       argv: args,
-      flags: Gio.SubprocessFlags.STDIN_PIPE | Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE
+      flags:
+        Gio.SubprocessFlags.STDIN_PIPE |
+        Gio.SubprocessFlags.STDOUT_PIPE |
+        Gio.SubprocessFlags.STDERR_PIPE,
     });
     this.process.init(null);
 
     this.stdin = this.process.get_stdin_pipe()!;
     this.stdout = new Gio.DataInputStream({
       baseStream: this.process.get_stdout_pipe()!,
-      closeBaseStream: true
+      closeBaseStream: true,
     });
     this.stderr = new Gio.DataInputStream({
       baseStream: this.process.get_stderr_pipe()!,
-      closeBaseStream: true
+      closeBaseStream: true,
     });
   }
 
   async write_stdin_async(data: string, cancellable: Gio.Cancellable) {
     try {
-      await this.stdin.write_bytes_async(Bytes(`${data}\n`), GLib.PRIORITY_DEFAULT, cancellable);
-    } catch(e) {
-      if(!(e instanceof GLib.Error) || e.code !== Gio.IOErrorEnum.CANCELLED) print(`Error writing to stdin: ${e}`);
+      await this.stdin.write_bytes_async(
+        Bytes(`${data}\n`),
+        GLib.PRIORITY_DEFAULT,
+        cancellable
+      );
+    } catch (e) {
+      if (!(e instanceof GLib.Error) || e.code !== Gio.IOErrorEnum.CANCELLED)
+        print(`Error writing to stdin: ${e}`);
     }
   }
 
@@ -139,9 +158,9 @@ export class StdIOSocketProcess {
 
   async sendAsync(data: string): Promise<string | null> {
     await this.lock.lock();
-    
+
     try {
-      if(this.activeRead) {
+      if (this.activeRead) {
         this.activeRead.cancel();
         this.activeRead = null;
       }
@@ -150,24 +169,31 @@ export class StdIOSocketProcess {
       this.activeRead = cancellable;
 
       // Clear the stdout buffer
-      if(this.stdout.get_available() > 0) {
-        await this.stdout.skip_async(this.stdout.get_available(), GLib.PRIORITY_DEFAULT, cancellable);
-        if(cancellable.is_cancelled()) return null;
+      if (this.stdout.get_available() > 0) {
+        await this.stdout.skip_async(
+          this.stdout.get_available(),
+          GLib.PRIORITY_DEFAULT,
+          cancellable
+        );
+        if (cancellable.is_cancelled()) return null;
       }
 
       await this.write_stdin_async(data, cancellable);
-      if(cancellable.is_cancelled()) return null;
+      if (cancellable.is_cancelled()) return null;
       // const stdout = await this.read_stdout_line_async();
-      
+
       await this.stdout.fill_async(-1, GLib.PRIORITY_DEFAULT, cancellable);
-      if(cancellable.is_cancelled()) return null;
+      if (cancellable.is_cancelled()) return null;
 
       const bytes = this.stdout.peek_buffer();
       const text = new TextDecoder().decode(bytes);
 
-      const [lineBytes] = await this.stdout.read_line_async(GLib.PRIORITY_DEFAULT, cancellable);
-      if(cancellable.is_cancelled()) return null;
-      if(!lineBytes) return null;
+      const [lineBytes] = await this.stdout.read_line_async(
+        GLib.PRIORITY_DEFAULT,
+        cancellable
+      );
+      if (cancellable.is_cancelled()) return null;
+      if (!lineBytes) return null;
 
       const line = new TextDecoder().decode(lineBytes);
 
@@ -182,21 +208,21 @@ export class StdIOSocketProcess {
   }
 }
 
-Array.prototype.defaultIfEmpty = function<T>(defaultValue: T): T[] {
+Array.prototype.defaultIfEmpty = function <T>(defaultValue: T): T[] {
   return this.length > 0 ? this : [defaultValue];
-}
-Array.prototype.all = function<T>(predicate: (value: T) => boolean): boolean {
-  for(let value of this) {
-    if(!predicate(value)) return false;
+};
+Array.prototype.all = function <T>(predicate: (value: T) => boolean): boolean {
+  for (let value of this) {
+    if (!predicate(value)) return false;
   }
   return true;
-}
-Array.prototype.any = function<T>(predicate: (value: T) => boolean): boolean {
-  for(let value of this) {
-    if(predicate(value)) return true;
+};
+Array.prototype.any = function <T>(predicate: (value: T) => boolean): boolean {
+  for (let value of this) {
+    if (predicate(value)) return true;
   }
   return false;
-}
+};
 declare global {
   interface Array<T> {
     defaultIfEmpty(defaultValue: T): T[];

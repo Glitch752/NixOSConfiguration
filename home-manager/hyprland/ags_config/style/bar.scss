@@ -35,8 +35,16 @@ window.bar {
     all: unset;
     transition: 200ms;
 
+    icon {
+      transition: 200ms;
+    }
+
     &:hover {
       color: white;
+
+      icon {
+        color: theme.$maroon;
+      }
     }
   }
 
@@ -82,7 +90,6 @@ window.bar {
   }
 
   // Center panel
-
   .media label {
     color: theme.$subtext1;
     padding: 2px 5px 0 5px;
@@ -102,6 +109,18 @@ window.bar {
     .dateLabel {
       color: theme.$subtext1;
       font-size: 11px;
+    }
+  }
+
+  // Right panel
+  .systemTray {
+    padding: 0;
+    > button {
+      padding: 0 8px;
+      border-radius: theme.$borderRadius;
+      &:hover {
+        background-color: color.adjust(theme.$mantle, $lightness: 10%);
+      }
     }
   }
 }

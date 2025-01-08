@@ -46,7 +46,7 @@ window.bar {
     padding-top: 1px;
 
     padding: 0 3px;
-    
+
     color: theme.$text;
 
     icon {
@@ -58,8 +58,7 @@ window.bar {
 
   .workspaces {
     .focused {
-      color: theme.$sapphire;
-      border-color: theme.$sapphire;
+      color: theme.$red;
     }
     label {
       min-width: 10px;
@@ -72,6 +71,7 @@ window.bar {
     }
 
     font-size: 16px;
+    font-weight: normal;
     color: theme.$subtext1;
   }
 
@@ -88,45 +88,10 @@ window.bar {
     padding: 2px 5px 0 5px;
   }
 
-  .resourceUtilization {
-    font-size: 11px;
-    padding: 0 10px 0 0;
-
-    // Minimum width to avoid reflow when the text is its maximum length
-    min-width: 84px;
-    .name {
-      min-width: 36px;
-      margin-left: 5px;
-
-      label {
-        color: theme.$sapphire;
-        padding: 0;
-        margin: 0;
-      }
-    }
-
-    .percent {
-      color: theme.$subtext1;
-    }
-    icon {
-      color: theme.$sapphire;
-    }
-  }
-
-  .battery {
-    label {
-      padding-left: 5px;
-    }
-    icon {
-      margin-bottom: 3px; // Makes the icon more visually centered
-    }
-    padding: 0 10px;
-  }
-
   .time {
     // Puts the text off-center, but fixes the icon shadow slightly overflowing at the top of the bar
     padding-top: 1px;
-    
+
     margin: 0 12px;
     font-weight: normal;
 

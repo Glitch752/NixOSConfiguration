@@ -27,8 +27,3 @@
     }
   }
 }
-
-.windowCloser {
-  // For some reason, if this is fully transparent, no mouse events are registered.
-  background-color: rgba(0, 0, 0, 0.01);
-}

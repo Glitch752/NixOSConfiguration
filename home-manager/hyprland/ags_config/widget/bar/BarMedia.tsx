@@ -34,7 +34,6 @@ class PlayerMode implements Subscribable {
       if (newMode > DisplayedPlayerData.Progress) newMode = DisplayedPlayerData.SongName;
 
       this.showedMode.set(newMode);
-      print(newMode);
 
       timeout(this.cycleTime, () => this.cycleNext());
     }
@@ -70,14 +69,13 @@ export default function Media() {
 
   // TODO: Progress bar and time elapsed/remaining
   return <Widget icon="music" cssClasses={["media"]} onButtonReleased={(self, event) => {
-    if (false /* right click */) {
-      // TODO: Figure out how to do this with gtk4
+    if (event.get_button() === Gdk.BUTTON_SECONDARY) {
       playerMode.next();
       return true;
-    } else {
-      openPopup(PopupType.MediaControls);
-      return true;
     }
+    return false;
+  }} onClicked={() => {
+    openPopup(PopupType.MediaControls);
   }}>
     {
       bind(mpris, "players").as(players => {

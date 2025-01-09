@@ -32,7 +32,7 @@ export function Widget({
   visible?: boolean | Binding<boolean>,
 
   onClicked?: () => any,
-  onButtonReleased?: (widget: Gtk.Button, event: Gdk.Event) => any,
+  onButtonReleased?: (widget: Gtk.Button, event: Gdk.ButtonEvent) => any,
 }) {
   if (onClicked || onButtonReleased) {
     return <box vexpand cssClasses={["widgetOuter"]}>

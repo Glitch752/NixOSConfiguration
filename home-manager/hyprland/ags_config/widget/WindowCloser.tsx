@@ -30,15 +30,17 @@ export function WindowCloser(
           closeOpenPopup();
         }
       }}
-    // TODO: Replicate this with gtk4
-    // css={`
-    //   background-color: rgba(
-    //     0,
-    //     0,
-    //     0,
-    //     ${String(popupData.backgroundOpacity)}
-    //   );
-    // `}
+      setup={(self) => {
+        // I don't know if this is the best way to do this, but it works for now.
+        const provider = Gtk.CssProvider.new();
+        provider.load_from_data(`
+          window {
+            /* For some reason, if this is fully transparent, no mouse events are registered. */
+            background-color: rgba(0, 0, 0, ${popupData.backgroundOpacity || 0.01});
+          }
+        `, -1);
+        self.get_style_context().add_provider(provider, 800);
+      }}
     >
       {drawBackground ? (
         // TODO

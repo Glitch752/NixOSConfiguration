@@ -179,6 +179,7 @@ export default function RunPopup(data?: PopupData) {
           previousHighlight();
           return true;
         } else if (keyval === Gdk.KEY_Return) {
+          print("Activate");
           const entry = getAllEntries()[highlightedIndex.get()];
           if (entry !== null && entry.onActivate) entry.onActivate();
           closeOpenPopup();
@@ -191,9 +192,6 @@ export default function RunPopup(data?: PopupData) {
       vscrollbarPolicy={Gtk.PolicyType.AUTOMATIC}
       hscrollbarPolicy={Gtk.PolicyType.NEVER}
       propagateNaturalHeight
-      setup={self => {
-        print(self.get_child());
-      }}
     >
       <box vertical cssClasses={["results"]} vexpand>
         {

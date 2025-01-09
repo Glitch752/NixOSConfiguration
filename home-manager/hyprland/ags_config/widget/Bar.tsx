@@ -106,13 +106,14 @@ function SystemTray() {
   const tray = Tray.get_default()
 
   return <Widget cssClasses={["systemTray"]}>
-    {bind(tray, "items").as(items => items.map(item => {
+    {bind(tray, "items").as(items => items.map(item =>
       <menubutton
         tooltipMarkup={bind(item, "tooltipMarkup")}
-        menuModel={bind(item, "menuModel")}>
+        menuModel={bind(item, "menuModel")}
+      >
         <image gicon={bind(item, "gicon")} />
       </menubutton>
-    }))}
+    ))}
   </Widget>
 }
 
@@ -234,7 +235,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor): Gtk.Window {
         <Audio />
         <BatteryLevel />
 
-        <Widget icon="preferences-system-time">
+        <Widget>
           <Time />
           <ControlsPopupButton />
         </Widget>

@@ -10,7 +10,7 @@ window.bar {
   font-size: 14px;
   // font-family: monospace;
 
-  > centerbox {
+  > box {
     margin: 5px 10px 0px 10px;
   }
 
@@ -99,7 +99,7 @@ window.bar {
     // Puts the text off-center, but fixes the icon shadow slightly overflowing at the top of the bar
     padding-top: 1px;
 
-    margin: 0 12px;
+    margin-right: 12px;
     font-weight: normal;
 
     .timeLabel {
@@ -115,7 +115,7 @@ window.bar {
   // Right panel
   .systemTray {
     padding: 0;
-    > button {
+    > menubutton > button {
       padding: 0 8px;
       border-radius: theme.$borderRadius;
       &:hover {

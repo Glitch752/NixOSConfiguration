@@ -1,13 +1,12 @@
-// import { bind, timeout, Variable } from "astal";
-// import { CalendarDayData, getCalendarLayout } from "./calendarLayout";
-// import { astalify, Gtk } from "astal/gtk4";
+// TODO: update that all to work with GTK4; for now, we use the built-in calendar widget
+import { Gtk } from "astal/gtk4";
+import { astalify } from "astal/gtk4";
 
-// const Fixed = astalify<Gtk.Fixed, Gtk.Fixed.ConstructorProps>(Gtk.Fixed, {
-//   // if it is a container widget, define children setter and getter here
-//   // TODO
-//   getChildren(self) { return [] },
-//   setChildren(self, children) { },
-// });
+export const Calendar = astalify<Gtk.Calendar, Gtk.Calendar.ConstructorProps>(Gtk.Calendar, {});
+
+// import { bind, Variable } from "astal";
+// import { CalendarDayData, getCalendarLayout } from "./calendarLayout";
+// import { Gtk } from "astal/gtk4";
 
 // function formatMonth({ month, year }: { month: number, year: number }) {
 //   return new Date(year, month).toLocaleString(undefined, { month: "long", year: "numeric" });
@@ -98,8 +97,13 @@
 //   let scrollTimeout: number | null = null;
 
 //   layout.cssClasses = ["infiniteScrollWindow", ...cssClasses ?? []];
-//   layout.heightRequest = viewportHeight;
-//   if (viewportWidth) layout.widthRequest = viewportWidth;
+
+//   layout.hexpand = hexpand ?? false;
+//   layout.vexpand = vexpand ?? false;
+//   layout.overflow = Gtk.Overflow.HIDDEN;
+//   if (!hexpand || !vexpand) {
+//     layout.set_size_request(viewportWidth ?? 0, viewportHeight);
+//   }
 
 //   // layout.connect("scroll", (self, dx, dy) => {
 //   //   if (snapToElement) {
@@ -125,10 +129,6 @@
 //       }
 //       scrollTarget = elementHeight * newValue;
 //     });
-//   }
-
-//   if (!hexpand || !vexpand) {
-//     layout.set_size_request(viewportWidth ?? 0, viewportHeight);
 //   }
 
 //   function getWidgetPosition(index: number) {
@@ -199,7 +199,7 @@
 //   return derivedVariable;
 // }
 
-// export default function Calendar() {
+// export function Calendar() {
 //   let displayedMonth = new Variable(monthToIndex(new Date().getMonth(), new Date().getFullYear()));
 //   let displayedMonthYear = bind(displayedMonth).as(month => Math.floor(month / 12));
 
@@ -261,9 +261,3 @@
 //     </box>
 //   </box>;
 // }
-
-// TODO: update that all to work with GTK4; for now, we use the built-in calendar widget
-import { Gtk } from "astal/gtk4";
-import { astalify } from "astal/gtk4";
-
-export const Calendar = astalify<Gtk.Calendar, Gtk.Calendar.ConstructorProps>(Gtk.Calendar, {});

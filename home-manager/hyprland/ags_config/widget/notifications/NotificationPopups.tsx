@@ -4,6 +4,8 @@ import Notification from "./Notification";
 import { type Subscribable } from "astal/binding";
 import { Variable, bind, timeout } from "astal";
 
+// TODO: Notifications were completely broken by our gtk4 migration
+
 /*
  * For reference, you can use `notify-send --action 'wow=Test' --action 'test2=Test 2' 'This is a notification!' 'This is the body of the notification.'` to test notifications.
  */
@@ -79,7 +81,6 @@ class NotifiationMap implements Subscribable {
    */
   private set(key: number, value: Gtk.Widget) {
     // In case of replacecment, destroy the previous widget.
-    this.widgetMap.get(key)?.destroy();
     this.widgetMap.set(key, value);
     this.notifiy();
   }
@@ -89,7 +90,6 @@ class NotifiationMap implements Subscribable {
    * @param key The notification ID
    */
   private delete(key: number) {
-    this.widgetMap.get(key)?.destroy();
     this.widgetMap.delete(key);
     this.notifiy();
   }

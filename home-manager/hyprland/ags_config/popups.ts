@@ -1,4 +1,4 @@
-import { App, Astal, Gdk, Gtk } from "astal/gtk3";
+import { App, Astal, Gdk, Gtk } from "astal/gtk4";
 import { WindowCloser } from "./widget/WindowCloser";
 import PopupWindow from "./widget/PopupWindow";
 import ControlsPopup from "./widget/ControlsPopup";
@@ -8,6 +8,8 @@ import MediaControls, {
 import { exec } from "astal";
 import RunPopup, { CenteredRunPopup } from "./widget/launcher/RunPopup";
 import cairo from "cairo";
+import AstalHyprland from "gi://AstalHyprland?version=0.1";
+import { hyprlandMonitorToGdkMonitor } from "./utils";
 
 export enum PopupType {
   MediaControls = "mediaControls",
@@ -63,45 +65,9 @@ function getPopup(popupType: PopupType, data?: PopupData): PopupContent {
   }
 }
 
-/**
- * We have to use this hacky solution until astal's gtk4 support is ready since GDK doesn't give us
- * monitor descriptions or anything else necessary to perfectly map hyprland monitors to GDK monitors.
- * Furthermore, GDK thinks all our monitors are at (0, 0) on top of each other, so we can't use GDK
- * to find the focused monitor.
- * Technically, this means that if you have multiple monitors with the same resolution, model, and scale,
- * the popup can open on the wrong one. However, I don't think this is a huge deal for now.
- * See https://github.com/Jas-SinghFSU/HyprPanel/blob/955eed6c60a3ea5d6b0b1b8b7086cffbae984277/modules/bar/Bar.ts#L137C1-L173C4
- * (although this is the inverse of what we're doing here)
- */
-function getMonitorForPopup(): Gdk.Monitor | null {
-  const monitors = JSON.parse(exec(`hyprctl monitors -j`)) as {
-    width: number;
-    height: number;
-    model: string;
-    scale: number;
-    focused: boolean;
-  }[];
-  const activeMonitor = monitors.find((monitor) => monitor.focused);
-  if (!activeMonitor) return null;
-
-  const { width, height, model, scale } = activeMonitor;
-
-  const gdkMonitors = App.get_monitors();
-  for (const monitor of gdkMonitors) {
-    if (
-      monitor.get_geometry().width === width &&
-      monitor.get_geometry().height === height &&
-      monitor.get_scale_factor() === scale &&
-      monitor.get_model() === model
-    ) {
-      return monitor;
-    }
-  }
-
-  // Fallback to the first monitor
-  if (gdkMonitors.length > 0) return gdkMonitors[0];
-
-  return null;
+function getMonitorForPopup(): AstalHyprland.Monitor | null {
+  const hyprland = AstalHyprland.get_default();
+  return hyprland.get_focused_monitor();
 }
 
 let openPopupData: {
@@ -141,17 +107,21 @@ export type PopupData = {
 
 export function openPopup(popupType: PopupType, data?: PopupData) {
   const monitor = getMonitorForPopup();
-  if (monitor === null) return;
+  if (!monitor) return;
+  const gdkmonitor = hyprlandMonitorToGdkMonitor(monitor);
 
   if (
     !openPopupData ||
     openPopupData.type !== popupType ||
-    openPopupData.monitor !== monitor
+    openPopupData.monitor !== gdkmonitor
   ) {
     const popupData = getPopup(popupType, data);
     const windowClosers = addWindowClosersForPopup(popupType, popupData);
 
-    const popup = PopupWindow(monitor, popupType, popupData);
+    windowClosers.forEach((closer) => closer.show());
+
+    const popup = PopupWindow(gdkmonitor, popupType, popupData);
+    popup.show();
     App.add_window(popup);
 
     openPopupData = {
@@ -161,7 +131,7 @@ export function openPopup(popupType: PopupType, data?: PopupData) {
       },
       type: popupType,
       windowClosers: windowClosers,
-      monitor: monitor,
+      monitor: gdkmonitor,
     };
 
     return;

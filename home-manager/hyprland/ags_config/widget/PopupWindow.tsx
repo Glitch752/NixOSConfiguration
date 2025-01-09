@@ -1,7 +1,6 @@
-import { App, Astal, Gdk, Gtk } from "astal/gtk3";
+import { App, Astal, Gdk, Gtk } from "astal/gtk4";
 import { closeOpenPopup, PopupContent } from "../popups";
 import { timeout } from "astal";
-import { DrawingArea, Overlay, Revealer } from "astal/gtk3/widget";
 
 export default function PopupWindow(
   monitor: Gdk.Monitor,
@@ -10,7 +9,7 @@ export default function PopupWindow(
 ): Gtk.Window {
   return (
     <window
-      className={`${windowName} popup`}
+      cssClasses={[windowName, "popup"]}
       name={windowName}
       namespace="ags-popup-window"
       gdkmonitor={monitor}
@@ -18,11 +17,11 @@ export default function PopupWindow(
       anchor={popupContent.anchor}
       keymode={Astal.Keymode.EXCLUSIVE}
       application={App}
-      onKeyPressEvent={(self, event: Gdk.Event) => {
-        if (event.get_keyval()[1] === Gdk.KEY_Escape) closeOpenPopup();
+      onKeyPressed={(self, keyval) => {
+        if (keyval === Gdk.KEY_Escape) closeOpenPopup();
       }}
       onRealize={(self) => {
-        const revealer = self.get_children()[0] as Gtk.Revealer;
+        const revealer = self.get_first_child() as Gtk.Revealer;
         timeout(0, () => revealer.set_reveal_child(true));
       }}
     >
@@ -30,7 +29,6 @@ export default function PopupWindow(
         visible={true}
         transitionType={popupContent.revealTransitionType}
         transitionDuration={50}
-        canFocus={false}
       >
         {popupContent.widget}
       </Gtk.Revealer>

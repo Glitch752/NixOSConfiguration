@@ -1,6 +1,7 @@
 import { Module, ModuleEntry } from "../module";
-import { AbortSignal, copyToClipboard } from "../../../utils";
+import { copyToClipboard } from "../../../utils";
 import { symbolsQuery } from "../launcherUtilsInterface";
+import { AbortSignal } from "../../../processes";
 
 export class SymbolsModule extends Module {
   static SYMBOLS_PREFIX = "";
@@ -17,7 +18,7 @@ export class SymbolsModule extends Module {
     query = query.slice(SymbolsModule.SYMBOLS_PREFIX.length).trim();
 
     const result = await symbolsQuery(query);
-    if(result.error) return [];
+    if (result.error) return [];
 
     return result.output.slice(0, SymbolsModule.MAXIMUM_RESULTS).map(({ name, value }) => new ModuleEntry(value, name, null, () => {
       copyToClipboard(value);

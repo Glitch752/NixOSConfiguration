@@ -5,4 +5,4 @@ ags quit -i main
 echo "" > /tmp/ags.log
 
 # Launch ags
-ags run 2>&1 | tee -a /tmp/ags.log & disown
+ags run --gtk4 2>&1 | tee -a /tmp/ags.log & disown

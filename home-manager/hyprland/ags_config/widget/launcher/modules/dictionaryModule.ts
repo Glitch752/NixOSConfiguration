@@ -1,6 +1,7 @@
 import { Module, ModuleEntry } from "../module";
-import { AbortSignal, copyToClipboard } from "../../../utils";
+import { copyToClipboard } from "../../../utils";
 import { execAsync } from "astal";
+import { AbortSignal } from "../../../processes";
 
 type DictionaryResponse = DictionaryWord[];
 type DictionaryWord = {
@@ -48,10 +49,10 @@ export class DictionaryModule extends Module {
 
       const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${query}`;
       const response = await execAsync(["curl", "-s", url]);
-      if(!response) return [];
+      if (!response) return [];
 
       const data: DictionaryResponse = JSON.parse(response);
-      if(!data || data.length === 0) return [];
+      if (!data || data.length === 0) return [];
 
       const word = data[0]; // Only use the first result
 
@@ -62,7 +63,7 @@ export class DictionaryModule extends Module {
 
         return new ModuleEntry(title, description, null, () => copyToClipboard(textToCopy));
       });
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       return [];
     }

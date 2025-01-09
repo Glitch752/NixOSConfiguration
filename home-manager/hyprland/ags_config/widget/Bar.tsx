@@ -1,4 +1,4 @@
-import { App, Astal, Gtk, Gdk } from "astal/gtk3"
+import { App, Astal, Gtk, Gdk } from "astal/gtk4"
 import { Binding, Variable, bind } from "astal"
 import Hyprland from "gi://AstalHyprland"
 import Wp from "gi://AstalWp"
@@ -6,12 +6,14 @@ import Network from "gi://AstalNetwork"
 import Battery from "gi://AstalBattery"
 import Tray from "gi://AstalTray"
 import { openPopup, PopupType } from "../popups"
-import { limitLength, startApplication } from "../utils"
+import { limitLength } from "../utils"
 import Media from "./bar/BarMedia"
-import { BindableChild } from "astal/gtk3/astalify"
+import { startApplication } from "../processes"
+
+type BindableChild = Gtk.Widget | Binding<Gtk.Widget>;
 
 export function Widget({
-  className,
+  cssClasses,
   child,
   children,
   icon,
@@ -19,9 +21,9 @@ export function Widget({
   visible,
 
   onClicked,
-  onButtonReleaseEvent
+  onButtonReleased
 }: {
-  className?: string
+  cssClasses?: string[]
 
   child?: BindableChild
   children?: Array<BindableChild>
@@ -30,17 +32,18 @@ export function Widget({
   visible?: boolean | Binding<boolean>,
 
   onClicked?: () => any,
-  onButtonReleaseEvent?: (widget: Gtk.Button, event: Gdk.Event) => any,
+  onButtonReleased?: (widget: Gtk.Button, event: Gdk.Event) => any,
 }) {
-  if (onClicked || onButtonReleaseEvent) {
-    return <box vexpand className="widgetOuter">
+  if (onClicked || onButtonReleased) {
+    return <box vexpand cssClasses={["widgetOuter"]}>
       <button
         tooltipText={tooltipText ?? ""}
-        visible={visible ?? true} className={`widget ${icon ? "icon" : ""} ${className ?? ""}`}
-        onClicked={onClicked ?? (() => { })} onButtonReleaseEvent={onButtonReleaseEvent ?? (() => { })}
+        visible={visible ?? true} cssClasses={["widget", icon ? "icon" : "", ...cssClasses ?? []]}
+        onClicked={onClicked ?? (() => { })}
+        onButtonReleased={onButtonReleased ?? (() => { })}
       >
         <box>
-          {icon && <icon icon={icon} />}
+          {icon && <image iconName={icon} />}
           {child}
           {children}
         </box>
@@ -48,29 +51,28 @@ export function Widget({
     </box>
   }
 
-  return <box vexpand tooltipText={tooltipText ?? ""} visible={visible ?? true} className={`widget widgetOuter ${icon ? "icon" : ""} ${className ?? ""}`}>
-    {icon && <icon icon={icon} />}
-    {child}
-    {children}
+  return <box vexpand tooltipText={tooltipText ?? ""} visible={visible ?? true} cssClasses={["widget", "widgetOuter", icon ? "icon" : "", ...cssClasses ?? []]}>
+    {icon ? <image iconName={icon} /> : null as any}
+    {child ?? null as any}
+    {children ?? null as any}
   </box>
 }
 
 // Left panel
 
 function NixOSIcon() {
-  return <Widget className="nixosIcon" onClicked={() => startApplication('kitty sh -lic "fastfetch && read -n 1 -s"')} icon="nixos" />
+  return <Widget cssClasses={["nixosIcon"]} onClicked={() => startApplication('kitty sh -lic "fastfetch && read -n 1 -s"')} icon="nixos" />
 }
 
 function Workspaces() {
   const hypr = Hyprland.get_default();
 
-  return <Widget icon="workspace" className="workspaces">
+  return <Widget icon="workspace" cssClasses={["workspaces"]}>
     {bind(hypr, "workspaces").as(wss => wss
       .sort((a, b) => a.id - b.id)
       .map(ws => (
         <button
-          className={bind(hypr, "focusedWorkspace").as(fw =>
-            ws === fw ? "focused" : "")}
+          cssClasses={bind(hypr, "focusedWorkspace").as(fw => ws === fw ? ["focused"] : [])}
           tooltipText={`"${ws.name}": Workspace ${ws.id}${ws.id < 0 ? " (special; moves windows to focused workspace)" : ""}`}
           onClicked={() => {
             if (ws.id > 0) ws.focus();
@@ -90,7 +92,7 @@ function FocusedClient() {
   const focused = bind(hypr, "focusedClient");
 
   return <Widget
-    className="focusedClient"
+    cssClasses={["focusedClient"]}
     visible={focused.as(Boolean)}>
     {focused.as(client => (
       client && <label label={bind(client, "title").as((s) => limitLength(String(s), 60))} />
@@ -103,20 +105,13 @@ function FocusedClient() {
 function SystemTray() {
   const tray = Tray.get_default()
 
-  return <Widget className="systemTray">
+  return <Widget cssClasses={["systemTray"]}>
     {bind(tray, "items").as(items => items.map(item => {
-      if (item.iconThemePath) App.add_icons(item.iconThemePath)
-      const menu = item.create_menu();
-
-      return <button
+      <menubutton
         tooltipMarkup={bind(item, "tooltipMarkup")}
-        onDestroy={() => menu?.destroy()}
-        onClickRelease={self => {
-          menu?.popup_at_widget(self, Gdk.Gravity.SOUTH, Gdk.Gravity.NORTH, null)
-        }}
-        tooltipText={bind(item, "tooltip").as(t => t ? `${t.title}` : "")}>
-        <icon gIcon={bind(item, "gicon")} />
-      </button>
+        menuModel={bind(item, "menuModel")}>
+        <image gicon={bind(item, "gicon")} />
+      </menubutton>
     }))}
   </Widget>
 }
@@ -140,7 +135,7 @@ function RAMUtilization() {
 function Bluetooth() {
   // TODO: Shortcut to run systemctl --user restart pipewire for bluetooth audio?
   return <Widget
-    className="bluetooth"
+    cssClasses={["bluetooth"]}
     tooltipText="Bluetooth"
     icon="bluetooth"
     onClicked={() => startApplication("overskride")}
@@ -151,7 +146,7 @@ function Wifi() {
   const { wifi } = Network.get_default();
 
   return <Widget
-    className="wifi"
+    cssClasses={["wifi"]}
     tooltipText={bind(wifi, "ssid").as(String)}
     onClicked={() => startApplication("nm-connection-editor")}
     icon={bind(wifi, "iconName")}
@@ -161,7 +156,7 @@ function Wifi() {
 function Audio() {
   const speaker = Wp.get_default()?.audio.defaultSpeaker!;
 
-  return <Widget className="audio" onClicked={() => startApplication("pavucontrol")} icon={bind(speaker, "volumeIcon").as(icon => icon ?? "audio-volume-low-symbolic")}>
+  return <Widget cssClasses={["audio"]} onClicked={() => startApplication("pavucontrol")} icon={bind(speaker, "volumeIcon").as(icon => icon ?? "audio-volume-low-symbolic")}>
     <label label={bind(speaker, "volume").as(v => `${Math.round(v * 100)}%`)}></label>
   </Widget>
 }
@@ -183,7 +178,7 @@ function Time() {
   return <box
     vertical
     tooltipText={tooltipText()}
-    className="time"
+    cssClasses={["time"]}
     valign={Gtk.Align.CENTER}
     onDestroy={() => {
       shortTime.drop();
@@ -192,26 +187,26 @@ function Time() {
     }}
   >
     <label
-      className="timeLabel"
+      cssClasses={["timeLabel"]}
       label={shortTime()}
     />
     <label
-      className="dateLabel"
+      cssClasses={["dateLabel"]}
       label={shortDate()}
     />
   </box>;
 }
 
 function ControlsPopupButton() {
-  return <button onClicked={() => openPopup(PopupType.ControlsPopup)} className="controlsPopupButton">
-    <icon icon="open-menu-symbolic" />
+  return <button onClicked={() => openPopup(PopupType.ControlsPopup)} cssClasses={["controlsPopupButton"]}>
+    <image iconName="open-menu-symbolic" />
   </button>
 }
 
 
 export default function Bar(gdkmonitor: Gdk.Monitor): Gtk.Window {
   return <window
-    className="bar"
+    cssClasses={["bar"]}
     namespace="ags-bar-window"
     gdkmonitor={gdkmonitor}
     layer={Astal.Layer.TOP}

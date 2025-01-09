@@ -1,6 +1,7 @@
-import { App, Astal, Gdk, Gtk } from "astal/gtk3";
+import { App, Astal, astalify, Gdk, Gtk } from "astal/gtk4";
 import { closeOpenPopup, PopupContent } from "../popups";
-import { DrawingArea } from "astal/gtk3/widget";
+
+const DrawingArea = astalify<Gtk.DrawingArea, Gtk.DrawingArea.ConstructorProps>(Gtk.DrawingArea, {})
 
 export function WindowCloser(
   menu: string,
@@ -14,7 +15,7 @@ export function WindowCloser(
   return (
     <window
       name={`${menu}Closer`}
-      className="windowCloser"
+      cssClasses={["windowCloser"]}
       layer={Astal.Layer.TOP}
       exclusivity={Astal.Exclusivity.NORMAL}
       gdkmonitor={monitor}
@@ -24,26 +25,32 @@ export function WindowCloser(
         Astal.WindowAnchor.LEFT |
         Astal.WindowAnchor.RIGHT
       }
+      onButtonPressed={(self, state) => {
+        if (state.get_button() === Gdk.BUTTON_PRIMARY || state.get_button() === Gdk.BUTTON_SECONDARY) {
+          closeOpenPopup();
+        }
+      }}
+    // TODO: Replicate this with gtk4
+    // css={`
+    //   background-color: rgba(
+    //     0,
+    //     0,
+    //     0,
+    //     ${String(popupData.backgroundOpacity)}
+    //   );
+    // `}
     >
-      <eventbox
-        onClick={closeOpenPopup}
-        css={`
-          background-color: rgba(
-            0,
-            0,
-            0,
-            ${String(popupData.backgroundOpacity)}
-          );
-        `}
-      >
-        {drawBackground ? (
-          <DrawingArea
-            onRealize={drawBackground.onRealize}
-            onDraw={drawBackground.onDraw as any}
-            onDestroy={drawBackground.onDestroy}
-          />
-        ) : null}
-      </eventbox>
+      {drawBackground ? (
+        // TODO
+        // <box />
+        <DrawingArea
+          setup={(self) => {
+            drawBackground.onRealize(self);
+            self.set_draw_func(drawBackground.onDraw as any);
+          }}
+          onDestroy={drawBackground.onDestroy}
+        />
+      ) : null}
     </window>
   ) as Gtk.Window;
 }

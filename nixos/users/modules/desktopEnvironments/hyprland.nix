@@ -55,7 +55,7 @@
         Hyprland = {
           prettyName = "Hyprland";
           comment = "Hyprland UWSM";
-          binPath = "/etc/profiles/per-user/quinn/bin/Hyprland";
+          binPath = "/etc/profiles/per-user/brody/bin/Hyprland";
         };
       };
     };
@@ -83,10 +83,10 @@
             # If the boot message exits with code 1, start normally.
             # If it exists with code 0, hide all terminal output from uwsm.
             if [ $? -eq 1 ]; then
-              ${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop
+              ${pkgs.uwsm}/bin/uwsm start /etc/profiles/per-user/brody/bin/Hyprland -N Hyprland
             else
               echo "" > /tmp/uwsm-stdout.log
-              ${pkgs.uwsm}/bin/uwsm start hyprland-uwsm.desktop > /tmp/uwsm-stdout.log 2>&1
+              ${pkgs.uwsm}/bin/uwsm start /etc/profiles/per-user/brody/bin/Hyprland -N Hyprland > /tmp/uwsm-stdout.log 2>&1
             fi
           ''}";
           user = "brody";

@@ -1,25 +1,19 @@
 {
-    "$schema": "https://json.schemastore.org/tsconfig",
-    "compilerOptions": {
-        "experimentalDecorators": true,
-        "strict": true,
-        "target": "ES2022",
-        "module": "ES2022",
-        "moduleResolution": "Bundler",
-        "lib": [
-            "ES2022"
-        ],
-        // "checkJs": true,
-        // "allowJs": true,
-        "jsx": "react-jsx",
-        "jsxImportSource": "/home/brody/.local/share/ags/gtk3",
-        "paths": {
-            "astal": [
-                "/home/brody/.local/share/ags"
-            ],
-            "astal/*": [
-                "/home/brody/.local/share/ags/*"
-            ]
-        },
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "strict": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    // "checkJs": true,
+    // "allowJs": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "/home/brody/.local/share/ags/gtk4",
+    "paths": {
+      "astal": ["/home/brody/.local/share/ags"],
+      "astal/*": ["/home/brody/.local/share/ags/*"]
     }
+  }
 }

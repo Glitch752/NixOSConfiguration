@@ -12,9 +12,9 @@ inotifywait\
   -e close_write $(readlink -f ~/.config/ags) | while read; do
     ags quit -i main
     echo "" > /tmp/ags.log
-    ags run 2>&1 | tee -a /tmp/ags.log & disown
+    ags run --gtk4 2>&1 | tee -a /tmp/ags.log & disown
 done & disown
 
 # Load ags
 echo "Force reloaded ags"
-ags run 2>&1 | tee -a /tmp/ags.log & disown
+ags run --gtk4 2>&1 | tee -a /tmp/ags.log & disown

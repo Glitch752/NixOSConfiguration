@@ -1,11 +1,11 @@
 import { bind, Binding, timeout, Variable } from "astal";
-import { mergeBindings } from "astal/gtk3/astalify";
 import { formatDuration } from "../../utils";
-import { Gdk } from "astal/gtk3";
+import { Gdk } from "astal/gtk4";
 import { openPopup, PopupType } from "../../popups";
 import Mpris from "gi://AstalMpris";
 import { Subscribable } from "astal/binding";
 import { Widget } from "../Bar";
+import { mergeBindings } from "astal/_astal";
 
 function playerPriority(player: Mpris.Player) {
   // TODO
@@ -27,11 +27,11 @@ class PlayerMode implements Subscribable {
   private cycleTime = 3000;
 
   cycleNext() {
-    if(this.mode === "cycle") {
+    if (this.mode === "cycle") {
       let newMode = this.showedMode.get();
-      
+
       newMode = this.showedMode.get() + 1;
-      if(newMode > DisplayedPlayerData.Progress) newMode = DisplayedPlayerData.SongName;
+      if (newMode > DisplayedPlayerData.Progress) newMode = DisplayedPlayerData.SongName;
 
       this.showedMode.set(newMode);
       print(newMode);
@@ -42,10 +42,10 @@ class PlayerMode implements Subscribable {
 
   next() {
     // This is pretty hacky...
-    if(this.mode === "cycle") {
+    if (this.mode === "cycle") {
       this.mode = DisplayedPlayerData.SongName;
       this.showedMode.set(this.mode);
-    } else if(this.mode === DisplayedPlayerData.Progress) {
+    } else if (this.mode === DisplayedPlayerData.Progress) {
       this.mode = "cycle";
       timeout(this.cycleTime, () => this.cycleNext());
     } else {
@@ -69,8 +69,9 @@ export default function Media() {
   let playerMode = new PlayerMode();
 
   // TODO: Progress bar and time elapsed/remaining
-  return <Widget icon="music" className="media" onButtonReleaseEvent={(self, event) => {
-    if(event.get_button()[1] === Gdk.BUTTON_SECONDARY) {
+  return <Widget icon="music" cssClasses={["media"]} onButtonReleased={(self, event) => {
+    if (false /* right click */) {
+      // TODO: Figure out how to do this with gtk4
       playerMode.next();
       return true;
     } else {
@@ -78,40 +79,42 @@ export default function Media() {
       return true;
     }
   }}>
-    {bind(mpris, "players").as(players => {
-      const displayedPlayer = players.filter(p => p.title !== "").sort((a, b) => playerPriority(a) - playerPriority(b))[0];
-      if(displayedPlayer) return <box>
-        {bind(playerMode).as(display => {
-          switch(display) {
-            case DisplayedPlayerData.SongName:
-              return <label label={bind(displayedPlayer, "title").as(String)} />;
-            case DisplayedPlayerData.Artist:
-              return <label label={bind(displayedPlayer, "artist").as(String)} />;
-            case DisplayedPlayerData.Duration:
-              return <label label={
-                (mergeBindings([
-                  bind(displayedPlayer, "position"),
-                  bind(displayedPlayer, "length")
-                ]) as Binding<[number, number]>).as(([pos, len]) => {
-                  return pos && len ? `${formatDuration(pos)} / ${formatDuration(len)}` : "";
-                })
-              } />;
-            case DisplayedPlayerData.Progress:
-              return <label label={
-                (mergeBindings([
-                  bind(displayedPlayer, "position"),
-                  bind(displayedPlayer, "length")
-                ]) as Binding<[number, number]>).as(([pos, len]) => {
-                  return pos && len ? `${Math.round(pos / len * 100)}%` : "";
-                })
-              } />;
-            default:
-              return <label label="Unknown" />;
-          }
-        })}
-      </box>;
+    {
+      bind(mpris, "players").as(players => {
+        const displayedPlayer = players.filter(p => p.title !== "").sort((a, b) => playerPriority(a) - playerPriority(b))[0];
+        if (displayedPlayer) return <box>
+          {bind(playerMode).as(display => {
+            switch (display) {
+              case DisplayedPlayerData.SongName:
+                return <label label={bind(displayedPlayer, "title").as(String)} />;
+              case DisplayedPlayerData.Artist:
+                return <label label={bind(displayedPlayer, "artist").as(String)} />;
+              case DisplayedPlayerData.Duration:
+                return <label label={
+                  (mergeBindings([
+                    bind(displayedPlayer, "position"),
+                    bind(displayedPlayer, "length")
+                  ]) as Binding<[number, number]>).as(([pos, len]) => {
+                    return pos && len ? `${formatDuration(pos)} / ${formatDuration(len)}` : "";
+                  })
+                } />;
+              case DisplayedPlayerData.Progress:
+                return <label label={
+                  (mergeBindings([
+                    bind(displayedPlayer, "position"),
+                    bind(displayedPlayer, "length")
+                  ]) as Binding<[number, number]>).as(([pos, len]) => {
+                    return pos && len ? `${Math.round(pos / len * 100)}%` : "";
+                  })
+                } />;
+              default:
+                return <label label="Unknown" />;
+            }
+          })}
+        </box>;
 
-      else return <label label="Nothing Playing" />;
-    })}
-  </Widget>
+        else return <label label="Nothing Playing" />;
+      })
+    }
+  </Widget >
 }

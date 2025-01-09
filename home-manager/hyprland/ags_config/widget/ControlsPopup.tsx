@@ -1,22 +1,22 @@
 import { bind, Binding, Variable } from "astal";
-import { Astal, Gtk } from "astal/gtk3";
+import { Gtk } from "astal/gtk4";
 import Notification from "./notifications/Notification";
 import Notifd from "gi://AstalNotifd";
-import { Scrollable } from "astal/gtk3/widget";
-import Calendar from "./calendar/Calendar";
+import { Calendar } from "./calendar/Calendar";
+import { ScrolledWindow } from "./launcher/RunPopup";
 
 // TODO: Power profile switcher
 
-function Section({ child, children, title, className }: {
+function Section({ child, children, title, cssClasses }: {
   child?: JSX.Element | Binding<JSX.Element> | Binding<Array<JSX.Element>>
   children?: Array<JSX.Element> | Binding<Array<JSX.Element>>,
   title?: string | Binding<string>,
-  className?: string,
+  cssClasses?: string[],
 }) {
-  return <box vertical className={`section ${className}`}>
-    {title ? <label label={title} className="title" /> : null}
-    {child}
-    {children}
+  return <box vertical cssClasses={["section", ...cssClasses ?? []]}>
+    {title ? <label label={title} cssClasses={["title"]} /> : null as any}
+    {child ?? null as any}
+    {children ?? null as any}
   </box>;
 }
 
@@ -24,7 +24,7 @@ const MAX_NOTIFICATIONS = Infinity;
 
 function NotificationsDisplay(notifd: Notifd.Notifd, notifications: Gtk.Widget[]) {
   return <box vertical>
-    <Scrollable maxContentHeight={400} propagateNaturalHeight={true}>
+    <ScrolledWindow maxContentHeight={400} propagateNaturalHeight={true}>
       <box vertical>
         {
           notifications.length > MAX_NOTIFICATIONS
@@ -32,8 +32,8 @@ function NotificationsDisplay(notifd: Notifd.Notifd, notifications: Gtk.Widget[]
             : notifications
         }
       </box>
-    </Scrollable>
-    <button className="dismissButton" onClicked={() => {
+    </ScrolledWindow>
+    <button cssClasses={["dismissButton"]} onClicked={() => {
       notifd.get_notifications().forEach(notif => notif.dismiss());
     }}>Dismiss all</button>
   </box>;
@@ -50,19 +50,19 @@ export default function ControlsPopup() {
   const date = Variable("").poll(1000, 'date "+%A, %B %e"');
 
   return <box vertical valign={Gtk.Align.START}>
-    <Section className="dateTime">
+    <Section cssClasses={["dateTime"]}>
       {/* TODO: Fancy animated time? Could be cool. */}
-      <label label={bind(time)} className="time" />
-      <label label={bind(date)} className="date" />
+      <label label={bind(time)} cssClasses={["time"]} />
+      <label label={bind(date)} cssClasses={["date"]} />
     </Section>
 
     <Section title="Quick settings">
       {/* TODO */}
     </Section>
 
-    <Section title={notifications.as(notifs => notifs.length > 0 ? `Notifications (${notifs.length})` : `Notifications`)} className="notifications">
+    <Section title={notifications.as(notifs => notifs.length > 0 ? `Notifications (${notifs.length})` : `Notifications`)} cssClasses={["notifications"]}>
       {notifications.as(notifications =>
-        notifications.length > 0 ? NotificationsDisplay(notifd, notifications) : <label label="No notifications" className="empty" />
+        notifications.length > 0 ? NotificationsDisplay(notifd, notifications) : <label label="No notifications" cssClasses={["empty"]} />
       )}
     </Section>
 

@@ -1,9 +1,11 @@
-import { App, Astal, Gdk, Gtk } from "astal/gtk3";
+import { App, Astal, Gdk, Gtk } from "astal/gtk4";
 import styles from "./style/styles.scss";
 import Bar from "./widget/Bar";
 import GLib from "gi://GLib";
 import NotificationPopups from "./widget/notifications/NotificationPopups";
 import { openPopup, PopupType } from "./popups";
+import AstalHyprland from "gi://AstalHyprland?version=0.1";
+import { hyprlandMonitorToGdkMonitor } from "./utils";
 
 // TODO: Shutdown menu
 // TODO: Widget to select active wallpapers
@@ -30,6 +32,8 @@ class MonitorWindows {
     this.gdkmonitor = gdkmonitor;
 
     this.windows = [Bar(gdkmonitor), NotificationPopups(gdkmonitor)];
+
+    this.windows.forEach((widget) => widget.show());
   }
 
   destroy() {
@@ -45,20 +49,20 @@ App.start({
   instanceName: "main",
   requestHandler(request: string, res) {
     const data = request.split(" ");
-    if(data.length === 0) {
+    if (data.length === 0) {
       res("No action specified");
       return;
     }
 
     const action = data[0];
-    switch(action) {
+    switch (action) {
       case "open": {
-        if(data.length < 2) {
+        if (data.length < 2) {
           res("No popup specified");
           return;
         }
         const popup = data[1];
-        if(!Object.values(PopupType).includes(popup as PopupType)) {
+        if (!Object.values(PopupType).includes(popup as PopupType)) {
           res("Invalid popup specified");
           return;
         }
@@ -67,13 +71,13 @@ App.start({
         break;
       }
       case "launcherList": {
-        if(data.length < 2) {
+        if (data.length < 2) {
           res("No launcher list specified");
           return;
         }
         openPopup(PopupType.RunPopup, {
           input: data.slice(1).join(" "),
-          respond: res
+          respond: res,
         });
         break;
       }
@@ -86,16 +90,23 @@ App.start({
     const monitorWidgets = new Map<Gdk.Monitor, MonitorWindows>();
 
     // Initialize
-    for(const gdkmonitor of App.get_monitors()) {
+    for (const gdkmonitor of App.get_monitors()) {
+      print(`Monitor ${gdkmonitor.get_model()} initialized`);
       monitorWidgets.set(gdkmonitor, new MonitorWindows(gdkmonitor));
     }
 
-    App.connect("monitor-added", (_, gdkmonitor) => {
+    const hyprland = AstalHyprland.get_default();
+
+    hyprland.connect("monitor-added", (_, monitor) => {
+      const gdkmonitor = hyprlandMonitorToGdkMonitor(monitor);
       monitorWidgets.set(gdkmonitor, new MonitorWindows(gdkmonitor));
-      print(`Monitor ${gdkmonitor.get_model()} added`);
     });
 
-    App.connect("monitor-removed", (_, gdkmonitor) => {
+    hyprland.connect("monitor-removed", (_, id) => {
+      const monitor = hyprland.get_monitors().find((monitor) => monitor.get_id() === id);
+      if (!monitor) return;
+
+      const gdkmonitor = hyprlandMonitorToGdkMonitor(monitor);
       monitorWidgets.get(gdkmonitor)?.destroy();
       monitorWidgets.delete(gdkmonitor);
       print(`Monitor ${gdkmonitor.get_model()} removed`);

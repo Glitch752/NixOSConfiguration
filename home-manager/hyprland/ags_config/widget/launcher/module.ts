@@ -1,4 +1,4 @@
-import { AbortSignal } from "../../utils";
+import { AbortSignal } from "../../processes";
 
 export class ModuleEntry {
   constructor(
@@ -7,14 +7,14 @@ export class ModuleEntry {
     public icon: string | null,
     /** If null, the entry can't be selected. */
     public onActivate: (() => void) | null
-  ) {}
+  ) { }
 }
 
 export abstract class Module {
   constructor(
     public name: string,
     public icon: string
-  ) {}
+  ) { }
 
   getActive(query: string): boolean {
     return true;

@@ -68,6 +68,8 @@ in {
     systemd.enable = false; # Conflicts with uwsm
 
     settings = {
+      "debug:disable_logs" = false;
+
       "$terminal" = "uwsm app -- kitty";
       "$fileManager" = "uwsm app -- thunar";
       "$lockScreen" = lib.mkDefault "uwsm app -- sh ${./hyprlock/hyprlock_nvidia_screenshot_fix.sh}";

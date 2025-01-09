@@ -23,7 +23,7 @@ window.bar {
     border-radius: theme.$borderRadius;
     padding: 0 8px;
 
-    icon {
+    image {
       color: theme.$red;
       &:not(:only-child) {
         margin-right: 10px;
@@ -35,21 +35,21 @@ window.bar {
     all: unset;
     transition: 200ms;
 
-    icon {
+    image {
       transition: 200ms;
     }
 
     &:hover {
       color: white;
 
-      icon {
+      image {
         color: theme.$maroon;
       }
     }
   }
 
   // Left panel
-  .nixosIcon {
+  .nixosimage {
     // Puts the icon off-center, but fixes the icon shadow slightly overflowing at the top of the bar
     padding-top: 1px;
 
@@ -57,7 +57,7 @@ window.bar {
 
     color: theme.$text;
 
-    icon {
+    image {
       color: inherit;
     }
 

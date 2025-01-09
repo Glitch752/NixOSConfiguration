@@ -1,4 +1,4 @@
-import { StdIOSocketProcess } from "../../utils";
+import { StdIOSocketProcess } from "../../processes";
 
 const rustLauncherUtils: StdIOSocketProcess = new StdIOSocketProcess(["rust_launcher_utils"]);
 
@@ -8,7 +8,7 @@ export type RinkQueryResult = {
 };
 export async function rinkQuery(query: string): Promise<RinkQueryResult> {
   const result = await rustLauncherUtils.sendAsync(`rink ${query}`);
-  if(result) return JSON.parse(result);
+  if (result) return JSON.parse(result);
   return { error: true, output: "" };
 }
 
@@ -21,6 +21,6 @@ export type SymbolsQueryResult = {
 }
 export async function symbolsQuery(query: string): Promise<SymbolsQueryResult> {
   const result = await rustLauncherUtils.sendAsync(`symbols ${query}`);
-  if(result) return JSON.parse(result);
+  if (result) return JSON.parse(result);
   return { error: true, output: [] };
 }

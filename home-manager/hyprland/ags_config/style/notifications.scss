@@ -6,7 +6,7 @@ window.notificationPopups {
   all: unset;
 }
 
-eventbox.notification {
+box.notification {
   &:first-child > box {
     margin-top: 1rem;
   }
@@ -22,7 +22,8 @@ eventbox.notification {
   }
 
   &.critical > box {
-    .summary, .body {
+    .summary,
+    .body {
       color: color.mix(theme.$red, theme.$text, 50%);
     }
     .header {
@@ -36,7 +37,7 @@ eventbox.notification {
     padding: 0.5rem;
     color: theme.$subtext1;
 
-    .app-icon {
+    .app-image {
       margin: 0 0.4rem;
     }
 

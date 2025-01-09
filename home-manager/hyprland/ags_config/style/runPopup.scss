@@ -12,10 +12,7 @@ window.runPopup {
     background-color: utils.gtkalpha(theme.$surface0, theme.$backgroundAlpha);
   }
 
-  scrollable {
-    viewport {
-      border: 0;
-    }
+  scrolledwindow {
     padding: 0;
     margin: 0;
   }
@@ -52,12 +49,13 @@ window.runPopup {
       border-radius: theme.$borderRadius;
 
       transition: background-color 0.15s, border-color 0.15s;
-      
-      &:hover, &.highlighted {
+
+      &:hover,
+      &.highlighted {
         background: utils.gtkalpha(theme.$surface0, 0.8);
       }
 
-      icon {
+      image {
         font-size: 34px;
       }
 

@@ -29,7 +29,7 @@
   hardware.nvidia = {
     # https://github.com/NVIDIA/open-gpu-kernel-modules/issues/472
     # Making sure to use the proprietary drivers until the issue above is fixed upstream
-    open = true;
+    open = false;
 
     modesetting.enable = true;
     
@@ -53,7 +53,7 @@
     # If you start experiencing lag and FPS drops in games or programs like Blender on stable
     # NixOS when using the Hyprland flake, it is most likely a mesa version mismatch between
     # your system and Hyprland.
-    # package = pkgs-unstable.mesa.drivers;
-    # package32 = pkgs-unstable.pkgsi686Linux.mesa.drivers;
+    # package = pkgs.mesa.drivers;
+    # package32 = pkgs.pkgsi686Linux.mesa.drivers;
   };
 }

@@ -6,11 +6,13 @@
     $radius: 7px;
     margin: -10px 0 -10px 15px;
 
-    trough, highlight, slider {
+    trough,
+    highlight,
+    slider {
       all: unset;
     }
 
-    icon {
+    image {
       color: theme.$sapphire;
     }
 

@@ -7,23 +7,24 @@ window.mediaControls {
     background-color: transparent;
 
     &:hover label,
-    &:hover icon {
+    &:hover image {
       background-color: color.adjust(theme.$text, $alpha: -0.84);
       border-color: color.adjust(theme.$sapphire, $alpha: -0.8);
     }
 
     &:active label,
-    &:active icon {
+    &:active image {
       background-color: color.adjust(theme.$text, $alpha: -0.8);
     }
   }
 
-  .close icon {
+  .close image {
     border-radius: theme.$borderRadius;
     font-size: 20px;
   }
 
-  label, icon {
+  label,
+  image {
     transition: 200ms;
     padding: 3px 8px;
   }
@@ -65,13 +66,13 @@ window.mediaControls {
       font-size: 24px;
       margin-top: 5px;
 
-      icon {
+      image {
         padding: 7px 12px;
       }
       .quitPlayer.noQuit {
         color: #999;
 
-        &:hover icon {
+        &:hover image {
           background-color: transparent;
         }
       }

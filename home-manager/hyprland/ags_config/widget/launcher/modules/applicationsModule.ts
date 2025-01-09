@@ -1,6 +1,6 @@
 import Apps from "gi://AstalApps";
 import { Module, ModuleEntry } from "../module";
-import { AbortSignal } from "../../../utils";
+import { AbortSignal } from "../../../processes";
 
 export class ApplicationsModule extends Module {
   static MAX_RESULTS = 8;

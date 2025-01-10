@@ -22,6 +22,8 @@
 
     background: theme.$mantle;
 
+    transition: background 0.2s;
+
     &:hover {
       background: color.adjust(theme.$mantle, $lightness: 15%);
     }

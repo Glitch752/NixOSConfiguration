@@ -32,7 +32,7 @@ export default function Notification(props: Props) {
   return (
     <box
       vertical
-      cssClasses={["notification", "popup", getUrgencyClass(n)]}
+      cssClasses={["notification", getUrgencyClass(n)]}
       setup={setup ?? (() => { })}
       onHoverLeave={onHoverLost ?? (() => { })}
     >
@@ -60,13 +60,10 @@ export default function Notification(props: Props) {
 
       <box cssClasses={["content"]}>
         {n.image && fileExists(n.image) && (
-          <box
+          <image
             valign={START}
             cssClasses={["image"]}
-          // TODO: Figure out how to do this with gtk4
-          // css={`
-          //   background-image: url("${n.image}");
-          // `}
+            file={n.image}
           />
         )}
         {n.image && (

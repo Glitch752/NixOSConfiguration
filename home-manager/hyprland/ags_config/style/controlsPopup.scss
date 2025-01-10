@@ -55,7 +55,7 @@ window.controlsPopup {
       }
     }
 
-    .notification > box {
+    .notification {
       background-color: utils.gtkalpha(theme.$surface0, 0.5);
       color: theme.$text;
 

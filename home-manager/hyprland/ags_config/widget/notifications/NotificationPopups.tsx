@@ -1,7 +1,7 @@
-import { Astal, Gtk, Gdk } from "astal/gtk4";
+import { Astal, Gtk, Gdk, Widget } from "astal/gtk4";
 import Notifd from "gi://AstalNotifd";
 import Notification from "./Notification";
-import { type Subscribable } from "astal/binding";
+import Binding, { Connectable, type Subscribable } from "astal/binding";
 import { Variable, bind, timeout } from "astal";
 
 // TODO: Notifications were completely broken by our gtk4 migration
@@ -80,7 +80,6 @@ class NotifiationMap implements Subscribable {
    * @param value The new widget.
    */
   private set(key: number, value: Gtk.Widget) {
-    // In case of replacecment, destroy the previous widget.
     this.widgetMap.set(key, value);
     this.notifiy();
   }
@@ -121,6 +120,6 @@ export default function NotificationPopups(gdkmonitor: Gdk.Monitor): Gtk.Window 
     exclusivity={Astal.Exclusivity.EXCLUSIVE}
     anchor={TOP | RIGHT}
   >
-    <box vertical>{bind(notifs)}</box>
+    <box vertical children={bind(notifs)} />
   </window> as Gtk.Window;
 }

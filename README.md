@@ -15,6 +15,22 @@ Inspired by the following configurations and resources:
 - https://github.com/fufexan/dotfiles
 - https://github.com/justinmdickey/publicdots/tree/main
 
+# Features
+- Custom hyprland theme
+- Custom wallpaper manager that changes and animates the wallpaper hourly
+- Custom lockscreen with hyprlock
+- Custom widgets using astal:
+  - Custom bar
+  - Custom launcher that supports applications, Rink formulas, shell commands, dictionary lookup, web searches, and symbols
+  - Custom notifications
+  - Media controls with Cava audio visualizer
+  - Controls menu with notifications, quick settings (TODO), and a calendar (currently broken with GTK4)
+- A variety of applications installed and configured in a modular, per-machine, way.
+- Custom boot splash screen
+- (Mostly working) Nvidia support!
+- NixOS configuration shared between multiple machines
+- ...and probably a bunch of other stuff I'm forgetting
+
 # Images
 ![Screenshot](./images/demo1.png)
 ![Screenshot](./images/demo2.png)

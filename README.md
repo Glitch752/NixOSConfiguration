@@ -14,3 +14,10 @@ Inspired by the following configurations and resources:
 - https://github.com/RoccoRakete/hyprland-dots
 - https://github.com/fufexan/dotfiles
 - https://github.com/justinmdickey/publicdots/tree/main
+
+# Images
+![Screenshot](./images/demo1.png)
+![Screenshot](./images/demo2.png)
+![Screenshot](./images/demo3.png)
+![Screenshot](./images/demo4.png)
+![Screenshot](./images/demo5.png)

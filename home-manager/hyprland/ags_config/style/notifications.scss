@@ -27,15 +27,15 @@ box.notification {
     }
   }
 
-  &:first-child > box {
+  &:first-child {
     margin-top: 1rem;
   }
 
-  &:last-child > box {
+  &:last-child {
     margin-bottom: 1rem;
   }
 
-  &.critical > box {
+  &.critical {
     .summary,
     .body {
       color: color.mix(theme.$red, theme.$text, 50%);

@@ -168,7 +168,7 @@ export default function RunPopup(data?: PopupData) {
         timeout(0, () => self.grab_focus());
       }}
       onKeyPressed={(self, keyval, keycode, state) => {
-        if (keyval === Gdk.KEY_Tab) {
+        if (keyval === Gdk.KEY_Tab || keyval === Gdk.KEY_ISO_Left_Tab) {
           if (state & Gdk.ModifierType.SHIFT_MASK) previousHighlight()
           else nextHighlight();
           return true;
@@ -178,13 +178,15 @@ export default function RunPopup(data?: PopupData) {
         } else if (keyval === Gdk.KEY_Up) {
           previousHighlight();
           return true;
-        } else if (keyval === Gdk.KEY_Return) {
-          print("Activate");
-          const entry = getAllEntries()[highlightedIndex.get()];
-          if (entry !== null && entry.onActivate) entry.onActivate();
-          closeOpenPopup();
-          return true;
         }
+
+        return false;
+      }}
+      onActivate={() => {
+        const entry = getAllEntries()[highlightedIndex.get()];
+        if (entry !== null && entry.onActivate) entry.onActivate();
+        closeOpenPopup();
+        return true;
       }}
       cssClasses={["query"]}
     />

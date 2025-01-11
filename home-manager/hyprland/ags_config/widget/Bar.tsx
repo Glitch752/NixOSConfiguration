@@ -1,5 +1,5 @@
 import { App, Astal, Gtk, Gdk } from "astal/gtk4"
-import { Binding, Variable, bind } from "astal"
+import { Binding, GLib, Gio, Variable, bind } from "astal"
 import Hyprland from "gi://AstalHyprland"
 import Wp from "gi://AstalWp"
 import Network from "gi://AstalNetwork"
@@ -106,15 +106,15 @@ function SystemTray() {
   const tray = Tray.get_default()
 
   return <Widget cssClasses={["systemTray"]}>
-    {bind(tray, "items").as(items => items.map(item =>
-      <menubutton
+    {bind(tray, "items").as(items => items.map(item => {
+      return <menubutton
         tooltipMarkup={bind(item, "tooltipMarkup")}
         // TODO: Most menu items are inactive for some reason?
         menuModel={bind(item, "menuModel")}
       >
         <image gicon={bind(item, "gicon")} />
       </menubutton>
-    ))}
+    }))}
   </Widget>
 }
 

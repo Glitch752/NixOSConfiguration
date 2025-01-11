@@ -20,7 +20,7 @@ box.notification {
     background: theme.$mantle;
     transition: background 0.2s;
 
-    padding: 0.2rem 0.5rem;
+    padding: 0.5rem;
 
     &:hover {
       background: color.adjust(theme.$mantle, $lightness: 15%);

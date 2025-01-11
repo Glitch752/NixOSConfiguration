@@ -109,6 +109,7 @@ function SystemTray() {
     {bind(tray, "items").as(items => items.map(item =>
       <menubutton
         tooltipMarkup={bind(item, "tooltipMarkup")}
+        // TODO: Most menu items are inactive for some reason?
         menuModel={bind(item, "menuModel")}
       >
         <image gicon={bind(item, "gicon")} />

@@ -108,8 +108,8 @@ export function drawMediaControlsBackground(): DrawBackgroundContext {
 function MediaPlayer({ player }: { player: Mpris.Player }) {
   const title = bind(player, "title").as((t) => t || "Unknown Track");
   const artist = bind(player, "artist").as((a) => a || "Unknown Artist");
-  const coverArt = bind(player, "coverArt").as((c) => `background-image: url('${c}')`);
-  const playerIcon = bind(player, "entry").as((e) => e ? e : "audio-x-generic-symbolic");
+  const coverArt = bind(player, "coverArt");
+  const playerIcon = bind(player, "entry").as((e) => e ? e : null);
   const position = bind(player, "position").as((p) => player.length > 0 ? p / player.length : 0);
   const playIcon = bind(player, "playbackStatus").as((s) => s === Mpris.PlaybackStatus.PLAYING ? "media-playback-pause-symbolic" : "media-playback-start-symbolic");
   const canQuit = bind(player, "canQuit");
@@ -120,12 +120,9 @@ function MediaPlayer({ player }: { player: Mpris.Player }) {
         <button cssClasses={canQuit.as((q) => [q ? "" : "noQuit", "quitPlayer"])} onClicked={() => player.quit()}>
           <image iconName="window-close-symbolic" />
         </button>
-        <image cssClasses={["playerIcon"]} iconName={playerIcon} />
+        <image cssClasses={["playerIcon"]} iconName={playerIcon.as(p => p ? p : "")} visible={playerIcon.as(p => p !== null)} />
       </box>
-      <box
-        cssClasses={["cover-art"]}
-      // css={coverArt} // TODO: Figure out how to do this with gtk4
-      />
+      <image cssClasses={["cover-art"]} file={coverArt} />
       <box vertical>
         <label cssClasses={["title"]} wrap wrapMode={Pango.WrapMode.WORD} hexpand halign={Gtk.Align.START} label={title} />
         <label halign={Gtk.Align.START} valign={Gtk.Align.START} vexpand wrap label={artist} />

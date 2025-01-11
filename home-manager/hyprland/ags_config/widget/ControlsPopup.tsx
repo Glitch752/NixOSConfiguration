@@ -66,13 +66,13 @@ export default function ControlsPopup() {
       )}
     </Section>
 
-    <Section>
-      {/* Please forgive me for this incredibly hacky centering solution */}
+    {/* <Section>
+      {/* Please forgive me for this incredibly hacky centering solution *}
       <centerbox>
         <box></box>
         <Calendar />
         <box></box>
       </centerbox>
-    </Section>
+    </Section> */}
   </box>;
 }

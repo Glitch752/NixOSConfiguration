@@ -1,7 +1,37 @@
-import { execAsync, Gio, GLib } from "astal";
+import { exec, execAsync, Gio, GLib } from "astal";
 
-export function startApplication(cmd: string) {
-  execAsync(["uwsm", "app", "--", cmd]);
+export function startApplication(cmd: string): Promise<string | void> {
+  // return execAsync(`uwsm app -- ${cmd}`)
+  //   .catch((e) => print(`Error starting application: ${e}`));
+
+  // Print the current environment
+  print(exec("env"));
+
+  const process = new Gio.Subprocess({
+    // argv: ["uwsm", "app", "--", cmd],
+    argv: [
+      // Because inheriting the app's environment
+      // breaks many applications, we need to
+    ],
+    flags:
+      Gio.SubprocessFlags.STDOUT_PIPE |
+      Gio.SubprocessFlags.STDERR_PIPE
+  });
+  process.init(null);
+
+  return new Promise((resolve, reject) => {
+    process.communicate_utf8_async(null, null)
+      .then(([stdout, stderr]) => {
+        if (stderr) {
+          reject(stderr);
+        } else {
+          resolve(stdout);
+        }
+      })
+      .catch((e) => {
+        reject(e);
+      });
+  });
 }
 
 /** An incredibly simple abort signal implementation. */

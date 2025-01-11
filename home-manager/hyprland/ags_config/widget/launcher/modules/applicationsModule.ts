@@ -1,6 +1,6 @@
 import Apps from "gi://AstalApps";
 import { Module, ModuleEntry } from "../module";
-import { AbortSignal } from "../../../processes";
+import { AbortSignal, startApplication } from "../../../processes";
 
 export class ApplicationsModule extends Module {
   static MAX_RESULTS = 8;
@@ -18,8 +18,12 @@ export class ApplicationsModule extends Module {
     return ApplicationsModule.apps
       .fuzzy_query(query)
       .slice(0, ApplicationsModule.MAX_RESULTS)
-      .map(app => new ModuleEntry(app.name, app.description, app.iconName, () => {
-        app.launch();
+      .map(app => new ModuleEntry(app.name, app.description, app.iconName, async () => {
+        // app.launch();
+        let executable = app.get_executable();
+        print(`Launching ${app.name} with executable "${executable}"`);
+
+        await startApplication(executable).catch(e => print(`Error launching ${app.name}: ${e}`));
       }));
   }
 }

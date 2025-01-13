@@ -17,4 +17,5 @@ done & disown
 
 # Load ags
 echo "Force reloaded ags"
+echo "--- Force reload ---" >> /tmp/ags.log
 ags run --gtk4 2>&1 | tee -a /tmp/ags.log & disown

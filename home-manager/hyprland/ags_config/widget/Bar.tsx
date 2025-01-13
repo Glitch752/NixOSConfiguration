@@ -120,7 +120,6 @@ function MenuButton({
   return <menubutton
     tooltipMarkup={tooltipMarkup}
     menuModel={menuModel}
-    sensitive={true}
     setup={(widget) => {
       const group = actionGroup.get();
       widget.insert_action_group(group.name, group.group);
@@ -147,11 +146,7 @@ function SystemTray() {
       return <MenuButton
         tooltipMarkup={bind(item, "tooltipMarkup")}
         // TODO: Most menu items are inactive for some reason?
-        menuModel={bind(item, "menuModel").as(m => {
-          // Set the menu to not be sensitive, since it wrongly disables all items.
-          m.set_property("sensitive", false);
-          return m;
-        })}
+        menuModel={bind(item, "menuModel")}
         actionGroup={bind(item, "actionGroup").as(ag => ({
           name: "dbusmenu",
           group: ag

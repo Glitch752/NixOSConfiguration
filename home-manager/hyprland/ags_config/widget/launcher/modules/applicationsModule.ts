@@ -18,11 +18,15 @@ export class ApplicationsModule extends Module {
     return ApplicationsModule.apps
       .fuzzy_query(query)
       .slice(0, ApplicationsModule.MAX_RESULTS)
-      .map(app => new ModuleEntry(app.name, app.description, app.iconName, async () => {
+      .map(app => new ModuleEntry(app.name, app.description, app.iconName, async() => {
         // app.launch();
         let executable = app.get_executable().replace("%U", ""); // I'm not sure why %U is included in the executable path
 
-        await startApplication(executable).catch(e => print(`Error launching ${app.name}: ${e}`));
+        try {
+          await startApplication(executable);
+        } catch (e) {
+          console.error(e);
+        }
       }));
   }
 }

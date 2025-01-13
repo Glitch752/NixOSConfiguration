@@ -20,8 +20,7 @@ export class ApplicationsModule extends Module {
       .slice(0, ApplicationsModule.MAX_RESULTS)
       .map(app => new ModuleEntry(app.name, app.description, app.iconName, async () => {
         // app.launch();
-        let executable = app.get_executable();
-        print(`Launching ${app.name} with executable "${executable}"`);
+        let executable = app.get_executable().replace("%U", ""); // I'm not sure why %U is included in the executable path
 
         await startApplication(executable).catch(e => print(`Error launching ${app.name}: ${e}`));
       }));

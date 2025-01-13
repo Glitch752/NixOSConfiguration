@@ -31,7 +31,8 @@
     # This is a tradeoff... turning it off can fix some stuttering,
     # but it breaks some apps like hyprlock when off.
     # Yay Nvidia drivers!
-    "render:explicit_sync" = 1;
+    # "render:explicit_sync" = 1;
+    "render:explicit_sync" = 0;
   };
 
   programs.hyprlock.settings.background = [

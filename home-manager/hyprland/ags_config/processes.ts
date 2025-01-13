@@ -4,20 +4,16 @@ export function startApplication(cmd: string): Promise<string | void> {
   // HACK: (like, a really big one)
   // Something with astal and gtk4 means launching applications doesn't work because
   // they inherit weird incompatible environment variables.
-  // We take _our_ parent process' environment variables from /proc/PPID/environ,
+  // We take hyprland's environment variables from /proc/PPID/environ,
   // manually set each in a new shell that doesn't inherit ours, and then launch
   // the application with uwsm. I'm... not proud of this.
 
-  // Get the current process' parent PID.
-  // We do this in a pretty roundabout way: we get the PID of a parent process,
-  // then take the grandparent PID.
-  // This is _incredibly_ dumb, but it works well.
-  const pid = exec(["bash", "-c", "ps -o ppid= -p $PPID"]); // Our current PID.
-  const parent = exec(["bash", "-c", `ps -o ppid= -p ${pid}`]); // Our parent PID.
+  // Get the PID of hyprland
+  const environmentProcess = exec(["pgrep", "hyprland"]).split("\n")[0].trim();
 
   // Since /proc/[process]/environ is zero-terminated, GLib can't read it correctly.
   // We just use a shell command to convert \0 to \n.
-  const parentEnvironment = exec(["bash", "-c", `cat /proc/${parent}/environ | tr '\\0' '\\n'`]);
+  const parentEnvironment = exec(["bash", "-c", `cat /proc/${environmentProcess}/environ | tr '\\0' '\\n'`]);
 
   const parentEnvironmentMap = parentEnvironment.split("\n").reduce<Record<string, string>>((acc, line) => {
     const [key, value] = line.split("=");

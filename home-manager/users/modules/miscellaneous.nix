@@ -37,7 +37,23 @@
 
     networkmanagerapplet # NetworkManager applet for the system tray
 
-    vesktop # Vencord optimized for wayland
+    # vesktop # Vencord optimized for wayland
+    (pkgs.symlinkJoin {
+      name = "vesktop";
+      paths = [
+        (pkgs.writeShellScriptBin "vesktop" ''
+          # --disable-gpu-compositing fixes some flickering on Nvidia at the cost of somewhere
+          # between a slight and massive performance hit. I'm personally fine with the application
+          # running at a low frame rate if it means I don't have to deal with flickering.
+          # Some of the performance hit can be mitigated by using the `--use-gl=angle` flag.
+          # For angle, we also need to use the correct backend; I found Swiftshader to be the
+          # most stable. Other backens include opengl, opengles, and angle.
+          # I'm honestly not sure why this improves performance (isn't it CPU-bound?), but it does.
+          exec ${pkgs.vesktop}/bin/vesktop --disable-gpu-compositing --use-gl=angle --use-angle=angle --use-angle-backend=vulkan $@
+        '')
+        pkgs.vesktop
+      ];
+    })
 
     bitwarden-desktop # Bitwarden password manager
     bitwarden-cli # Bitwarden password manager CLI

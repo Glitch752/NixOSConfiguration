@@ -20,7 +20,16 @@ if [ ! -f $DISABLED_WALLPAPERS_STATE_FILE ]; then
 fi
 
 # Read the disabled wallpapers state file into an array
-mapfile -t disabled_wallpapers < $DISABLED_WALLPAPERS_STATE_FILE
+mapfile -t disabled_wallpaper_lines < $DISABLED_WALLPAPERS_STATE_FILE
+
+# Remove any lines that are empty or start with a octothorpe (which is the only correct name, by the way!)
+disabled_wallpapers=()
+for line in "${disabled_wallpaper_lines[@]}"; do
+  if [ -z "$line" ] || [[ "$line" == \#* ]]; then
+    continue
+  fi
+  disabled_wallpapers+=("$line")
+done
 
 # $DISABLE_WALLPAPERS can be default (yes), no, or invert
 if [ -z $DISABLE_WALLPAPERS ]; then

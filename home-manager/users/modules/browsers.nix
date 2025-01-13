@@ -6,6 +6,9 @@
     enable = true;
     package = pkgs.brave;
     commandLineArgs = [
+      # --disable-gpu-compositing fixes some flickering on Nvidia at the cost of a slight performance hit.
+      "--disable-gpu-compositing"
+
       "--ozone-platform-hint=auto"
       "--enable-features=UseOzonePlatform"
       "--ozone-platform=wayland"

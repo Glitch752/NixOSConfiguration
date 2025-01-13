@@ -1,4 +1,4 @@
-import { App, Astal, Gtk, Gdk } from "astal/gtk4"
+import { App, Astal, Gtk, Gdk, astalify, ConstructProps } from "astal/gtk4"
 import { Binding, GLib, Gio, Variable, bind } from "astal"
 import Hyprland from "gi://AstalHyprland"
 import Wp from "gi://AstalWp"
@@ -102,18 +102,63 @@ function FocusedClient() {
 
 // Right panel
 
+// The default astal gtk4 menubutton doesn't support action groups, so we need to make our own.
+function MenuButton({
+  tooltipMarkup,
+  menuModel,
+  actionGroup,
+  child
+}: {
+  tooltipMarkup: Binding<string>,
+  menuModel: Binding<Gio.MenuModel>,
+  actionGroup: Binding<{
+    name: string,
+    group: Gio.ActionGroup  
+  }>,
+  child?: BindableChild
+}) {
+  return <menubutton
+    tooltipMarkup={tooltipMarkup}
+    menuModel={menuModel}
+    sensitive={true}
+    setup={(widget) => {
+      const group = actionGroup.get();
+      widget.insert_action_group(group.name, group.group);
+
+      let lastName = group.name;
+      actionGroup.subscribe((group) => {
+        if(lastName !== group.name) {
+          widget.insert_action_group(lastName, null);
+          lastName = group.name;
+        }
+        widget.insert_action_group(group.name, group.group);
+      });
+    }}
+  >
+    {child}
+  </menubutton>
+}
+
 function SystemTray() {
-  const tray = Tray.get_default()
+  const tray = Tray.get_default();
 
   return <Widget cssClasses={["systemTray"]}>
     {bind(tray, "items").as(items => items.map(item => {
-      return <menubutton
+      return <MenuButton
         tooltipMarkup={bind(item, "tooltipMarkup")}
         // TODO: Most menu items are inactive for some reason?
-        menuModel={bind(item, "menuModel")}
+        menuModel={bind(item, "menuModel").as(m => {
+          // Set the menu to not be sensitive, since it wrongly disables all items.
+          m.set_property("sensitive", false);
+          return m;
+        })}
+        actionGroup={bind(item, "actionGroup").as(ag => ({
+          name: "dbusmenu",
+          group: ag
+        }))}
       >
         <image gicon={bind(item, "gicon")} />
-      </menubutton>
+      </MenuButton>
     }))}
   </Widget>
 }
@@ -150,6 +195,7 @@ function Wifi() {
   return <Widget
     cssClasses={["wifi"]}
     tooltipText={bind(wifi, "ssid").as(String)}
+    // TODO: Maybe use nmtui instead?
     onClicked={() => startApplication("nm-connection-editor")}
     icon={bind(wifi, "iconName")}
   />

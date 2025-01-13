@@ -4,6 +4,15 @@
 
 window.notificationPopups {
   all: unset;
+
+  // For some reason, GTK 4 can't handle the transition from
+  // or to a fully transparent window. We draw a single pixel
+  // of semi-transparent color to work around this.
+  .fixGtkBug {
+    min-width: 1px;
+    min-height: 1px;
+    background-color: rgba(0, 0, 0, 0.01);
+  }
 }
 
 box.notification {
@@ -11,7 +20,7 @@ box.notification {
   border-radius: theme.$borderRadius;
   min-width: 400px;
   padding: 5px;
-  margin: 10px;
+  margin: 5px 10px;
 
   button {
     all: unset;

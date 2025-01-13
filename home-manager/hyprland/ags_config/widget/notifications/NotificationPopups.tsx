@@ -1,4 +1,4 @@
-import { Astal, Gtk, Gdk, Widget } from "astal/gtk4";
+import { Astal, Gtk, Gdk, Widget, App } from "astal/gtk4";
 import Notifd from "gi://AstalNotifd";
 import Notification from "./Notification";
 import Binding, { Connectable, type Subscribable } from "astal/binding";
@@ -117,9 +117,17 @@ export default function NotificationPopups(gdkmonitor: Gdk.Monitor): Gtk.Window 
     cssClasses={["notificationPopups"]}
     namespace="ags-notifications"
     gdkmonitor={gdkmonitor}
-    exclusivity={Astal.Exclusivity.EXCLUSIVE}
+    exclusivity={Astal.Exclusivity.NORMAL}
+    layer={Astal.Layer.OVERLAY}
     anchor={TOP | RIGHT}
+    application={App}
+    resizable={false}
+    defaultHeight={1}
+    defaultWidth={1}
   >
-    <box vertical children={bind(notifs)} />
+    <box vertical>
+      <box halign={Gtk.Align.END}><box cssClasses={["fixGtkBug"]} /></box>
+      {bind(notifs)}
+    </box>
   </window> as Gtk.Window;
 }

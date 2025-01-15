@@ -25,7 +25,7 @@ export class ApplicationsModule extends Module {
         try {
           await startApplication(executable);
         } catch (e) {
-          console.error(e);
+          console.error("Error starting application", e);
         }
       }));
   }

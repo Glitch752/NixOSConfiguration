@@ -4,12 +4,12 @@ export function startApplication(cmd: string): Promise<string | void> {
   // HACK: (like, a really big one)
   // Something with astal and gtk4 means launching applications doesn't work because
   // they inherit weird incompatible environment variables.
-  // We take hyprland's environment variables from /proc/PPID/environ,
+  // We take a known-good application's environment variables from /proc/PPID/environ,
   // manually set each in a new shell that doesn't inherit ours, and then launch
   // the application with uwsm. I'm... not proud of this.
 
-  // Get the PID of hyprland
-  const environmentProcess = exec(["pgrep", "hyprland"]).split("\n")[0].trim();
+  // xdg-desktop-portal is guarenteed to be running and seems to always have a working environment.
+  const environmentProcess = exec(["pgrep", "-f", "xdg-desktop-portal"]).split("\n")[0].trim();
 
   // Since /proc/[process]/environ is zero-terminated, GLib can't read it correctly.
   // We just use a shell command to convert \0 to \n.
@@ -39,11 +39,7 @@ export function startApplication(cmd: string): Promise<string | void> {
   return new Promise((resolve, reject) => {
     process.communicate_utf8_async(null, null)
       .then(([stdout, stderr]) => {
-        if (stderr) {
-          reject(stderr);
-        } else {
-          resolve(stdout);
-        }
+        resolve(stdout);
       })
       .catch((e) => {
         reject(e);

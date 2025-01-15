@@ -70,17 +70,28 @@
     ];
 
     label = [ 
-      { # Fingerprint reader message
+      {
         monitor = "";
-        text = "$FPRINTMESSAGE";
+        text = "$FPRINTPROMPT";
         color = "rgba(242, 243, 244, 0.75)";
         font_size = 22;
         font_family = "JetBrains Mono";
-        position = "0, -75";
+        position = "0, -80";
         halign = "center";
         valign = "center";
         zindex = 5;
-      }
+      }  
+      # {
+      #   monitor = "";
+      #   text = "$FPRINTFAIL";
+      #   color = "rgba(255, 220, 220, 0.75)";
+      #   font_size = 20;
+      #   font_family = "JetBrains Mono";
+      #   position = "0, -30";
+      #   halign = "center";
+      #   valign = "center";
+      #   zindex = 5;
+      # }
 
       { # Battery percentage
         monitor = "";
@@ -93,10 +104,10 @@
       }
     ];
 
-    general = {
-      enable_fingerprint = true;
-      fingerprint_ready_message = "Scan fingerprint";
-      fingerprint_present_message = "Scanning fingerprint...";
+    auth = {
+      "fingerprint:enabled" = true;
+      "fingerprint:ready_message" = "Scan fingerprint";
+      "fingerprint:present_message" = "Scanning fingerprint...";
     };
   };
 

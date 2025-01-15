@@ -42,6 +42,7 @@
       "$mainMod, Z, togglefloating,"
       "$mainMod, P, pseudo," # dwindle
       "$mainMod, J, togglesplit," # dwindle
+      "$mainMod, F, fullscreen" # fullscreen
 
       # Custom ags menu binds
       "$mainMod, Space, exec, ags request -i main 'open controlsPopup'"

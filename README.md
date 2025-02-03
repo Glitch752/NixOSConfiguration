@@ -1,6 +1,10 @@
 My custom NixOS rice. Set up with two machines for my devices with NixOS, but built in a modular and reusable way so it should be easily adaptable to other people's configurations.
 
-![Screenshot](./images/demo5.png)
+Short demo video:
+
+
+https://github.com/user-attachments/assets/74eb4369-141a-4cd0-9b5b-98a392076f8c
+
 
 # Features
 - Custom hyprland theme
@@ -23,6 +27,7 @@ My custom NixOS rice. Set up with two machines for my devices with NixOS, but bu
 ![Screenshot](./images/demo2.png)
 ![Screenshot](./images/demo3.png)
 ![Screenshot](./images/demo4.png)
+![Screenshot](./images/demo5.png)
 
 Inspired by the following configurations and resources:
 - https://github.com/Misterio77/nix-starter-configs

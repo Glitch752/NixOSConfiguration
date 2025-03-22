@@ -1,4 +1,6 @@
 { inputs, lib, config, pkgs, ... }: {
+  miscPrograms.disableGPUCompositing = true;
+  
   wayland.windowManager.hyprland.settings = {
     monitor = [
       # Position (0, 0), fractional scaling of 1.25x

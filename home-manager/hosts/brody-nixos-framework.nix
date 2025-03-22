@@ -1,4 +1,6 @@
 { inputs, lib, config, pkgs, ... }: {
+  miscPrograms.disableGPUCompositing = false;
+
   wayland.windowManager.hyprland.settings = {
     "$lockScreen" = "uwsm app -- hyprlock"; # No need to use our nvidia screenshot fix script.
     monitor = [

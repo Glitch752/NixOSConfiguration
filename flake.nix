@@ -49,25 +49,31 @@
     nixosConfigurations = let
       makeNixOSConfig =
         { username, hostname }: let specialArgs = { inherit username; };
+          lib = nixpkgs.lib.extend (self: super: { custom = import ./lib { inherit (nixpkgs) lib; }; });
         in nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
           system = "x86_64-linux";
+
+          # Use a custom lib that extends nixpkgs.lib
+          inherit lib;
 
           modules = [
             ./nixos/hosts/${hostname}/configuration.nix
             ./nixos/users/${username}.nix
 
             home-manager.nixosModules.home-manager {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.${username} = {
-                imports = [
-                  ./home-manager/users/${username}.nix
-                  ./home-manager/hosts/${hostname}.nix
-                ];
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                users.${username} = {
+                  imports = [
+                    ./home-manager/users/${username}.nix
+                    ./home-manager/hosts/${hostname}.nix
+                  ];
+                };
+                extraSpecialArgs = { inherit inputs outputs; } // specialArgs;
+                backupFileExtension = "backup";
               };
-              home-manager.extraSpecialArgs = { inherit inputs outputs; } // specialArgs;
-              home-manager.backupFileExtension = "backup";
             }
           ];
         };

@@ -28,6 +28,8 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
+    enableAutosuggestions = true;
+    
     syntaxHighlighting.enable = true;
 
     shellAliases = {
@@ -48,10 +50,28 @@
       path = "${config.xdg.dataHome}/zsh/history";
     };
 
+    plugins = [
+      {
+        name = "enhancd";
+        file = "init.sh";
+        src = pkgs.fetchFromGitHub {
+          owner = "b4b4r07";
+          repo = "enhancd";
+          rev = "v2.5.1";
+          sha256 = "sha256-kaintLXSfLH7zdLtcoZfVNobCJCap0S/Ldq85wd3krI=";
+        };
+      }
+    ];
+    
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" "fzf" "thefuck" "direnv" ];
-      theme = "philips"; # nebirhos, norm, robbyrussell
+      plugins = [
+        "git"
+        "fzf"
+        "thefuck"
+        "direnv"
+      ];
+      theme = "philips"; # frisk, nebirhos, norm, robbyrussell
     };
 
     # The zshrc file

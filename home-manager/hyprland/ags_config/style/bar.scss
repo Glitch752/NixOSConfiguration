@@ -1,6 +1,6 @@
 @use "sass:color";
-@use "./theme.scss" as theme;
-@use "./utils.scss" as utils;
+@use "./theme.scss";
+@use "./utils.scss";
 
 window.bar {
   background: transparent;
@@ -20,6 +20,7 @@ window.bar {
 
   .widget {
     background: utils.gtkalpha(theme.$mantle, theme.$backgroundAlpha);
+    border: 1px solid var(--color, transparent);
     border-radius: theme.$borderRadius;
     padding: 0 8px;
 
@@ -28,6 +29,13 @@ window.bar {
       &:not(:only-child) {
         margin-right: 10px;
       }
+    }
+  }
+
+  // Add a color class for each possible color
+  @each $color, $value in theme.$colors {
+    .widgetOuter.#{$color} {
+      --color: #{$value};
     }
   }
 

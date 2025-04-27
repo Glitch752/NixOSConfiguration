@@ -1,6 +1,6 @@
 @use "sass:color";
-@use "./theme.scss" as theme;
-@use "./utils.scss" as utils;
+@use "./theme.scss";
+@use "./utils.scss";
 
 window.runPopup {
   > revealer > box {

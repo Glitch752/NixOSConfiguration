@@ -82,7 +82,7 @@
       gparted # Graphical disk partitioning tool
       squirreldisk # Disk usage analyzer
 
-      valent # A better KDE connect client
+      scrcpy # A really nice Android screen mirroring/input tool
     ];
 
     xdg.desktopEntries.gparted = {

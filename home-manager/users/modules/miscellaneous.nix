@@ -81,6 +81,8 @@
 
       gparted # Graphical disk partitioning tool
       squirreldisk # Disk usage analyzer
+
+      valent # A better KDE connect client
     ];
 
     xdg.desktopEntries.gparted = {
@@ -110,6 +112,11 @@
         file_manager = "thunar";
         terminal = "kitty";
       };
+    };
+
+    services.kdeconnect = {
+      enable = true;
+      indicator = true;
     };
   };
 }

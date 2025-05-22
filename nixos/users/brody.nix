@@ -13,6 +13,7 @@
     ./modules/programs.nix
     ./modules/dbus-broker.nix
     ./modules/devices.nix
+    ./modules/fhs.nix # Embrace the FHS...
   ];
 
   # Allow unfree packages

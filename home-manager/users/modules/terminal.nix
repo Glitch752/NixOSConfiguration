@@ -76,6 +76,8 @@
 
     # The zshrc file
     initExtra = ''
+      export PROMPT="$PROMPT_PREFIX$PROMPT"
+
       fastfetch
     '';
   };

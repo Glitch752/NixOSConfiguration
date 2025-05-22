@@ -113,10 +113,5 @@
         terminal = "kitty";
       };
     };
-
-    services.kdeconnect = {
-      enable = true;
-      indicator = true;
-    };
   };
 }

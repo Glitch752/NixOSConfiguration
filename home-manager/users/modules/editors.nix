@@ -5,8 +5,14 @@
       # For rust
       rustup
       zlib
+      clang
+      gcc
       openssl.dev
       pkg-config
+      
+      libGL
+      libxkbcommon
+      wayland
     ]);
 
     enable = true;
